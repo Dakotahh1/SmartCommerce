@@ -1,0 +1,93 @@
+# ─────────────────────────────────────────────────────────────
+# SmartCommerce · .gitignore
+# Nunca versionar credenciales, estados de infraestructura ni artefactos.
+# ─────────────────────────────────────────────────────────────
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.jks
+*.keystore
+!**/debug.keystore.example
+secrets/
+credentials*.json
+service-account*.json
+
+# Dependencias
+node_modules/
+.pnpm-store/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.uv-cache/
+
+# Artefactos de build
+dist/
+build/
+out-tsc/
+.angular/
+www/
+coverage/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+junit*.xml
+*.tsbuildinfo
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Capacitor / Android (se versiona el proyecto nativo, no sus builds)
+frontend/android/app/build/
+frontend/android/build/
+frontend/android/.gradle/
+frontend/android/local.properties
+frontend/android/capacitor-cordova-android-plugins/build/
+*.apk
+*.aab
+
+# Terraform (el estado vive fuera del repositorio)
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+*.auto.tfvars
+!*.auto.tfvars.example
+
+# Logs y temporales
+logs/
+*.log
+npm-debug.log*
+tmp/
+.tmp/
+*.tmp
+
+# Editores y sistema operativo
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Herramientas locales
+.claude/
+reports/
