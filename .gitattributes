@@ -1,0 +1,18 @@
+# Normaliza finales de línea: los scripts deben ejecutarse en contenedores Linux.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+gradlew text eol=lf
+
+# Binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.jar binary
+*.pdf binary
