@@ -46,7 +46,7 @@ x-db-connection: &db-connection
 
 services:
   database:
-    image: postgres:17.11-alpine3.24
+    image: postgres:18.6-alpine3.24
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME:-smartcommerce}
