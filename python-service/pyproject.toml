@@ -1,0 +1,70 @@
+[project]
+name = "smartcommerce-python-service"
+version = "0.1.0"
+description = "Servicio SmartMatch: obtención y normalización de datos de Open Food Facts y motor de recomendación explicable."
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+license = "MIT"
+dependencies = [
+  "fastapi>=0.141,<0.142",
+  "uvicorn>=0.53,<0.54",
+  "pydantic>=2.13,<3",
+  "pydantic-settings>=2.15,<3",
+  "httpx>=0.28,<0.29",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=9.1",
+  "pytest-cov>=7.1",
+  "respx>=0.23",
+  "ruff>=0.16",
+  "mypy>=2.3",
+  "bandit>=1.9",
+  "pip-audit>=2.10",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+src = ["app", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "N", "SIM", "RUF", "ASYNC", "PT", "C4", "PL"]
+ignore = [
+  "RUF001", "RUF002", "RUF003", # textos en español con caracteres unicode
+  "PLR0913",                     # constructores con configuración explícita
+  "PLR2004",                     # umbrales documentados en el dominio (Ley 20.606)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "PLR2004", "PLC0415"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Header"]
+
+[tool.mypy]
+python_version = "3.13"
+plugins = ["pydantic.mypy"]
+strict = true
+warn_unreachable = true
+files = ["app"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --cov=app --cov-report=term-missing --cov-report=xml --cov-fail-under=85"
+
+[tool.coverage.run]
+branch = true
+source = ["app"]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
