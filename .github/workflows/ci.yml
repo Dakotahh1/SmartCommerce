@@ -8,7 +8,8 @@
 #                                análisis de dependencias                      ─┤
 #  3. Contenedores              build de imágenes + escaneo de vulnerabilidades (Trivy) + SBOM
 #  4. Staging efímero           Docker Compose con las imágenes construidas: salud, humo,
-#                                resiliencia y aislamiento de red              ─┘
+#                                resiliencia y aislamiento de red              ─┤
+#  4. Terraform                 fmt · validate (dev, staging) · plan de staging ─┘
 #  5. Quality gate              un único check requerido que falla si cualquier etapa falla
 #  6. Publicación               imágenes en GHCR (solo main / tags, tras el quality gate)
 #
@@ -580,12 +581,93 @@ jobs:
         run: docker compose down -v --remove-orphans
 
   # ════════════════════════════════════════════════════════════════════════════
+  # 4 · Infraestructura como código (Terraform)
+  # ════════════════════════════════════════════════════════════════════════════
+  terraform:
+    name: Terraform (fmt · validate · plan staging)
+    needs: [secrets-scan, sast, config-lint]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: staging
+    env:
+      TF_IN_AUTOMATION: "true"
+      TF_INPUT: "false"
+      TF_ROOT: infra/terraform
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: "1.16.3"
+          terraform_wrapper: false
+
+      - name: Formato (terraform fmt)
+        run: terraform -chdir="$TF_ROOT" fmt -check -recursive -diff
+
+      - name: Validación de los ambientes dev y staging (terraform validate)
+        run: |
+          for env in dev staging; do
+            echo "::group::${env}"
+            terraform -chdir="$TF_ROOT/environments/${env}" init -backend=false -lockfile=readonly
+            terraform -chdir="$TF_ROOT/environments/${env}" validate
+            echo "::endgroup::"
+          done
+
+      - name: Secretos del ambiente staging (o efímeros enmascarados)
+        env:
+          S_POSTGRES_SUPERUSER_PASSWORD: ${{ secrets.POSTGRES_SUPERUSER_PASSWORD }}
+          S_DB_OWNER_PASSWORD: ${{ secrets.DB_OWNER_PASSWORD }}
+          S_DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
+          S_JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          S_INTERNAL_API_TOKEN: ${{ secrets.INTERNAL_API_TOKEN }}
+        run: |
+          for name in POSTGRES_SUPERUSER_PASSWORD DB_OWNER_PASSWORD DB_APP_PASSWORD JWT_ACCESS_SECRET INTERNAL_API_TOKEN; do
+            provided="S_${name}"
+            value="${!provided}"
+            if [ -z "$value" ]; then
+              value="$(openssl rand -hex 32)"
+              echo "${name}: efímero aleatorio"
+            else
+              echo "${name}: GitHub Secret"
+            fi
+            echo "::add-mask::${value}"
+            echo "TF_VAR_${name,,}=${value}" >> "$GITHUB_ENV"
+          done
+
+      - name: Plan de staging contra el daemon Docker del runner (terraform plan)
+        env:
+          DOCKER_HOST_TARGET: ${{ vars.STAGING_DOCKER_HOST || 'unix:///var/run/docker.sock' }}
+        run: |
+          dir="$TF_ROOT/environments/staging"
+          terraform -chdir="$dir" init -lockfile=readonly
+          terraform -chdir="$dir" plan -lock-timeout=60s -out=staging.tfplan \
+            -var "docker_host=${DOCKER_HOST_TARGET}" \
+            -var "image_tag=sha-${GITHUB_SHA::12}"
+          # Plan legible (valores sensibles ocultos por Terraform); el binario del plan no se publica.
+          terraform -chdir="$dir" show -no-color staging.tfplan > plan-staging.txt
+          {
+            echo "### 🏗️ Terraform · plan de staging"
+            echo '```'
+            grep -E "^Plan:|No changes" plan-staging.txt || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          rm -f "$dir/staging.tfplan"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: terraform-plan-staging
+          path: plan-staging.txt
+          retention-days: 14
+
+  # ════════════════════════════════════════════════════════════════════════════
   # 5 · Quality gate
   # ════════════════════════════════════════════════════════════════════════════
   quality-gate:
     name: Quality gate
     if: always()
-    needs: [secrets-scan, sast, config-lint, frontend, backend, python-service, android, images, staging-e2e]
+    needs: [secrets-scan, sast, config-lint, frontend, backend, python-service, android, images, staging-e2e, terraform]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
