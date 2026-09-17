@@ -57,6 +57,7 @@ frontend/android/capacitor-cordova-android-plugins/build/
 
 # Terraform (el estado vive fuera del repositorio)
 **/.terraform/*
+infra/terraform/.state/
 *.tfstate
 *.tfstate.*
 *.tfplan
