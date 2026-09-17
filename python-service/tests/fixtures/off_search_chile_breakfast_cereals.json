@@ -1,0 +1,1218 @@
+{
+ "count": 117,
+ "page": 1,
+ "page_size": 24,
+ "products": [
+  {
+   "allergens_tags": [
+    "en:gluten"
+   ],
+   "brands": "Quaker",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:flakes",
+    "en:cereal-flakes",
+    "en:rolled-flakes"
+   ],
+   "code": "7802000011719",
+   "completeness": 0.475,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "d",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/200/001/1719/front_en.3.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-content-unknown",
+    "en:vegan-status-unknown",
+    "en:vegetarian-status-unknown"
+   ],
+   "last_modified_t": 1788925637,
+   "nutriments": {},
+   "nutriscore_grade": "unknown",
+   "nutrition_data": "on",
+   "nutrition_data_per": "100g",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Avena Multisemillas",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [
+    "en:gluten",
+    "en:soybeans"
+   ],
+   "brands": "Nestlé, Chocapic",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:chocolate-cereals",
+    "en:breakfast-cereals-fortified-with-vitamins-and-chemical-elements"
+   ],
+   "code": "7613287521507",
+   "completeness": 0.9,
+   "countries_tags": [
+    "en:bolivia",
+    "en:chile"
+   ],
+   "ecoscore_grade": "d",
+   "generic_name": "cereal para el desayuno a base de maíz integral, trigo y trigo integral sabor chocolate.",
+   "generic_name_es": "cereal para el desayuno a base de maíz integral, trigo y trigo integral sabor chocolate.",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/761/328/752/1507/front_es.21.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil",
+    "en:vegan-status-unknown",
+    "en:vegetarian-status-unknown"
+   ],
+   "labels_tags": [
+    "en:no-added-sugar",
+    "en:CPU"
+   ],
+   "last_modified_t": 1788743113,
+   "nova_group": 4,
+   "nutriments": {
+    "energy-kcal_100g": 328,
+    "energy_100g": 726.3,
+    "fiber_100g": 12.3,
+    "proteins_100g": 9.2,
+    "salt_100g": 0.94,
+    "saturated-fat_100g": 1.1,
+    "sodium_100g": 0.376,
+    "sugars_100g": 1.5
+   },
+   "nutriscore_grade": "a",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Chocapic Sin Azúcar Añadida",
+   "product_name_es": "Chocapic Sin Azúcar Añadida",
+   "product_quantity": 350,
+   "product_quantity_unit": "g",
+   "quantity": "350 g",
+   "stores_tags": [
+    "Farmacorp",
+    "Hipermaxi"
+   ],
+   "traces_tags": [
+    "en:milk",
+    "en:nuts"
+   ]
+  },
+  {
+   "allergens_tags": [],
+   "brands": "Vivo",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals"
+   ],
+   "code": "7800120170170",
+   "completeness": 0.375,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "d",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/012/017/0170/front_en.15.400.jpg",
+   "labels_tags": [
+    "en:source-of-fibre"
+   ],
+   "last_modified_t": 1788142920,
+   "nutriments": {
+    "energy-kcal_100g": 366.666666666667,
+    "energy_100g": 1515.33333333333,
+    "proteins_100g": 11,
+    "sugars_100g": 0
+   },
+   "nutriscore_grade": "unknown",
+   "nutrition_data": "on",
+   "nutrition_data_per": "100ml",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Avena instantánea",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [],
+   "brands": "Quaker",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals"
+   ],
+   "code": "7802000011306",
+   "completeness": 0.475,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "d",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/200/001/1306/front_fr.4.400.jpg",
+   "last_modified_t": 1787922899,
+   "nutriments": {
+    "energy-kcal_100g": 361,
+    "energy_100g": 572.3,
+    "proteins_100g": 11,
+    "salt_100g": 3.39,
+    "saturated-fat_100g": 1.1,
+    "sodium_100g": 1.356,
+    "sugars_100g": 12
+   },
+   "nutriscore_grade": "e",
+   "nutrition_data": "on",
+   "nutrition_data_per": "100g",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Quadritos",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [],
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals"
+   ],
+   "code": "7800120170125",
+   "completeness": 0.375,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "d",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/012/017/0125/front_en.3.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-content-unknown",
+    "en:vegan-status-unknown",
+    "en:vegetarian-status-unknown"
+   ],
+   "last_modified_t": 1787922855,
+   "nutriments": {},
+   "nutriscore_grade": "unknown",
+   "nutrition_data": "on",
+   "nutrition_data_per": "100g",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Avena Instantanea",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [],
+   "brands": "Cheerios, Nestlé",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:extruded-cereals"
+   ],
+   "code": "7613287593467",
+   "completeness": 0.475,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "d",
+   "generic_name": "",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/761/328/759/3467/front_fr.3.400.jpg",
+   "labels_tags": [
+    "en:no-colorings"
+   ],
+   "last_modified_t": 1787849157,
+   "nutriments": {
+    "energy-kcal_100g": 371,
+    "energy_100g": 1625.4,
+    "fiber_100g": 6.5,
+    "proteins_100g": 7.2,
+    "salt_100g": 0.9975,
+    "saturated-fat_100g": 1.1,
+    "sodium_100g": 0.399,
+    "sugars_100g": 19.8
+   },
+   "nutriscore_grade": "c",
+   "nutrition_data": "on",
+   "nutrition_data_per": "100g",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "cheerios",
+   "quantity": "",
+   "stores_tags": [],
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [],
+   "brands": "MIZOS",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:mueslis",
+    "en:Cereales",
+    "en:Cereales para el desayuno"
+   ],
+   "code": "7804646450297",
+   "completeness": 0.675,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "c",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/464/645/0297/front_es.13.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-free",
+    "en:vegan",
+    "en:vegetarian"
+   ],
+   "labels_tags": [
+    "en:vegetarian",
+    "en:no-gluten",
+    "en:vegan"
+   ],
+   "last_modified_t": 1786453718,
+   "nova_group": 4,
+   "nutriments": {
+    "energy-kcal_100g": 402,
+    "energy_100g": 1801.6,
+    "fiber_100g": 9.8,
+    "proteins_100g": 11.4,
+    "saturated-fat_100g": 2.7,
+    "sugars_100g": 16.7
+   },
+   "nutriscore_grade": "unknown",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Granola Mix Semillas",
+   "product_name_es": "Granola Mix Semillas",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [
+    "en:gluten",
+    "en:milk",
+    "en:peanuts"
+   ],
+   "brands": "Enlinea",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:extruded-cereals",
+    "en:filled-cereals",
+    "en:breakfast-cereals-filled-with-chocolate"
+   ],
+   "code": "7804000003022",
+   "completeness": 0.6875,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "d",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/400/000/3022/front_es.3.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-free",
+    "en:non-vegan",
+    "en:vegetarian-status-unknown"
+   ],
+   "labels_tags": [
+    "en:low-or-no-sodium",
+    "en:source-of-fibre",
+    "en:low-sodium",
+    "en:no-added-sugar"
+   ],
+   "last_modified_t": 1782373558,
+   "nova_group": 4,
+   "nutriments": {
+    "energy-kcal_100g": 363,
+    "energy_100g": 1633,
+    "fiber_100g": 13,
+    "proteins_100g": 15,
+    "salt_100g": 60,
+    "saturated-fat_100g": 2.4,
+    "sodium_100g": 0.018,
+    "sugars_100g": 1.4
+   },
+   "nutriscore_grade": "e",
+   "nutrition_data": "on",
+   "nutrition_data_per": "100g",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Cereal relleno sabor chocolate",
+   "product_name_es": "Cereal relleno sabor chocolate",
+   "product_quantity": 360,
+   "product_quantity_unit": "g",
+   "quantity": "360 g",
+   "stores_tags": [],
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [],
+   "brands": "Quaker",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:flakes",
+    "en:cereal-flakes",
+    "en:rolled-flakes",
+    "en:rolled-oats"
+   ],
+   "code": "7802000013546",
+   "completeness": 0.475,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "b",
+   "last_modified_t": 1782253385,
+   "nutriments": {
+    "energy-kcal_100g": 375,
+    "energy_100g": 1623.6,
+    "fiber_100g": 11,
+    "proteins_100g": 13,
+    "sugars_100g": 1.3
+   },
+   "nutriscore_grade": "unknown",
+   "nutrition_data": "on",
+   "nutrition_data_per": "100g",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Avena Multisemillas",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [],
+   "brands": "WILD",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:mueslis",
+    "en:Cereales",
+    "en:Cereales para desayuno",
+    "en:Granola proteica"
+   ],
+   "code": "7804673913673",
+   "completeness": 0.675,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "c",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/467/391/3673/front_en.8.400.jpg",
+   "last_modified_t": 1782211011,
+   "nutriments": {
+    "energy-kcal_100g": 346,
+    "energy_100g": 1759.7,
+    "fiber_100g": 11.9,
+    "proteins_100g": 29.5,
+    "salt_100g": 0.8715,
+    "saturated-fat_100g": 1.6,
+    "sodium_100g": 0.3486,
+    "sugars_100g": 2.4
+   },
+   "nutriscore_grade": "a",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "PROTEIN Granola GOLDEN CRUNCHY",
+   "product_name_es": "PROTEIN Granola GOLDEN CRUNCHY",
+   "product_quantity": 300,
+   "product_quantity_unit": "g",
+   "quantity": "300 g",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [
+    "en:gluten",
+    "en:milk",
+    "en:soybeans"
+   ],
+   "brands": "Enlinea",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:Cereales",
+    "en:Cereales para desayuno"
+   ],
+   "code": "7804000002100",
+   "completeness": 0.7875,
+   "countries_tags": [
+    "en:bolivia",
+    "en:chile"
+   ],
+   "ecoscore_grade": "c",
+   "generic_name": "cereal a base de maíz y proteína concentrada de suero en forma de bolitas, sabor chocolate.",
+   "generic_name_es": "cereal a base de maíz y proteína concentrada de suero en forma de bolitas, sabor chocolate.",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/400/000/2100/front_es.29.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-free",
+    "en:non-vegan",
+    "en:vegetarian-status-unknown"
+   ],
+   "labels_tags": [
+    "en:no-added-sugar",
+    "en:With stevia"
+   ],
+   "last_modified_t": 1781911591,
+   "nova_group": 4,
+   "nutriments": {
+    "energy-kcal_100g": 337,
+    "energy_100g": 1410,
+    "fiber_100g": 0,
+    "proteins_100g": 34,
+    "salt_100g": 0.94,
+    "saturated-fat_100g": 1.2,
+    "sodium_100g": 0.371,
+    "sugars_100g": 2.2
+   },
+   "nutriscore_grade": "b",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Enlinea Cereal de Proteína Bolitas Sabor Chocolate",
+   "product_name_es": "Enlinea Cereal de Proteína Bolitas Sabor Chocolate",
+   "product_quantity": 300,
+   "product_quantity_unit": "g",
+   "quantity": "300g",
+   "stores_tags": [
+    "Bonjour Santé"
+   ],
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [
+    "en:gluten"
+   ],
+   "brands": "Vivo, Carozzi",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:breakfast-cereals-fortified-with-vitamins-and-chemical-elements",
+    "en:extruded-cereals"
+   ],
+   "code": "7800120162212",
+   "completeness": 0.6875,
+   "countries_tags": [
+    "en:bolivia",
+    "en:canada",
+    "en:chile",
+    "en:costa-rica",
+    "en:cuba",
+    "en:dominican-republic",
+    "en:ecuador",
+    "en:el-salvador",
+    "en:guatemala",
+    "en:honduras",
+    "en:nicaragua",
+    "en:panama",
+    "en:paraguay",
+    "en:peru",
+    "en:puerto-rico",
+    "en:united-states",
+    "en:uruguay"
+   ],
+   "ecoscore_grade": "c",
+   "generic_name": "cereal para el desayuno a base de avena integral, trigo, maíz, fortificado en hierro, calcio, zinc, ácido fólico, niacina y vitaminas (C, B1, B2, B6 y B12).",
+   "generic_name_es": "cereal para el desayuno a base de avena integral, trigo, maíz, fortificado en hierro, calcio, zinc, ácido fólico, niacina y vitaminas (C, B1, B2, B6 y B12).",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/012/016/2212/front_en.3.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-free",
+    "en:vegan-status-unknown",
+    "en:vegetarian-status-unknown"
+   ],
+   "labels_tags": [
+    "en:incorrect-data-on-label",
+    "en:incorrect-nutrition-facts-on-label",
+    "en:no-added-sugar",
+    "en:pefc"
+   ],
+   "last_modified_t": 1781512466,
+   "nova_group": 4,
+   "nutriments": {
+    "energy-kcal_100g": 340,
+    "energy_100g": 1423,
+    "fiber_100g": 16,
+    "proteins_100g": 9,
+    "salt_100g": 0.775,
+    "saturated-fat_100g": 1.6,
+    "sodium_100g": 0.31,
+    "sugars_100g": 1
+   },
+   "nutriscore_grade": "a",
+   "nutrition_data": "on",
+   "nutrition_data_per": "100g",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Check 3 Cereales",
+   "product_name_es": "Check 3 Cereales",
+   "product_quantity": 360,
+   "product_quantity_unit": "g",
+   "quantity": "360 g / 12.7 oz",
+   "stores_tags": [],
+   "traces_tags": [
+    "en:eggs",
+    "en:gluten",
+    "en:milk",
+    "en:nuts",
+    "en:peanuts",
+    "en:sesame-seeds",
+    "en:soybeans",
+    "en:sulphur-dioxide-and-sulphites"
+   ]
+  },
+  {
+   "allergens_tags": [
+    "en:gluten"
+   ],
+   "brands": "En Línea",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:mueslis"
+   ],
+   "code": "7804000002131",
+   "completeness": 0.7875,
+   "countries_tags": [
+    "en:bolivia",
+    "en:chile"
+   ],
+   "ecoscore_grade": "b",
+   "generic_name": "muesli multi semilla a base de avena y maíz con linaza, chía, pepas de zapallo, maravilla y quinoa.",
+   "generic_name_es": "muesli multi semilla a base de avena y maíz con linaza, chía, pepas de zapallo, maravilla y quinoa.",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/400/000/2131/front_es.18.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-free",
+    "en:vegan-status-unknown",
+    "en:vegetarian-status-unknown"
+   ],
+   "labels_tags": [
+    "en:no-added-sugar",
+    "en:With stevia"
+   ],
+   "last_modified_t": 1780252791,
+   "nova_group": 4,
+   "nutriments": {
+    "energy-kcal_100g": 358,
+    "energy_100g": 1675.4,
+    "fiber_100g": 8.8,
+    "proteins_100g": 18,
+    "salt_100g": 0.185,
+    "sodium_100g": 0.074,
+    "sugars_100g": 1.8
+   },
+   "nutriscore_grade": "unknown",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Muesli Multi Semilla",
+   "product_name_es": "Muesli Multi Semilla",
+   "product_quantity": 700,
+   "product_quantity_unit": "g",
+   "quantity": "700 g",
+   "stores_tags": [],
+   "traces_tags": [
+    "en:eggs",
+    "en:milk",
+    "en:nuts",
+    "en:peanuts",
+    "en:soybeans",
+    "en:sulphur-dioxide-and-sulphites"
+   ]
+  },
+  {
+   "allergens_tags": [
+    "en:milk",
+    "en:nuts",
+    "en:soybeans"
+   ],
+   "brands": "Quaker",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:mueslis",
+    "en:Cereales"
+   ],
+   "code": "7802000017803",
+   "completeness": 0.7875,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "c",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/200/001/7803/front_es.24.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil",
+    "en:non-vegan",
+    "en:maybe-vegetarian"
+   ],
+   "last_modified_t": 1779808907,
+   "nova_group": 4,
+   "nutriments": {
+    "energy-kcal_100g": 371,
+    "energy_100g": 1392.6,
+    "fiber_100g": 0,
+    "proteins_100g": 10,
+    "salt_100g": 0.15,
+    "saturated-fat_100g": 2.3,
+    "sodium_100g": 0.059,
+    "sugars_100g": 6.9
+   },
+   "nutriscore_grade": "c",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Granola Avena, Almendras y Miel",
+   "product_name_es": "Granola Avena, Almendras y Miel",
+   "product_quantity": 320,
+   "product_quantity_unit": "g",
+   "quantity": "320 g",
+   "traces_tags": [
+    "en:gluten",
+    "en:milk",
+    "en:nuts",
+    "en:soybeans",
+    "en:sulphur-dioxide-and-sulphites"
+   ]
+  },
+  {
+   "allergens_tags": [],
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals"
+   ],
+   "code": "7804646450624",
+   "completeness": 0.2,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "d",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/464/645/0624/front_es.3.400.jpg",
+   "labels_tags": [
+    "en:no-gluten",
+    "en:no-colorings"
+   ],
+   "last_modified_t": 1779552177,
+   "nutriscore_grade": "unknown",
+   "traces_tags": [],
+   "nutriments": {}
+  },
+  {
+   "allergens_tags": [
+    "en:gluten",
+    "en:milk",
+    "es:Avena"
+   ],
+   "brands": "Cerelac, Nestlé",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:baby-foods",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:from-6-months",
+    "en:main-meals-for-babies",
+    "en:instant-cereal-powder-to-be-reconstituted-for-baby-from-6-months"
+   ],
+   "code": "7613032269586",
+   "completeness": 1.1,
+   "countries_tags": [
+    "en:bolivia",
+    "en:chile",
+    "en:spain"
+   ],
+   "ecoscore_grade": "unknown",
+   "generic_name": "cereal instantáneo a base de 5 cereales con leche.",
+   "generic_name_es": "cereal instantáneo a base de 5 cereales con leche.",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/761/303/226/9586/front_es.61.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:may-contain-palm-oil",
+    "en:non-vegan",
+    "en:vegetarian-status-unknown"
+   ],
+   "labels_tags": [
+    "es:Con probiótico"
+   ],
+   "last_modified_t": 1778255242,
+   "nova_group": 4,
+   "nutriments": {},
+   "nutriscore_grade": "not-applicable",
+   "nutrition_data_prepared": "on",
+   "nutrition_data_prepared_per": "100ml",
+   "product_name": "Cerelac 5 Cereales y leche",
+   "product_name_es": "Cerelac 5 Cereales y leche",
+   "product_quantity": 400,
+   "product_quantity_unit": "g",
+   "quantity": "400 g",
+   "stores_tags": [
+    "Amarket",
+    "FSA",
+    "Farmacias Chávez",
+    "Farmacorp"
+   ],
+   "traces_tags": [
+    "en:soybeans"
+   ]
+  },
+  {
+   "allergens_tags": [],
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:chocolate-cereals"
+   ],
+   "code": "7802215168895",
+   "completeness": 0.375,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "d",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/221/516/8895/front_es.9.400.jpg",
+   "labels_tags": [
+    "es:sistema-de-etiquetado-frontal-de-alimentos-y-bebidas",
+    "es:exceso-grasas-saturadas"
+   ],
+   "last_modified_t": 1777429029,
+   "nutriments": {
+    "energy-kcal_100g": 119,
+    "energy_100g": 507.6,
+    "fiber_100g": 0.9,
+    "proteins_100g": 1.8,
+    "salt_100g": 0.125,
+    "saturated-fat_100g": 1.2,
+    "sodium_100g": 0.05,
+    "sugars_100g": 10.2
+   },
+   "nutriscore_grade": "c",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Mono balls",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [
+    "en:milk",
+    "en:nuts",
+    "en:soybeans"
+   ],
+   "brands": "Enlinea",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:mueslis",
+    "en:Cereales"
+   ],
+   "code": "7804000002759",
+   "completeness": 0.675,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "c",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/400/000/2759/front_es.6.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-free",
+    "en:non-vegan",
+    "en:vegetarian-status-unknown"
+   ],
+   "labels_tags": [
+    "en:no-added-sugar"
+   ],
+   "last_modified_t": 1777383370,
+   "nova_group": 4,
+   "nutriments": {
+    "energy-kcal_100g": 459,
+    "energy_100g": 1543.6,
+    "fiber_100g": 0,
+    "proteins_100g": 22,
+    "salt_100g": 0.38,
+    "saturated-fat_100g": 1.8,
+    "sodium_100g": 0.15,
+    "sugars_100g": 1
+   },
+   "nutriscore_grade": "a",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Granola de Proteína Almendras y Coco",
+   "product_name_es": "Granola de Proteína Almendras y Coco",
+   "product_quantity": 300,
+   "product_quantity_unit": "g",
+   "quantity": "300g",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [
+    "en:gluten",
+    "en:milk",
+    "en:nuts",
+    "en:peanuts",
+    "en:soybeans"
+   ],
+   "brands": "Costa",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals"
+   ],
+   "code": "7802215168970",
+   "completeness": 0.775,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "d",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/221/516/8970/front_en.12.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-free",
+    "en:non-vegan",
+    "en:vegetarian-status-unknown"
+   ],
+   "labels_tags": [
+    "en:high-in-calories",
+    "en:high-in-saturated-fats",
+    "en:high-in-sugars",
+    "en:pefc"
+   ],
+   "last_modified_t": 1777217017,
+   "nova_group": 4,
+   "nutriments": {
+    "energy-kcal_100g": 396,
+    "energy_100g": 1702,
+    "fiber_100g": 3.5,
+    "proteins_100g": 6,
+    "salt_100g": 0.3625,
+    "saturated-fat_100g": 4.3,
+    "sodium_100g": 0.145,
+    "sugars_100g": 34
+   },
+   "nutriscore_grade": "d",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Cereal Mono Rolls de Costa",
+   "product_name_es": "Mono Rolls",
+   "product_quantity": 400,
+   "product_quantity_unit": "g",
+   "quantity": "400g",
+   "traces_tags": [
+    "en:milk",
+    "en:nuts",
+    "en:soybeans"
+   ]
+  },
+  {
+   "allergens_tags": [],
+   "brands": "Kellogs",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals"
+   ],
+   "code": "7702103127693",
+   "completeness": 0.8,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "c",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/770/210/312/7693/front_es.3.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-free",
+    "en:maybe-vegan",
+    "en:maybe-vegetarian"
+   ],
+   "labels_tags": [
+    "en:high-in-calories",
+    "en:high-in-sugars"
+   ],
+   "last_modified_t": 1776953325,
+   "nova_group": 3,
+   "nutriments": {
+    "energy-kcal_100g": 375,
+    "energy_100g": 1624,
+    "fiber_100g": 1.8,
+    "proteins_100g": 3.9,
+    "salt_100g": 0.9,
+    "saturated-fat_100g": 0.1,
+    "sodium_100g": 0.361,
+    "sugars_100g": 41
+   },
+   "nutriscore_grade": "e",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Zucaritas",
+   "product_name_es": "Zucaritas",
+   "product_quantity": 30,
+   "product_quantity_unit": "g",
+   "quantity": "30g",
+   "traces_tags": [
+    "en:gluten",
+    "en:soybeans"
+   ]
+  },
+  {
+   "allergens_tags": [
+    "en:gluten",
+    "en:sulphur-dioxide-and-sulphites"
+   ],
+   "brands": "Granix",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:bran",
+    "en:cereal-brans",
+    "en:wheat-brans",
+    "en:oat-brans"
+   ],
+   "code": "7790045823094",
+   "completeness": 0.9,
+   "countries_tags": [
+    "en:argentina",
+    "en:chile",
+    "en:paraguay",
+    "en:spain",
+    "en:uruguay"
+   ],
+   "ecoscore_grade": "a",
+   "generic_name": "",
+   "generic_name_es": "",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/779/004/582/3094/front_es.22.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-free",
+    "en:vegan-status-unknown",
+    "en:vegetarian-status-unknown"
+   ],
+   "labels_tags": [
+    "en:low-or-no-sodium",
+    "en:low-sodium"
+   ],
+   "last_modified_t": 1776895749,
+   "nova_group": 4,
+   "nutriments": {
+    "energy-kcal_100g": 296.666666666667,
+    "energy_100g": 1393,
+    "fiber_100g": 15,
+    "proteins_100g": 14,
+    "salt_100g": 0.25,
+    "saturated-fat_100g": 0.3,
+    "sodium_100g": 0.1
+   },
+   "nutriscore_grade": "unknown",
+   "nutrition_data": "on",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Fibra Total 4 Fibras",
+   "product_name_es": "Fibra Total 4 Fibras",
+   "product_quantity": 250,
+   "product_quantity_unit": "g",
+   "quantity": "250 g",
+   "stores_tags": [],
+   "traces_tags": [
+    "en:milk",
+    "en:nuts",
+    "en:peanuts",
+    "en:soybeans"
+   ]
+  },
+  {
+   "allergens_tags": [],
+   "brands": "Quajer",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:flakes",
+    "en:cereal-flakes",
+    "en:rolled-flakes",
+    "en:rolled-oats"
+   ],
+   "code": "7802000014949",
+   "completeness": 0.475,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "b",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/200/001/4949/front_en.4.400.jpg",
+   "last_modified_t": 1776809982,
+   "nutriments": {
+    "energy-kcal_100g": 402,
+    "energy_100g": 1734.95,
+    "fiber_100g": 9.71,
+    "proteins_100g": 13.1,
+    "salt_100g": 0,
+    "saturated-fat_100g": 1.4,
+    "sodium_100g": 0,
+    "sugars_100g": 1.2
+   },
+   "nutriscore_grade": "a",
+   "nutrition_data": "on",
+   "nutrition_data_per": "100g",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Avena",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [],
+   "brands": "La Fuente Natural",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals",
+    "en:flakes",
+    "en:cereal-flakes",
+    "en:rolled-flakes",
+    "en:rolled-oats"
+   ],
+   "code": "7803515020005",
+   "completeness": 0.675,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "b",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/780/351/502/0005/front_es.3.400.jpg",
+   "ingredients_analysis_tags": [
+    "en:palm-oil-free",
+    "en:vegan",
+    "en:vegetarian"
+   ],
+   "labels_tags": [
+    "en:no-additives"
+   ],
+   "last_modified_t": 1776746258,
+   "nova_group": 1,
+   "nutriments": {
+    "energy-kcal_100g": 384,
+    "energy_100g": 1746,
+    "fiber_100g": 9,
+    "proteins_100g": 14.3333333333333,
+    "salt_100g": 0.0266666666666667,
+    "saturated-fat_100g": 1.33333333333333,
+    "sodium_100g": 0.0106666666666667,
+    "sugars_100g": 1.66666666666667
+   },
+   "nutriments_estimated": {
+    "alcohol_100g": 0,
+    "beta-carotene_100g": 0,
+    "calcium_100g": 0.0843,
+    "cholesterol_100g": 0,
+    "copper_100g": 0.0003,
+    "fructose_100g": 0,
+    "galactose_100g": 0,
+    "glucose_100g": 0,
+    "iodine_100g": 5e-07,
+    "iron_100g": 0.00405,
+    "lactose_100g": 0,
+    "magnesium_100g": 0.148,
+    "maltose_100g": 0,
+    "manganese_100g": 0.00472,
+    "pantothenic-acid_100g": 0.00131,
+    "phosphorus_100g": 0.422,
+    "phylloquinone_100g": 2e-06,
+    "polyols_100g": 0,
+    "potassium_100g": 0.377,
+    "selenium_100g": 3.05e-06,
+    "starch_100g": 56.9,
+    "sucrose_100g": 0.97,
+    "vitamin-a_100g": 0,
+    "vitamin-b12_100g": 0,
+    "vitamin-b1_100g": 0.00043,
+    "vitamin-b2_100g": 0.00014,
+    "vitamin-b6_100g": 0.00012,
+    "vitamin-b9_100g": 3.96e-05,
+    "vitamin-c_100g": 0,
+    "vitamin-d_100g": 0,
+    "vitamin-e_100g": 0.00059,
+    "vitamin-pp_100g": 0.00096,
+    "water_100g": 10.1,
+    "zinc_100g": 0.00333
+   },
+   "nutriscore_grade": "a",
+   "nutrition_data": "on",
+   "nutrition_data_per": "100g",
+   "nutrition_data_prepared_per": "100g",
+   "product_name": "Avena Integral",
+   "product_name_es": "Avena Integral",
+   "product_quantity": 500,
+   "product_quantity_unit": "g",
+   "quantity": "500g",
+   "traces_tags": []
+  },
+  {
+   "allergens_tags": [],
+   "brands": "Nestlé",
+   "categories_tags": [
+    "en:plant-based-foods-and-beverages",
+    "en:plant-based-foods",
+    "en:breakfasts",
+    "en:cereals-and-potatoes",
+    "en:cereals-and-their-products",
+    "en:breakfast-cereals"
+   ],
+   "code": "7613287193834",
+   "completeness": 0.5625,
+   "countries_tags": [
+    "en:chile"
+   ],
+   "ecoscore_grade": "c",
+   "image_front_url": "https://images.openfoodfacts.org/images/products/761/328/719/3834/front_es.4.400.jpg",
+   "last_modified_t": 1776745494,
+   "nutriscore_grade": "unknown",
+   "product_name": "trix",
+   "product_name_es": "trix",
+   "product_quantity": 220,
+   "product_quantity_unit": "g",
+   "quantity": "220g",
+   "traces_tags": [],
+   "nutriments": {}
+  }
+ ]
+}
