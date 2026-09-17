@@ -1,0 +1,253 @@
+.sidebar {
+  --background: var(--sc-ink);
+  --width: 264px;
+
+  ion-content {
+    --background: var(--sc-ink);
+  }
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 100%;
+  padding: 28px 18px 22px;
+  color: #c9cbe0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px 22px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--sc-primary), var(--sc-mint));
+  color: #fff;
+  font-size: 20px;
+}
+
+.section {
+  padding: 12px 10px 6px;
+  color: #8f93b3;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--sc-touch-target);
+  padding: 0 12px;
+  border-radius: 12px;
+  color: #c9cbe0;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+
+  ion-icon {
+    font-size: 20px;
+    color: #a6a9c4;
+  }
+
+  span:not(.badge) {
+    flex: 1;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  &.active {
+    background: var(--sc-gradient-button);
+    box-shadow: 0 8px 18px rgba(91, 61, 245, 0.35);
+    color: #fff;
+    font-weight: 700;
+
+    ion-icon {
+      color: #fff;
+    }
+  }
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: var(--sc-lime);
+  color: var(--sc-ink);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.data-card {
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+
+  strong {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--sc-lime);
+    font-size: 12px;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: var(--sc-lavender);
+    font-size: 11px;
+    line-height: 1.4;
+  }
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 6px 0;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--sc-lime);
+  color: var(--sc-ink);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.who {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+
+  strong {
+    overflow: hidden;
+    color: #fff;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  small {
+    color: #8f93b3;
+    font-size: 11px;
+  }
+}
+
+.logout {
+  display: grid;
+  place-items: center;
+  width: var(--sc-touch-target);
+  height: var(--sc-touch-target);
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #a6a9c4;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.login {
+  display: grid;
+  place-items: center;
+  min-height: var(--sc-touch-target);
+  margin-top: 12px;
+  border-radius: 12px;
+  background: var(--sc-lime);
+  color: var(--sc-ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+#sc-main {
+  display: flex;
+  flex-direction: column;
+  background: var(--sc-bg);
+}
+
+.offline {
+  padding: 8px 12px 0;
+  padding-top: calc(8px + var(--ion-safe-area-top, 0px));
+}
+
+.outlet {
+  position: relative;
+  flex: 1;
+}
+
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 8px calc(10px + var(--ion-safe-area-bottom, 0px));
+  background: #fff;
+  box-shadow: 0 -4px 24px rgba(42, 27, 143, 0.08);
+
+  a {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 3px;
+    min-width: 72px;
+    min-height: var(--sc-touch-target);
+    color: var(--sc-muted);
+    font-size: 11px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .pill {
+    display: grid;
+    place-items: center;
+    padding: 5px 18px;
+    border-radius: 99px;
+    font-size: 22px;
+  }
+
+  a.active {
+    color: var(--sc-primary);
+    font-weight: 700;
+
+    .pill {
+      background: var(--sc-soft-violet);
+    }
+  }
+
+  .dot {
+    position: absolute;
+    top: 0;
+    right: 12px;
+    padding: 0 6px;
+    border-radius: 99px;
+    background: var(--sc-lime);
+    color: var(--sc-ink);
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  @media (min-width: 992px) {
+    display: none;
+  }
+}
