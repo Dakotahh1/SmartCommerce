@@ -1,0 +1,15 @@
+node_modules
+dist
+coverage
+.env
+.env.*
+!.env.example
+test
+**/*.spec.ts
+src/test-utils
+Dockerfile
+.dockerignore
+README.md
+.oxlintrc.json
+.prettierrc
+vitest.config*.ts
