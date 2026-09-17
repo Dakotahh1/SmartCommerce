@@ -42,6 +42,12 @@ step() { printf '\n\033[1m▸ %s\033[0m\n' "$*"; }
 
 pass() { PASSED=$((PASSED + 1)); green "  ✔ $*"; }
 fail() { FAILED=$((FAILED + 1)); red "  ✘ $*"; }
+# check <etiqueta> <comando...>: registra éxito o fallo según el código de salida del comando
+check() {
+  local label="$1"
+  shift
+  if "$@"; then pass "$label"; else fail "$label"; fi
+}
 
 # json <archivo> <expresión python sobre `d`>
 json() { PYTHONIOENCODING=utf-8 "$PY" -c "import json,sys; d=json.load(open(sys.argv[1], encoding='utf-8')); print($2)" "$1"; }
@@ -79,9 +85,9 @@ if [[ "${SKIP_GATEWAY:-false}" != "true" ]]; then
   expect_status 200 "$(request GET "$BASE_URL/healthz")" "Gateway /healthz"
   code="$(request GET "$BASE_URL/app/inicio")"
   expect_status 200 "$code" "Ruta SPA /app/inicio (fallback a index.html)"
-  grep -qi '<ion-app\|<app-root' "$TMP/body" && pass "index.html contiene la app Angular/Ionic" || fail "index.html no contiene la app"
-  grep -qi '^content-security-policy:.*script-src .self.' "$TMP/headers" && pass "Cabecera CSP presente" || fail "Falta la cabecera Content-Security-Policy"
-  grep -qi '^x-frame-options: DENY' "$TMP/headers" && pass "X-Frame-Options: DENY" || fail "Falta X-Frame-Options"
+  check "index.html contiene la app Angular/Ionic" grep -qi '<ion-app\|<app-root' "$TMP/body"
+  check "Cabecera Content-Security-Policy con script-src 'self'" grep -qi "^content-security-policy:.*script-src 'self'" "$TMP/headers"
+  check "Cabecera X-Frame-Options: DENY" grep -qi '^x-frame-options: DENY' "$TMP/headers"
   expect_status 404 "$(request GET "$BASE_URL/.env")" "Archivos ocultos bloqueados (/.env)"
   expect_status 200 "$(request GET "$BASE_URL/manifest.webmanifest")" "Manifest PWA"
 fi
@@ -90,7 +96,7 @@ fi
 step "Salud de servicios (GET /api/health)"
 request GET "$API_URL/health" >/dev/null
 status="$(json "$TMP/body" "d['status']")"
-[[ "$(json "$TMP/body" "d['checks']['database']['status']")" == "up" ]] && pass "NestJS → PostgreSQL: up" || fail "PostgreSQL no disponible"
+check "NestJS → PostgreSQL: up" test "$(json "$TMP/body" "d['checks']['database']['status']")" = "up"
 if [[ "$(json "$TMP/body" "d['checks']['smartmatch']['status']")" == "up" ]]; then
   pass "NestJS → FastAPI (SmartMatch): up"
 else
@@ -124,7 +130,7 @@ expect_status 401 "$(request GET "$API_URL/v1/recommendations")" "Sin token → 
 expect_status 401 "$(request GET "$API_URL/v1/auth/me" "token-invalido.abc.def")" "Token manipulado → 401"
 expect_status 403 "$(request GET "$API_URL/v1/admin/ingestions" "$token")" "Usuario sin rol admin → 403"
 expect_status 400 "$(request POST "$API_URL/v1/auth/register" "" '{"email":"no-es-correo","password":"123","displayName":"<script>"}')" "Datos inválidos → 400"
-[[ "$(json "$TMP/body" "d.get('code')")" == "VALIDATION_ERROR" ]] && pass "Formato de error uniforme (code=VALIDATION_ERROR)" || fail "Formato de error inesperado: $(head -c 200 "$TMP/body")"
+check "Formato de error uniforme (code=VALIDATION_ERROR)" test "$(json "$TMP/body" "d.get('code')")" = "VALIDATION_ERROR"
 expect_status 400 "$(request POST "$API_URL/v1/auth/login" "" "{\"email\":\"$email\",\"password\":\"x\",\"extra\":\"campo-no-permitido\"}")" "Campos no permitidos → 400 (whitelist)"
 expect_status 401 "$(request POST "$API_URL/v1/auth/login" "" "{\"email\":\"$email\",\"password\":\"Clave-incorrecta-1\"}")" "Contraseña incorrecta → 401"
 
@@ -143,7 +149,7 @@ if [[ "${SMOKE_INGEST:-false}" == "true" ]]; then
       request GET "$API_URL/v1/recommendations?limit=5" "$token" >/dev/null
       count="$(json "$TMP/body" "len(d.get('items', []))")"
       degraded="$(json "$TMP/body" "d.get('degraded')")"
-      [[ "$count" -gt 0 && "$degraded" == "False" ]] && pass "Recomendaciones personalizadas desde FastAPI ($count ítems, degraded=false)" || fail "Recomendaciones: $count ítems, degraded=$degraded"
+      check "Recomendaciones desde FastAPI ($count ítems, degraded=$degraded)" test "$count" -gt 0 -a "$degraded" = "False"
       request GET "$API_URL/v1/products?limit=2" >/dev/null
       ids="$(json "$TMP/body" "json.dumps([p['id'] for p in d['items']][:2])")"
       expect_status 200 "$(request POST "$API_URL/v1/comparisons" "$token" "{\"productIds\":$ids}")" "POST /v1/comparisons"
