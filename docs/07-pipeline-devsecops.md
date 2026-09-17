@@ -31,16 +31,17 @@ flowchart LR
     subgraph s3["3 · Contenedores"]
         im["Build de 3 imágenes<br/>no root · Trivy · SBOM"]
     end
-    subgraph s4["4 · Staging efímero"]
-        st["Docker Compose<br/>humo · aislamiento de red<br/>resiliencia"]
+    subgraph s4["4 · Integración e infraestructura"]
+        st["Staging efímero<br/>Docker Compose · humo<br/>aislamiento · resiliencia"]
+        tf["Terraform<br/>fmt · validate · plan"]
     end
     qg{{"5 · Quality gate"}}
     pub["6 · Publicación GHCR<br/>(main / tags)"]
 
-    gl & sg & cl --> fe & be & py
+    gl & sg & cl --> fe & be & py & tf
     fe --> an
     fe & be & py --> im --> st
-    st & an --> qg --> pub
+    st & an & tf --> qg --> pub
 ```
 
 | # | Job | Controles | Falla si… |
@@ -54,6 +55,7 @@ flowchart LR
 | 2 | **Android** | Build `android` + `cap sync` + `./gradlew assembleDebug`; publica el APK como artefacto | La app no compila para Android |
 | 3 | **Imágenes** (matriz ×3) | Build con Buildx y caché · verificación de usuario **no root** · Trivy (vulnerabilidades con parche) · SBOM CycloneDX · reporte JSON | Imagen como root o vulnerabilidad CRITICAL/HIGH con parche |
 | 4 | **Staging efímero** | `docker compose up` con **las mismas imágenes escaneadas** · [`smoke-test.sh`](../scripts/smoke-test.sh) · [`network-isolation-test.sh`](../scripts/network-isolation-test.sh) · [`resilience-test.sh`](../scripts/resilience-test.sh) · logs como artefacto si falla · `down -v` siempre | Cualquier prueba falla |
+| 4 | **Terraform** | `terraform fmt -check` · `init -lockfile=readonly` + `validate` de `dev` y `staging` · `plan` de staging contra el daemon Docker del runner con secretos del ambiente `staging` (o efímeros); plan legible como artefacto | Formato, validación o plan inválidos (ver [09](09-staging-terraform.md)) |
 | 5 | **Quality gate** | Evalúa el resultado de todas las etapas y publica una tabla en el resumen | Alguna etapa no terminó en `success` (incluye `skipped` por un fallo previo) |
 | 6 | **Publicación** | `docker push` a `ghcr.io/<owner>/smartcommerce-<servicio>` con `packages: write` solo en este job | — |
 
@@ -85,6 +87,8 @@ Configurar en **Settings › Branches › Add branch ruleset** (o *branch protec
 Con esto ningún cambio llega a `main` si falla una prueba, aparece un secreto, hay una vulnerabilidad bloqueante o el staging efímero no pasa.
 
 ## 7.5 Evidencia de bloqueo
+
+**Evidencia real (PR #6):** la primera ejecución del pipeline ([run 35197922556](https://github.com/Dakotahh1/SmartCommerce/actions/runs/35197922556)) fue **bloqueada por Trivy** al detectar vulnerabilidades CRITICAL/HIGH con parche disponible en las imágenes base (OpenSSL en Alpine; `perl-base`, `gzip`, `pcre2` y `sqlite` en Debian; `msgpack` y `setuptools` vendorizados por pip). El staging efímero y la publicación quedaron omitidos y el quality gate falló. Tras aplicar los parches en los Dockerfiles, la [siguiente ejecución](https://github.com/Dakotahh1/SmartCommerce/actions/runs/35198504106) pasó todas las etapas (humo 29/29, aislamiento 12/12, resiliencia 9/9).
 
 Para la demostración se abre un PR que introduce un error deliberado; el pipeline lo detiene en la etapa correspondiente y el `Quality gate` queda en rojo, impidiendo el merge. Ejemplos reproducibles:
 
