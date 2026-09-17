@@ -87,7 +87,7 @@ Las pruebas de integración usan una base PostgreSQL de servicio del propio job 
 |---|---|
 | Base de datos | Superusuario solo para inicializar; rol `owner` solo para migraciones; la API usa `app` con DML y `statement_timeout` |
 | Contenedores | Usuarios sin privilegios (`node`, uid 10001, uid 101), `read_only`, `cap_drop: ALL`, `no-new-privileges`, límites de CPU/memoria |
-| Redes | Solo el gateway publica un puerto (ligado a `127.0.0.1` por defecto); `services` y `data` son internas; solo `python-service` tiene salida a Internet |
+| Redes | Solo el gateway publica un puerto (ligado a `127.0.0.1` por defecto); `api`, `services` y `data` son internas; solo `python-service` tiene salida a Internet (verificado por `scripts/network-isolation-test.sh`) |
 | Servicio Python | Endpoints `/v1/*` exigen `X-Internal-Token`; no es alcanzable desde el host |
 | GitHub Actions | `permissions: contents: read` por defecto; escritura de paquetes solo en el job de publicación; acciones fijadas por SHA; secretos por ambiente |
 | Aplicación | RBAC (`user`, `operator`, `admin`); el registro público nunca asigna roles elevados (`scripts/promote-user.sh` requiere acceso a la base de datos) |

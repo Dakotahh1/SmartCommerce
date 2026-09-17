@@ -70,13 +70,16 @@ Alineado con la Ley 19.628 sobre protección de la vida privada y la Ley 21.719 
 
 ## 6.6 Controles automáticos en el pipeline
 
+Detalle de etapas y evidencias en [07-pipeline-devsecops.md](07-pipeline-devsecops.md).
+
 | Control | Herramienta | Bloquea |
 |---|---|---|
-| Secretos en el repositorio | gitleaks | Sí |
-| Análisis estático (SAST) | Semgrep (TypeScript, Python, Docker, secretos) + Bandit + reglas de ESLint | Sí (severidad alta) |
-| Dependencias vulnerables | `npm audit --audit-level=critical`, `pip-audit` | Sí (críticas) |
-| Imágenes Docker | Trivy (vulnerabilidades CRITICAL con parche disponible) | Sí |
-| Dockerfiles | Hadolint | Sí (errores) |
+| Secretos en el repositorio (historial completo) | gitleaks (lista blanca mínima por valor exacto) | Sí, cualquier hallazgo |
+| Análisis estático (SAST) | Semgrep CE (OWASP Top 10, TypeScript, Node.js, Python, Dockerfile, GitHub Actions, secretos) + Bandit + reglas de seguridad de Ruff y ESLint | Sí (Semgrep `ERROR`, Bandit severidad media o superior) |
+| Dependencias vulnerables | `npm audit --audit-level=high`, `pip-audit` | Sí (altas y críticas) |
+| Imágenes Docker | Trivy (CRITICAL y HIGH con parche disponible) + SBOM CycloneDX + verificación de usuario no root | Sí |
+| Dockerfiles, scripts y workflows | Hadolint, ShellCheck, actionlint, `docker compose config` | Sí |
+| Integración en staging efímero | Pruebas de humo con controles negativos (401/403/400), aislamiento de red y resiliencia | Sí |
 | Infraestructura | `terraform fmt/validate/plan` | Sí |
 
 ## 6.7 Accesibilidad
