@@ -1,0 +1,208 @@
+<ion-content [fullscreen]="true">
+  @if (product(); as p) {
+    <header class="hero">
+      <div class="nav">
+        <button type="button" class="round" (click)="nav.back()" aria-label="Volver">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+        <div class="nav-right">
+          <button
+            type="button"
+            class="round"
+            (click)="addToCompare()"
+            aria-label="Agregar a la comparación"
+          >
+            <ion-icon name="swap-horizontal-outline"></ion-icon>
+          </button>
+          <button
+            type="button"
+            class="round fav"
+            (click)="toggleFavorite()"
+            [attr.aria-pressed]="favorite()"
+            [attr.aria-label]="favorite() ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+          >
+            <ion-icon [name]="favorite() ? 'heart' : 'heart-outline'"></ion-icon>
+          </button>
+        </div>
+      </div>
+      <app-product-thumb [name]="p.name" [imageUrl]="p.imageUrl" [size]="140" />
+    </header>
+
+    <main class="sheet">
+      <div class="title-row">
+        <div class="title">
+          <span class="sc-overline">{{ p.brand ?? 'Marca no informada' }} · EAN {{ p.gtin }}</span>
+          <h1>{{ p.name }}</h1>
+          <p class="sc-muted">
+            {{ p.quantityText ?? 'Cantidad no informada' }} · {{ priceText() }}
+          </p>
+        </div>
+        @if (scored(); as s) {
+          <div class="ring">
+            <app-match-ring [score]="s.score" [size]="64" />
+            <span>SmartMatch</span>
+          </div>
+        }
+      </div>
+
+      <section class="tiles" aria-label="Indicadores de calidad">
+        <div class="tile">
+          <span class="tile-label">Nutri-Score</span>
+          <app-nutri-score [grade]="p.nutriscoreGrade" />
+        </div>
+        <div class="tile">
+          <span class="tile-label">NOVA</span>
+          <span class="big" [class]="'big nova-' + (p.novaGroup ?? 'x')">{{
+            p.novaGroup ?? '?'
+          }}</span>
+          <small>{{ p.novaGroup ? novaLabels[p.novaGroup] : 'Sin dato' }}</small>
+        </div>
+        <div class="tile">
+          <span class="tile-label">Eco-Score</span>
+          <span class="big" [class]="'big grade-' + (p.ecoscoreGrade ?? 'x')">{{
+            p.ecoscoreGrade?.toUpperCase() ?? '?'
+          }}</span>
+          <small>{{ p.ecoscoreGrade ? 'Impacto ambiental' : 'Sin dato' }}</small>
+        </div>
+      </section>
+
+      @if (p.highInSeals.length) {
+        <section class="seals-box" aria-label="Sellos de advertencia">
+          <app-high-in-seals [seals]="p.highInSeals" [size]="58" />
+          <p>
+            Calculado con la Ley 20.606 a partir de los nutrientes por
+            {{ p.isBeverage ? '100 ml' : '100 g' }} (referencial).
+          </p>
+        </section>
+      } @else if (p.nutriments.sugars !== undefined && p.nutriments.sugars !== null) {
+        <app-status-banner
+          variant="success"
+          title="Sin sellos “ALTO EN”"
+          message="Calculado con la Ley 20.606 y nutrientes de la fuente (referencial)."
+        />
+      }
+
+      @if (scored(); as s) {
+        <section class="sc-card explain">
+          <div class="explain-head">
+            <h2>
+              <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon> Cómo calculamos tu
+              {{ s.score | number: '1.0-0' }}%
+            </h2>
+          </div>
+          <app-score-breakdown [breakdown]="s.breakdown" />
+          @if (s.warnings.length) {
+            <ul class="warnings">
+              @for (warning of s.warnings; track warning) {
+                <li>
+                  <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon> {{ warning }}
+                </li>
+              }
+            </ul>
+          }
+        </section>
+      }
+
+      <section class="grid-2">
+        <div class="sc-card">
+          <h2>Nutrientes</h2>
+          <dl class="nutrients">
+            @for (n of nutrients(); track n.label) {
+              <div>
+                <dt>{{ n.label }}</dt>
+                <dd>
+                  {{
+                    n.value === null || n.value === undefined
+                      ? '—'
+                      : (n.value | number: '1.0-1') + ' ' + n.unit
+                  }}
+                </dd>
+              </div>
+            }
+          </dl>
+        </div>
+        <div class="sc-card">
+          <h2>Dietas y alérgenos</h2>
+          <ul class="diet-list">
+            @for (d of diets(); track d.label) {
+              <li [class]="d.value === true ? 'yes' : d.value === false ? 'no' : 'unknown'">
+                <ion-icon
+                  [name]="
+                    d.value === true
+                      ? 'checkmark-circle-outline'
+                      : d.value === false
+                        ? 'close-circle-outline'
+                        : 'information-circle-outline'
+                  "
+                  aria-hidden="true"
+                ></ion-icon>
+                {{ d.label }}:
+                {{ d.value === true ? 'apto' : d.value === false ? 'no apto' : 'no verificado' }}
+              </li>
+            }
+          </ul>
+          <p class="allergens">
+            <strong>Contiene:</strong>
+            {{
+              p.allergens.length
+                ? p.allergens.map((a) => allergenLabels[a] ?? a).join(', ')
+                : 'sin alérgenos declarados'
+            }}
+          </p>
+        </div>
+      </section>
+
+      <section class="provenance" aria-label="Procedencia de los datos">
+        <ion-icon name="server-outline" aria-hidden="true"></ion-icon>
+        <div>
+          @for (source of p.provenance; track source.url) {
+            <p>
+              Fuente:
+              <a [href]="source.url" target="_blank" rel="noopener noreferrer">{{ source.name }}</a>
+              · actualizado {{ source.fetchedAt | date: 'dd-MM-yyyy' }} · Licencia
+              {{ source.license }}
+            </p>
+          } @empty {
+            <p>Procedencia no disponible.</p>
+          }
+          <p>
+            Completitud del registro en la fuente: {{ p.completeness * 100 | number: '1.0-0' }}%
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="actions">
+      <ion-button fill="outline" class="outline" (click)="addToCompare()">
+        <ion-icon slot="start" name="swap-horizontal-outline" aria-hidden="true"></ion-icon>Comparar
+      </ion-button>
+      <ion-button class="sc-primary grow" (click)="toggleFavorite()">
+        <ion-icon
+          slot="start"
+          [name]="favorite() ? 'heart' : 'heart-outline'"
+          aria-hidden="true"
+        ></ion-icon>
+        {{ favorite() ? 'En favoritos' : 'Guardar en favoritos' }}
+      </ion-button>
+    </footer>
+  } @else if (failed()) {
+    <main class="sc-page">
+      <app-status-banner
+        variant="degraded"
+        title="No encontramos este producto"
+        message="Puede que ya no esté en el catálogo o que no haya conexión."
+      />
+      <ion-button fill="outline" (click)="nav.navigateRoot('/app/explorar')"
+        >Volver a explorar</ion-button
+      >
+    </main>
+  } @else {
+    <main class="sc-page" aria-busy="true">
+      <ion-skeleton-text
+        [animated]="true"
+        style="height: 200px; border-radius: 24px"
+      ></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" style="width: 60%"></ion-skeleton-text>
+    </main>
+  }
+</ion-content>

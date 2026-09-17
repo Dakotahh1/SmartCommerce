@@ -1,0 +1,314 @@
+.hero {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: calc(14px + var(--ion-safe-area-top, 0px)) 20px 56px;
+  background: linear-gradient(135deg, var(--sc-soft-mint), var(--sc-soft-violet));
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 900px;
+}
+
+.nav-right {
+  display: flex;
+  gap: 8px;
+}
+
+.round {
+  display: grid;
+  place-items: center;
+  width: var(--sc-touch-target);
+  height: var(--sc-touch-target);
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(42, 27, 143, 0.08);
+  color: var(--sc-ink);
+  font-size: 20px;
+  cursor: pointer;
+
+  &.fav {
+    color: var(--sc-coral);
+  }
+}
+
+.sheet {
+  position: relative;
+  max-width: 900px;
+  margin: -30px auto 0;
+  padding: 22px 20px 120px;
+  border-radius: 28px 28px 0 0;
+  background: #fff;
+  display: grid;
+  gap: 16px;
+
+  @media (min-width: 992px) {
+    border-radius: 28px;
+    margin-bottom: 24px;
+    padding-bottom: 28px;
+  }
+}
+
+.title-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.title {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+  }
+}
+
+.ring {
+  display: grid;
+  justify-items: center;
+  color: var(--sc-primary);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tile {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 6px;
+  padding: 10px 6px;
+  border-radius: 16px;
+  background: var(--sc-bg);
+  text-align: center;
+
+  small {
+    color: var(--sc-slate);
+    font-size: 10px;
+  }
+}
+
+.tile-label {
+  color: var(--sc-slate);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.big {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #b9b4d6;
+  color: #fff;
+  font-weight: 800;
+}
+
+.nova-1,
+.grade-a {
+  background: var(--sc-grade-a);
+}
+
+.nova-2,
+.grade-b {
+  background: var(--sc-grade-b);
+}
+
+.grade-c {
+  background: var(--sc-grade-c);
+  color: var(--sc-ink);
+}
+
+.nova-3,
+.grade-d {
+  background: var(--sc-grade-d);
+}
+
+.nova-4,
+.grade-e {
+  background: var(--sc-grade-e);
+}
+
+.seals-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--sc-soft-amber);
+
+  p {
+    flex: 1;
+    min-width: 180px;
+    margin: 0;
+    color: #6b4600;
+    font-size: 12px;
+  }
+}
+
+.explain {
+  border: 1px solid var(--sc-line);
+  box-shadow: none;
+  display: grid;
+  gap: 12px;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 800;
+
+    ion-icon {
+      color: var(--sc-primary);
+    }
+  }
+}
+
+.warnings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  color: #6b4600;
+  font-size: 12px;
+}
+
+.grid-2 {
+  display: grid;
+  gap: 12px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sc-card {
+    border: 1px solid var(--sc-line);
+    box-shadow: none;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 800;
+  }
+}
+
+.nutrients {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+.diet-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .yes {
+    color: var(--sc-mint-dark);
+  }
+
+  .no {
+    color: #b42318;
+  }
+
+  .unknown {
+    color: var(--sc-slate);
+  }
+}
+
+.allergens {
+  margin: 10px 0 0;
+  font-size: 13px;
+}
+
+.provenance {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--sc-bg);
+  color: var(--sc-slate);
+  font-size: 12px;
+
+  p {
+    margin: 0 0 3px;
+  }
+
+  a {
+    color: var(--sc-primary);
+    font-weight: 700;
+  }
+}
+
+.actions {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+  padding: 12px 20px calc(12px + var(--ion-safe-area-bottom, 0px));
+  background: #fff;
+  box-shadow: 0 -6px 24px rgba(42, 27, 143, 0.1);
+
+  .grow {
+    flex: 1;
+  }
+
+  .outline {
+    --border-radius: 16px;
+    --color: var(--sc-ink);
+    --border-color: var(--sc-line);
+    min-height: 52px;
+  }
+
+  @media (min-width: 992px) {
+    position: static;
+    max-width: 900px;
+    margin: 0 auto 32px;
+    border-radius: 20px;
+  }
+}

@@ -1,0 +1,144 @@
+<ion-content [fullscreen]="true">
+  <main class="sc-page admin">
+    <header class="head">
+      <div>
+        <h1>Ingesta de datos</h1>
+        <p class="sc-muted">Fuente: Open Food Facts (API oficial, ODbL) · país: Chile</p>
+      </div>
+      <span class="restricted"
+        ><ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon> Solo administradores y
+        operadores</span
+      >
+    </header>
+
+    <section class="sc-card">
+      <h2>Nueva ingesta</h2>
+      <form [formGroup]="form" (ngSubmit)="start()" class="form" novalidate>
+        <label>
+          <span>Categoría</span>
+          <select formControlName="category">
+            @for (c of categories; track c.slug) {
+              <option [value]="c.slug">{{ c.label }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>Productos por página (máx. 100)</span>
+          <input type="number" formControlName="pageSize" min="1" max="100" />
+        </label>
+        <label>
+          <span>Página</span>
+          <input type="number" formControlName="page" min="1" max="1000" />
+        </label>
+        <ion-button type="submit" class="sc-primary" [disabled]="running()">
+          @if (running()) {
+            <ion-spinner name="crescent" aria-label="Ejecutando ingesta"></ion-spinner>
+          } @else {
+            <ion-icon slot="start" name="cloud-download-outline" aria-hidden="true"></ion-icon>
+            Ejecutar ingesta
+          }
+        </ion-button>
+      </form>
+      <p class="note">
+        La fuente limita las búsquedas por minuto; el servicio respeta ese límite y reintenta de
+        forma acotada.
+      </p>
+      @if (error()) {
+        <app-status-banner variant="degraded" title="La ingesta falló" [message]="error()" />
+      }
+    </section>
+
+    @if (lastRun(); as run) {
+      <section class="kpis" aria-label="Resultado de la última ingesta">
+        <div class="kpi">
+          <span>Obtenidos</span><strong>{{ run.counts.fetched }}</strong>
+        </div>
+        <div class="kpi">
+          <span>Registros válidos</span
+          ><strong>{{ (run.qualityReport?.validRatio ?? 0) * 100 | number: '1.1-1' }} %</strong>
+        </div>
+        <div class="kpi">
+          <span>Duplicados</span
+          ><strong>{{ (run.qualityReport?.duplicateRatio ?? 0) * 100 | number: '1.1-1' }} %</strong>
+        </div>
+        <div class="kpi">
+          <span>Nuevos / actualizados</span
+          ><strong>{{ run.counts.inserted }} / {{ run.counts.updated }}</strong>
+        </div>
+        <div class="kpi">
+          <span>Sin cambios</span><strong>{{ run.counts.unchanged }}</strong>
+        </div>
+      </section>
+      @if (run.qualityReport?.fieldCoverage; as coverage) {
+        <section class="sc-card">
+          <h2>Cobertura de campos</h2>
+          <ul class="coverage">
+            @for (entry of coverage | keyvalue; track entry.key) {
+              <li>
+                <span>{{ entry.key }}</span>
+                <div class="track">
+                  <div class="fill" [style.width.%]="entry.value * 100"></div>
+                </div>
+                <strong>{{ entry.value * 100 | number: '1.0-0' }}%</strong>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    }
+
+    <section class="sc-card">
+      <div class="table-head">
+        <h2>Ejecuciones</h2>
+        <ion-button fill="clear" size="small" (click)="refresh()"
+          ><ion-icon slot="start" name="refresh-outline"></ion-icon>Actualizar</ion-button
+        >
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Inicio</th>
+              <th scope="col">Consulta</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Obtenidos</th>
+              <th scope="col">Válidos</th>
+              <th scope="col">Nuevos</th>
+              <th scope="col">Rechazados</th>
+              <th scope="col">Duración</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (run of runs(); track run.id) {
+              <tr>
+                <td>{{ run.startedAt | date: 'dd-MM HH:mm' }}</td>
+                <td>{{ run.params['category'] ?? 'todas' }} · p{{ run.params['page'] ?? 1 }}</td>
+                <td>
+                  <span
+                    class="status"
+                    [class]="'status ' + run.status"
+                    [attr.title]="run.errorMessage"
+                    >{{ statusLabel(run.status) }}</span
+                  >
+                </td>
+                <td>{{ run.counts.fetched }}</td>
+                <td>{{ run.counts.valid }}</td>
+                <td>{{ run.counts.inserted }}</td>
+                <td [class.bad]="run.counts.rejected > 0">{{ run.counts.rejected }}</td>
+                <td>
+                  {{
+                    run.durationMs === null ? '—' : (run.durationMs / 1000 | number: '1.1-1') + ' s'
+                  }}
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="8">Aún no hay ejecuciones.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</ion-content>

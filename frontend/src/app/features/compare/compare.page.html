@@ -1,0 +1,182 @@
+<ion-content [fullscreen]="true">
+  <main class="sc-page compare">
+    <header class="head">
+      <div>
+        <h1>Comparar productos</h1>
+        <p class="sc-muted">
+          {{ store.count() }} de 4 productos ·
+          {{
+            auth.isAuthenticated()
+              ? 'según tus preferencias'
+              : 'ranking general (inicia sesión para personalizar)'
+          }}
+        </p>
+      </div>
+      @if (store.count()) {
+        <ion-button fill="clear" color="medium" (click)="store.clear()">Vaciar</ion-button>
+      }
+    </header>
+
+    @if (store.count() < 2) {
+      <section class="sc-card empty">
+        <span class="icon" aria-hidden="true"
+          ><ion-icon name="swap-horizontal-outline"></ion-icon
+        ></span>
+        <h2>Agrega al menos 2 productos</h2>
+        <p class="sc-muted">
+          Usa el botón «Comparar» en Explorar, en tus recomendaciones o en el detalle de un
+          producto.
+        </p>
+        <ion-button class="sc-primary" routerLink="/app/explorar">Explorar productos</ion-button>
+      </section>
+      @if (store.count() === 1) {
+        <p class="sc-muted">Seleccionado: {{ store.items()[0].name }}</p>
+      }
+    } @else if (!network.online()) {
+      <app-status-banner
+        variant="offline"
+        title="Comparar requiere conexión"
+        message="Tus productos seleccionados se mantienen guardados."
+      />
+    } @else if (loading() && !result()) {
+      <ion-skeleton-text
+        [animated]="true"
+        style="height: 260px; border-radius: 24px"
+      ></ion-skeleton-text>
+    } @else if (failed()) {
+      <app-status-banner
+        variant="degraded"
+        title="No pudimos comparar"
+        message="Intenta nuevamente en unos segundos."
+      />
+      <ion-button fill="outline" (click)="retry()"
+        ><ion-icon slot="start" name="refresh-outline"></ion-icon>Reintentar</ion-button
+      >
+    } @else if (result(); as r) {
+      @if (r.degraded) {
+        <app-status-banner variant="degraded" title="Comparación básica" [message]="r.notice" />
+      }
+
+      <section class="table-wrap" aria-label="Tabla comparativa">
+        <table>
+          <caption class="visually-hidden">
+            Comparación de productos por criterio
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col" class="crit-col"><span class="sc-overline">Criterio</span></th>
+              @for (item of items(); track item.gtin) {
+                <th scope="col" [class.winner]="isWinner(item)">
+                  <div class="product-head">
+                    @if (isWinner(item)) {
+                      <span class="best"
+                        ><ion-icon name="trophy-outline" aria-hidden="true"></ion-icon> Mejor para
+                        ti</span
+                      >
+                    } @else if (!item.eligible) {
+                      <span class="not-eligible">No cumple restricciones</span>
+                    } @else {
+                      <span class="spacer"></span>
+                    }
+                    @if (item.product) {
+                      <app-product-thumb
+                        [name]="item.product.name"
+                        [imageUrl]="item.product.imageUrl"
+                        [size]="56"
+                      />
+                    }
+                    <button type="button" class="name" (click)="open(item)">{{ item.name }}</button>
+                    <small>{{ item.product?.brand ?? '' }}</small>
+                    <app-match-ring [score]="item.score" [size]="46" />
+                    <button
+                      type="button"
+                      class="remove"
+                      (click)="remove(item.productId)"
+                      [attr.aria-label]="'Quitar ' + item.name + ' de la comparación'"
+                    >
+                      <ion-icon name="close-outline" aria-hidden="true"></ion-icon> Quitar
+                    </button>
+                  </div>
+                </th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row" class="crit-col">Nutri-Score · NOVA · Eco</th>
+              @for (item of items(); track item.gtin) {
+                <td>
+                  <div class="badges">
+                    <app-grade-badge
+                      label="Nutri"
+                      [value]="item.product?.nutriscoreGrade ?? null"
+                    />
+                    <app-grade-badge
+                      label="NOVA"
+                      [value]="item.product?.novaGroup ?? null"
+                      kind="nova"
+                    />
+                    <app-grade-badge label="Eco" [value]="item.product?.ecoscoreGrade ?? null" />
+                  </div>
+                </td>
+              }
+            </tr>
+            @for (row of rows; track row.criterion) {
+              <tr>
+                <th scope="row" class="crit-col">
+                  {{ row.label }}
+                  <small>peso {{ r.weightsUsed[row.criterion] ?? 0 | number: '1.0-0' }}</small>
+                </th>
+                @for (item of items(); track item.gtin) {
+                  @let value = valueOf(item, row.criterion);
+                  <td [class.best-cell]="isCriterionWinner(item, row.criterion)">
+                    @if (value !== null) {
+                      <span class="score">{{ value * 100 | number: '1.0-0' }}</span>
+                      @if (isCriterionWinner(item, row.criterion)) {
+                        <ion-icon name="checkmark" aria-label="Mejor en este criterio"></ion-icon>
+                      }
+                    } @else {
+                      <span class="missing">sin dato</span>
+                    }
+                  </td>
+                }
+              </tr>
+            }
+            <tr>
+              <th scope="row" class="crit-col">Sellos ALTO EN</th>
+              @for (item of items(); track item.gtin) {
+                <td>
+                  {{
+                    item.product?.highInSeals?.length
+                      ? item.product!.highInSeals.length + ' sello(s)'
+                      : 'Sin sellos'
+                  }}
+                </td>
+              }
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="verdict" aria-live="polite">
+        <span class="spark" aria-hidden="true"><ion-icon name="sparkles-outline"></ion-icon></span>
+        <div>
+          <h2>
+            {{ r.strategy === 'personalized' ? 'Por qué gana para ti' : 'Resultado general' }}
+          </h2>
+          <p>{{ r.summary }}</p>
+          @for (item of items(); track item.gtin) {
+            @if (!item.eligible) {
+              <p class="excluded">{{ item.name }}: {{ item.exclusionReasons.join(', ') }}</p>
+            }
+          }
+          @if (auth.isAuthenticated()) {
+            <a routerLink="/app/perfil" class="adjust"
+              ><ion-icon name="options-outline" aria-hidden="true"></ion-icon> Ajustar mis pesos</a
+            >
+          }
+        </div>
+      </section>
+    }
+  </main>
+</ion-content>
