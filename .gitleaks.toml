@@ -1,0 +1,18 @@
+# Configuración de gitleaks: reglas por defecto + lista blanca MÍNIMA.
+# Solo se permiten valores ficticios conocidos (pruebas y marcadores de .env.example),
+# por valor exacto y nunca por ruta: un secreto real en un archivo de pruebas se sigue detectando.
+title = "SmartCommerce · detección de secretos"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Valores ficticios de pruebas y marcadores de archivos de ejemplo"
+regexTarget = "match"
+regexes = [
+  '''Clave-segura-2026''',
+  '''e2e-(jwt-secret|internal-token)-0123456789[a-z]*''',
+  '''otro-secreto-cualquiera-0123456789''',
+  '''reemplazar-por-[a-z0-9-]+''',
+  '''cambiar-[a-z-]+''',
+]

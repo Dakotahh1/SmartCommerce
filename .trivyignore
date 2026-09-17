@@ -1,0 +1,4 @@
+# Vulnerabilidades aceptadas explícitamente (Trivy).
+# Formato: un identificador por línea, precedido de un comentario con
+#   justificación · responsable · fecha de revisión (máximo 30 días).
+# Mantener vacío salvo excepción documentada y aprobada en un pull request.
