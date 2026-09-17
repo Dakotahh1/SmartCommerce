@@ -55,16 +55,13 @@ flowchart LR
 flowchart TB
     user(["Usuario<br/>navegador · PWA · Android"])
 
-    subgraph edge["Red edge"]
+    subgraph edge["Red edge (pública: único puerto publicado)"]
         fe["<b>frontend</b><br/>Angular 22 + Ionic 9 + Capacitor 8<br/>servido por Nginx sin privilegios :8080<br/>SPA · PWA (service worker)<br/>proxy /api → backend"]
     end
 
-    subgraph services["Red services (internal)"]
-        be["<b>backend</b><br/>NestJS 12 · Node 22 :3000<br/>API REST /api/v1 · Swagger /api/docs<br/>Auth JWT · RBAC · validación<br/>orquestación y fallback"]
+    subgraph internas["Redes internas (internal: true, sin salida a Internet)"]
+        be["<b>backend</b><br/>NestJS 12 · Node 24 :3000<br/>API REST /api/v1 · Swagger /api/docs<br/>Auth JWT · RBAC · validación<br/>orquestación y fallback"]
         py["<b>python-service</b><br/>Python 3.13 · FastAPI :8000<br/>ingesta y normalización<br/>motor SmartMatch<br/>/v1/* protegido con token interno"]
-    end
-
-    subgraph data["Red data (internal)"]
         db[("<b>database</b><br/>PostgreSQL 17<br/>rol owner: migraciones<br/>rol app: solo DML")]
         mig["<b>migrate</b> (one-shot)<br/>TypeORM migrations"]
     end
@@ -72,20 +69,22 @@ flowchart TB
     ext[("Open Food Facts<br/>Open Prices")]
 
     user -->|"HTTPS :8080"| fe
-    fe -->|"HTTP /api (proxy inverso)"| be
-    be -->|"SQL (TypeORM, pool)"| db
-    mig -->|"DDL (rol owner)"| db
-    be -->|"REST JSON + X-Internal-Token<br/>timeout 3–10 s · 2 reintentos"| py
-    py -->|"HTTPS · red egress<br/>rate limit · caché"| ext
+    fe -->|"red api · HTTP /api (proxy inverso)"| be
+    be -->|"red data · SQL (TypeORM, pool)"| db
+    mig -->|"red data · DDL (rol owner)"| db
+    be -->|"red services · REST JSON + X-Internal-Token<br/>timeout 3–10 s · 2 reintentos"| py
+    py -->|"red egress · HTTPS<br/>rate limit · caché"| ext
 ```
 
-| Contenedor | Tecnología | Responsabilidad | Expone |
-|---|---|---|---|
-| `frontend` | Angular 22, Ionic 9, Capacitor 8, Nginx | UI multiplataforma, PWA, proxy `/api` | `8080` (único puerto público) |
-| `backend` | NestJS 12, TypeORM, Pino, Terminus | API REST, autenticación/autorización, negocio, persistencia, coordinación con Python, salud | `3000` (solo redes internas) |
-| `python-service` | FastAPI, Pydantic v2, httpx | Obtención y normalización de datos web, motor SmartMatch | `8000` (solo red `services`) |
-| `database` | PostgreSQL 17 | Persistencia relacional | `5432` (solo red `data`) |
-| `migrate` | Imagen del backend | Ejecuta migraciones con rol propietario y termina | — |
+| Contenedor | Tecnología | Responsabilidad | Redes | Expone |
+|---|---|---|---|---|
+| `frontend` | Angular 22, Ionic 9, Capacitor 8, Nginx | UI multiplataforma, PWA, proxy `/api` | `edge`, `api` | `8080` (único puerto publicado) |
+| `backend` | NestJS 12, TypeORM, Pino | API REST, autenticación/autorización, negocio, persistencia, coordinación con Python, salud | `api`, `services`, `data` | `3000` (solo redes internas) |
+| `python-service` | FastAPI, Pydantic v2, httpx | Obtención y normalización de datos web, motor SmartMatch | `services`, `egress` | `8000` (solo red `services`) |
+| `database` | PostgreSQL 17 | Persistencia relacional | `data` | `5432` (solo red `data`) |
+| `migrate` | Imagen del backend | Ejecuta migraciones con rol propietario y termina | `data` | — |
+
+La segmentación garantiza que cada contenedor alcance **solo** lo que necesita: el gateway no llega a Python ni a la base de datos, la API no tiene salida a Internet y solo el servicio Python consulta la fuente web. El pipeline lo verifica en cada ejecución con `scripts/network-isolation-test.sh`.
 
 ## 2.4 Componentes (C4 nivel 3)
 
@@ -253,27 +252,19 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-    dev(["Desarrollador<br/>localhost:8080"]) --> fe
-    subgraph host["Docker host local"]
-        subgraph edge["edge"]
-            fe["frontend :8080"]
-        end
-        subgraph services["services (internal)"]
-            be["backend :3000"]
-            py["python-service :8000"]
-        end
-        subgraph data["data (internal)"]
-            db[("database :5432<br/>volumen db-data")]
-            mig["migrate (one-shot)"]
-        end
-        egress["egress (salida a Internet)"]
+    dev(["Desarrollador<br/>127.0.0.1:8080"]) --> fe
+    subgraph host["Docker host local (docker compose)"]
+        fe["frontend :8080"]
+        be["backend :3000"]
+        py["python-service :8000"]
+        db[("database :5432<br/>volumen smartcommerce-db-data")]
+        mig["migrate (one-shot)"]
     end
-    fe --> be
-    be --> py
-    be --> db
-    mig --> db
-    py --- egress
-    egress --> internet[("Open Food Facts")]
+    fe -->|"api (internal)"| be
+    be -->|"services (internal)"| py
+    be -->|"data (internal)"| db
+    mig -->|"data (internal)"| db
+    py -->|"egress"| internet[("Open Food Facts")]
 ```
 
 Orden de arranque controlado con `depends_on` + `healthcheck`: `database (healthy)` → `migrate (completed)` + `python-service (healthy)` → `backend (healthy)` → `frontend`.
@@ -285,7 +276,7 @@ flowchart LR
     gh["GitHub Actions<br/>CI verde en main"] -->|"push imágenes :sha"| ghcr[("GHCR<br/>ghcr.io/dakotahh1/smartcommerce-*")]
     gh -->|"terraform plan/apply<br/>(entorno staging, aprobación)"| host
     subgraph host["Host de staging (VM Linux con Docker)"]
-        tfres["Recursos Terraform (provider docker):<br/>redes edge/services/data · volumen db ·<br/>contenedores frontend, backend, python, postgres"]
+        tfres["Recursos Terraform (provider docker):<br/>redes edge/api/services/data/egress · volumen db ·<br/>contenedores frontend, backend, python, postgres"]
     end
     ghcr -->|"pull"| host
     gh -->|"smoke tests + GET /api/health"| host

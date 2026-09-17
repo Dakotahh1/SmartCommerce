@@ -26,13 +26,13 @@ LABEL org.opencontainers.image.title="smartcommerce-frontend" \
 ENV API_UPSTREAM=http://backend:3000 \
     DNS_RESOLVER=127.0.0.11 \
     NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
-USER root
+# /etc/nginx pertenece al uid 101 en la imagen unprivileged: no hace falta root.
 RUN rm -f /etc/nginx/conf.d/default.conf
 COPY --chown=root:root nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --chown=root:root nginx/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build --chown=root:root /app/dist/frontend/browser /usr/share/nginx/html
-# Usuario nginx (uid 101): los archivos servidos son de solo lectura para el proceso.
-USER 101
+# Usuario nginx (uid 101): los archivos servidos son de root y de solo lectura para el proceso.
+USER 101:101
 EXPOSE 8080
 HEALTHCHECK --interval=15s --timeout=3s --start-period=10s --retries=3 \
   CMD ["wget", "-q", "--spider", "http://127.0.0.1:8080/healthz"]

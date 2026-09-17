@@ -5,9 +5,10 @@
 #   docker compose up -d --build
 #   → http://localhost:8080 (app)  ·  http://localhost:8080/api/docs (Swagger)
 #
-# Redes (mínima exposición):
+# Redes (mínima exposición, cada servicio solo ve a quien necesita):
 #   edge      pública: solo el gateway frontend publica un puerto en el host
-#   services  interna: frontend → backend → python-service
+#   api       interna: frontend → backend
+#   services  interna: backend → python-service
 #   data      interna: backend / migrate → database
 #   egress    salida a Internet: solo python-service (Open Food Facts)
 #
@@ -158,6 +159,7 @@ services:
       python-service:
         condition: service_healthy
     networks:
+      - api
       - services
       - data
     tmpfs:
@@ -185,7 +187,7 @@ services:
         condition: service_healthy
     networks:
       - edge
-      - services
+      - api
     # Nginx escribe su configuración generada y archivos temporales solo en memoria.
     tmpfs:
       - /tmp:size=32m,uid=101,gid=101
@@ -200,6 +202,9 @@ services:
 networks:
   edge:
     name: smartcommerce-edge
+  api:
+    name: smartcommerce-api
+    internal: true
   services:
     name: smartcommerce-services
     internal: true

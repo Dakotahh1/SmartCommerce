@@ -1,0 +1,650 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# SmartCommerce · Pipeline DevSecOps
+#
+#  1. Seguridad del repositorio  secretos (gitleaks) · SAST (Semgrep) · lint de Dockerfiles,
+#                                scripts y workflows                          ─┐ bloqueantes
+#  2. Componentes               frontend · backend (+PostgreSQL) · python-service: instalación
+#                                reproducible, lint, tipos, pruebas, cobertura, build y
+#                                análisis de dependencias                      ─┤
+#  3. Contenedores              build de imágenes + escaneo de vulnerabilidades (Trivy) + SBOM
+#  4. Staging efímero           Docker Compose con las imágenes construidas: salud, humo,
+#                                resiliencia y aislamiento de red              ─┘
+#  5. Quality gate              un único check requerido que falla si cualquier etapa falla
+#  6. Publicación               imágenes en GHCR (solo main / tags, tras el quality gate)
+#
+# Un fallo en una etapa impide que se ejecuten las siguientes (needs) y hace fallar el gate.
+# ──────────────────────────────────────────────────────────────────────────────
+name: CI DevSecOps
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Mínimo privilegio: solo lectura por defecto; cada job eleva lo estrictamente necesario.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  NODE_VERSION: "24.21.0"
+  PYTHON_VERSION: "3.13"
+  UV_VERSION: "0.12.15"
+  GITLEAKS_VERSION: "8.30.1"
+  GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+  TRIVY_VERSION: "0.74.0"
+  TRIVY_SHA256: "2ae6fe3ee734b7fdf11335663e18c75ea12dccc76062f09f164a3b0f8be4371a"
+  HADOLINT_VERSION: "2.15.1"
+  HADOLINT_SHA256: "c7187db94eeeeca956519a6af171adc31453941a1e777961f6e680f697c8c507"
+  ACTIONLINT_VERSION: "1.7.12"
+  ACTIONLINT_SHA256: "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
+  NG_CLI_ANALYTICS: "false"
+  FORCE_COLOR: "1"
+
+jobs:
+  # ════════════════════════════════════════════════════════════════════════════
+  # 1 · Seguridad del repositorio
+  # ════════════════════════════════════════════════════════════════════════════
+  secrets-scan:
+    name: Secretos (gitleaks)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Instalar gitleaks (checksum verificado)
+        run: |
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum --check --strict
+          tar -xzf gitleaks.tar.gz gitleaks && sudo install gitleaks /usr/local/bin/ && rm gitleaks gitleaks.tar.gz
+
+      - name: Escanear todo el historial de git
+        run: |
+          gitleaks git --config .gitleaks.toml --redact --verbose \
+            --report-format sarif --report-path gitleaks.sarif .
+
+      - name: Resumen
+        if: always()
+        run: |
+          count=$(jq '[.runs[].results[]] | length' gitleaks.sarif 2>/dev/null || echo "?")
+          {
+            echo "### 🔐 Detección de secretos"
+            echo "Hallazgos de gitleaks en el historial completo: **${count}** (cualquier hallazgo bloquea el pipeline)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: report-gitleaks
+          path: gitleaks.sarif
+          retention-days: 14
+
+  sast:
+    name: SAST (Semgrep)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    container:
+      image: semgrep/semgrep:1.177.0@sha256:acaac22ffc7b7cc5926de0751b223bce0b2491c33d18422fa72f632c78d81198
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Análisis estático (TypeScript, Python, Dockerfiles, workflows, secretos)
+        run: |
+          semgrep scan \
+            --config p/default --config p/owasp-top-ten --config p/typescript \
+            --config p/nodejs --config p/python --config p/dockerfile \
+            --config p/github-actions --config p/secrets \
+            --metrics off \
+            --sarif-output semgrep.sarif --json-output semgrep.json
+
+      - name: Bloquear hallazgos de severidad alta
+        run: |
+          python3 - <<'PY'
+          import json, os
+          results = json.load(open("semgrep.json"))["results"]
+          blocking = [r for r in results if r["extra"]["severity"] == "ERROR"]
+          lines = ["### 🛡️ SAST (Semgrep)", f"Hallazgos totales: **{len(results)}** · bloqueantes (ERROR): **{len(blocking)}**", ""]
+          for r in results:
+              lines.append(f"- `{r['extra']['severity']}` {r['path']}:{r['start']['line']} — {r['check_id']}")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+              summary.write("\n".join(lines) + "\n")
+          for r in blocking:
+              print(f"::error file={r['path']},line={r['start']['line']}::{r['check_id']}: {r['extra']['message']}")
+          raise SystemExit(1 if blocking else 0)
+          PY
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: report-semgrep
+          path: semgrep.sarif
+          retention-days: 14
+
+  config-lint:
+    name: Lint de Dockerfiles, Compose, scripts y workflows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Instalar hadolint y actionlint (checksums verificados)
+        run: |
+          curl -sSfL -o hadolint "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-linux-x86_64"
+          echo "${HADOLINT_SHA256}  hadolint" | sha256sum --check --strict
+          curl -sSfL -o actionlint.tar.gz "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          echo "${ACTIONLINT_SHA256}  actionlint.tar.gz" | sha256sum --check --strict
+          tar -xzf actionlint.tar.gz actionlint
+          sudo install hadolint actionlint /usr/local/bin/ && rm hadolint actionlint actionlint.tar.gz
+
+      - name: Dockerfiles (hadolint)
+        run: hadolint --config .hadolint.yaml frontend/Dockerfile backend/Dockerfile python-service/Dockerfile
+
+      - name: Scripts de shell (ShellCheck)
+        run: shellcheck --severity=style scripts/*.sh infra/docker/postgres/init/*.sh
+
+      - name: Workflows de GitHub Actions (actionlint)
+        run: actionlint -color
+
+      - name: Docker Compose (sintaxis e interpolación de variables)
+        run: |
+          scripts/init-env.sh .env.ci
+          docker compose --env-file .env.ci config --quiet
+          echo "✔ docker-compose.yml válido"
+          rm .env.ci
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 2 · Componentes
+  # ════════════════════════════════════════════════════════════════════════════
+  frontend:
+    name: Frontend (Angular + Ionic)
+    needs: [secrets-scan, sast, config-lint]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalación reproducible (npm ci)
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint (ESLint + accesibilidad de plantillas)
+        run: npm run lint
+
+      - name: Formato (Prettier)
+        run: npm run format:check
+
+      - name: Tipos (TypeScript)
+        run: npm run typecheck
+
+      - name: Pruebas unitarias con cobertura (Vitest)
+        run: npm run test:ci
+
+      - name: Build de producción (PWA)
+        run: npm run build
+
+      - name: Análisis de dependencias (npm audit, bloquea high/critical)
+        run: npm audit --audit-level=high
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: coverage-frontend
+          path: frontend/coverage/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  backend:
+    name: Backend (NestJS + PostgreSQL)
+    needs: [secrets-scan, sast, config-lint]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Instalación reproducible (npm ci)
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint (oxlint)
+        run: npm run lint
+
+      - name: Formato (Prettier)
+        run: npm run format:check
+
+      - name: Tipos (TypeScript)
+        run: npm run typecheck
+
+      - name: Pruebas unitarias con cobertura (Vitest)
+        run: npm run test:cov
+
+      - name: Build
+        run: npm run build
+
+      - name: Credenciales efímeras para pruebas de integración
+        run: |
+          for name in DB_PASSWORD JWT_ACCESS_SECRET INTERNAL_API_TOKEN; do
+            value="$(openssl rand -hex 32)"
+            echo "::add-mask::${value}"
+            echo "${name}=${value}" >> "$GITHUB_ENV"
+          done
+
+      - name: PostgreSQL 17 efímero
+        run: |
+          docker run -d --name postgres-it -p 127.0.0.1:5432:5432 \
+            -e POSTGRES_DB=smartcommerce_test -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD="$DB_PASSWORD" \
+            --health-cmd "pg_isready -h 127.0.0.1 -U postgres" --health-interval 2s --health-retries 30 \
+            postgres:17.11-alpine3.24
+          for _ in $(seq 1 60); do
+            [ "$(docker inspect -f '{{.State.Health.Status}}' postgres-it)" = "healthy" ] && exit 0
+            sleep 2
+          done
+          docker logs postgres-it; exit 1
+
+      - name: Pruebas de integración (API + PostgreSQL real + migraciones up/down)
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: "5432"
+          DB_NAME: smartcommerce_test
+          DB_USER: postgres
+        run: npm run test:e2e
+
+      - name: Análisis de dependencias (npm audit, bloquea high/critical)
+        run: npm audit --audit-level=high
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: coverage-backend
+          path: backend/coverage/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  python-service:
+    name: Servicio Python (FastAPI + SmartMatch)
+    needs: [secrets-scan, sast, config-lint]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: python-service
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: python-service/uv.lock
+
+      - name: Instalación reproducible (uv sync --frozen)
+        run: uv sync --frozen
+
+      - name: Lint (Ruff, incluye reglas de seguridad flake8-bandit)
+        run: uv run ruff check --output-format=github .
+
+      - name: Formato (Ruff)
+        run: uv run ruff format --check .
+
+      - name: Tipos (mypy estricto)
+        run: uv run mypy
+
+      - name: Pruebas unitarias con cobertura ≥ 85 % (pytest)
+        run: uv run pytest --junitxml=junit.xml
+
+      - name: Análisis estático de seguridad (Bandit)
+        run: uv run bandit -c pyproject.toml -r app --severity-level medium
+
+      - name: Análisis de dependencias (pip-audit)
+        run: |
+          uv export --frozen --no-dev --no-emit-project --no-hashes -o requirements-audit.txt
+          uv run pip-audit -r requirements-audit.txt --disable-pip --no-deps --progress-spinner off
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: coverage-python
+          path: |
+            python-service/coverage.xml
+            python-service/junit.xml
+          retention-days: 7
+          if-no-files-found: ignore
+
+  android:
+    name: Android (Capacitor, APK debug)
+    needs: [frontend]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+          cache-dependency-path: frontend/android/**/*.gradle*
+
+      - name: Build web para Android y sincronización con Capacitor
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build:android
+
+      - name: Compilar APK (Gradle)
+        working-directory: frontend/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: smartcommerce-android-debug-apk
+          path: frontend/android/app/build/outputs/apk/debug/*.apk
+          retention-days: 7
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 3 · Contenedores
+  # ════════════════════════════════════════════════════════════════════════════
+  images:
+    name: Imagen ${{ matrix.service }} (build + Trivy)
+    needs: [frontend, backend, python-service]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [frontend, backend, python-service]
+    env:
+      IMAGE: smartcommerce-${{ matrix.service }}:ci
+      TRIVY_DB_REPOSITORY: mirror.gcr.io/aquasec/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2,ghcr.io/aquasecurity/trivy-db:2
+      TRIVY_JAVA_DB_REPOSITORY: mirror.gcr.io/aquasec/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-java-db:1,ghcr.io/aquasecurity/trivy-java-db:1
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Build de la imagen
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: ${{ matrix.service }}
+          load: true
+          push: false
+          tags: ${{ env.IMAGE }}
+          labels: |
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.version=${{ vars.APP_VERSION || '0.1.0' }}
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+
+      - name: Verificar que la imagen no se ejecuta como root
+        run: |
+          user="$(docker image inspect --format '{{.Config.User}}' "$IMAGE")"
+          echo "Usuario de la imagen: '${user}'"
+          case "$user" in ""|root|0|0:*) echo "::error::La imagen ${IMAGE} se ejecuta como root"; exit 1 ;; esac
+
+      - name: Instalar Trivy (checksum verificado)
+        run: |
+          curl -sSfL -o trivy.tar.gz \
+            "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+          echo "${TRIVY_SHA256}  trivy.tar.gz" | sha256sum --check --strict
+          tar -xzf trivy.tar.gz trivy && sudo install trivy /usr/local/bin/ && rm trivy trivy.tar.gz
+
+      - name: Escaneo de vulnerabilidades (bloquea ${{ vars.TRIVY_SEVERITY || 'CRITICAL,HIGH' }} con parche disponible)
+        run: |
+          trivy image --scanners vuln --ignore-unfixed --ignorefile .trivyignore \
+            --severity "${{ vars.TRIVY_SEVERITY || 'CRITICAL,HIGH' }}" --exit-code 1 --no-progress \
+            "$IMAGE"
+
+      - name: Reporte completo y SBOM (CycloneDX)
+        if: always()
+        run: |
+          trivy image --scanners vuln --format json --output "trivy-${{ matrix.service }}.json" --no-progress "$IMAGE" || true
+          trivy image --format cyclonedx --output "sbom-${{ matrix.service }}.cdx.json" --no-progress "$IMAGE" || true
+          if [ -f "trivy-${{ matrix.service }}.json" ]; then
+            jq -r --arg svc "${{ matrix.service }}" '
+              [.Results[]?.Vulnerabilities[]?] as $v
+              | "### 📦 Imagen \($svc) (todas las severidades, con y sin parche)\n| Severidad | Cantidad |\n|---|---|\n"
+                + ([ "CRITICAL", "HIGH", "MEDIUM", "LOW" ] | map(. as $s | "| \($s) | \([$v[] | select(.Severity == $s)] | length) |") | join("\n"))' \
+              "trivy-${{ matrix.service }}.json" >> "$GITHUB_STEP_SUMMARY" || true
+          fi
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: report-image-${{ matrix.service }}
+          path: |
+            trivy-${{ matrix.service }}.json
+            sbom-${{ matrix.service }}.cdx.json
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Exportar imagen para el staging efímero
+        run: docker save "$IMAGE" | gzip -1 > "image-${{ matrix.service }}.tar.gz"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: image-${{ matrix.service }}
+          path: image-${{ matrix.service }}.tar.gz
+          retention-days: 1
+          compression-level: 0
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 4 · Staging efímero (Docker Compose con las imágenes escaneadas)
+  # ════════════════════════════════════════════════════════════════════════════
+  staging-e2e:
+    name: Staging efímero (Compose + humo + resiliencia)
+    needs: [images]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    environment: staging
+    env:
+      IMAGE_PREFIX: smartcommerce
+      IMAGE_TAG: ci
+      BASE_URL: http://localhost:8080
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: image-*
+          merge-multiple: true
+
+      - name: Cargar imágenes
+        run: |
+          for f in image-*.tar.gz; do gunzip -c "$f" | docker load; done
+          docker image ls "smartcommerce-*"
+
+      - name: Configurar .env desde GitHub Secrets/Variables (o valores efímeros)
+        env:
+          S_POSTGRES_SUPERUSER_PASSWORD: ${{ secrets.POSTGRES_SUPERUSER_PASSWORD }}
+          S_DB_OWNER_PASSWORD: ${{ secrets.DB_OWNER_PASSWORD }}
+          S_DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
+          S_JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          S_INTERNAL_API_TOKEN: ${{ secrets.INTERNAL_API_TOKEN }}
+          V_APP_VERSION: ${{ vars.APP_VERSION || '0.1.0' }}
+          V_OFF_USER_AGENT: ${{ vars.OFF_USER_AGENT || 'SmartCommerce-CI/0.1.0 (github.com/Dakotahh1/SmartCommerce)' }}
+        run: |
+          # init-env.sh genera un valor aleatorio por secreto; si existe el GitHub Secret, se usa ese.
+          scripts/init-env.sh .env.generated
+          umask 077
+          : > .env
+          while IFS= read -r line || [ -n "$line" ]; do
+            key="${line%%=*}"
+            case "$key" in
+              POSTGRES_SUPERUSER_PASSWORD | DB_OWNER_PASSWORD | DB_APP_PASSWORD | JWT_ACCESS_SECRET | INTERNAL_API_TOKEN)
+                provided="S_${key}"
+                if [ -n "${!provided}" ]; then
+                  value="${!provided}"
+                  origin="GitHub Secret"
+                else
+                  value="${line#*=}"
+                  origin="efímero aleatorio"
+                fi
+                echo "::add-mask::${value}"
+                printf '%s=%s\n' "$key" "$value" >> .env
+                echo "${key}: ${origin}"
+                ;;
+              APP_VERSION) printf 'APP_VERSION=%s\n' "$V_APP_VERSION" >> .env ;;
+              OFF_USER_AGENT) printf 'OFF_USER_AGENT=%s\n' "$V_OFF_USER_AGENT" >> .env ;;
+              IMAGE_TAG) printf 'IMAGE_TAG=ci\n' >> .env ;;
+              *) printf '%s\n' "$line" >> .env ;;
+            esac
+          done < .env.generated
+          rm .env.generated
+
+      - name: Levantar el stack (sin build, con las imágenes escaneadas)
+        run: |
+          docker compose up -d --no-build
+          docker compose ps
+
+      - name: Pruebas de humo extremo a extremo
+        env:
+          SMOKE_INGEST: ${{ vars.SMOKE_INGEST || 'true' }}
+          WAIT_SECONDS: "240"
+        run: scripts/smoke-test.sh
+
+      - name: Aislamiento de red
+        run: scripts/network-isolation-test.sh
+
+      - name: Resiliencia (fallo controlado del servicio Python)
+        run: scripts/resilience-test.sh
+
+      - name: Diagnóstico
+        if: failure()
+        run: |
+          docker compose ps -a
+          docker compose logs --no-color --timestamps > compose-logs.txt
+          tail -n 200 compose-logs.txt
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: failure()
+        with:
+          name: staging-logs
+          path: compose-logs.txt
+          retention-days: 7
+
+      - name: Destruir el ambiente
+        if: always()
+        run: docker compose down -v --remove-orphans
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 5 · Quality gate
+  # ════════════════════════════════════════════════════════════════════════════
+  quality-gate:
+    name: Quality gate
+    if: always()
+    needs: [secrets-scan, sast, config-lint, frontend, backend, python-service, android, images, staging-e2e]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Evaluar resultados de todas las etapas
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          {
+            echo "## ✅ Quality gate"
+            echo "| Etapa | Resultado |"
+            echo "|---|---|"
+            echo "$NEEDS" | jq -r 'to_entries[] | "| \(.key) | \(if .value.result == "success" then "✅" else "❌" end) \(.value.result) |"'
+          } >> "$GITHUB_STEP_SUMMARY"
+          failed="$(echo "$NEEDS" | jq -r 'to_entries[] | select(.value.result != "success") | .key')"
+          if [ -n "$failed" ]; then
+            echo "::error::Etapas que no pasaron: $(echo "$failed" | tr '\n' ' ')"
+            exit 1
+          fi
+          echo "Todas las etapas pasaron."
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 6 · Publicación de imágenes (solo main y tags de versión)
+  # ════════════════════════════════════════════════════════════════════════════
+  publish:
+    name: Publicar ${{ matrix.service }} en GHCR
+    needs: [quality-gate]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        service: [frontend, backend, python-service]
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: image-${{ matrix.service }}
+
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Etiquetar y publicar (sha + main o versión)
+        env:
+          SERVICE: ${{ matrix.service }}
+          REF_NAME: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+        run: |
+          gunzip -c "image-${SERVICE}.tar.gz" | docker load
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          target="ghcr.io/${owner}/smartcommerce-${SERVICE}"
+          tags=("sha-${GITHUB_SHA::12}")
+          if [ "$REF_TYPE" = "tag" ]; then tags+=("${REF_NAME#v}"); else tags+=("main"); fi
+          for tag in "${tags[@]}"; do
+            docker tag "smartcommerce-${SERVICE}:ci" "${target}:${tag}"
+            docker push "${target}:${tag}"
+            echo "- \`${target}:${tag}\`" >> "$GITHUB_STEP_SUMMARY"
+          done

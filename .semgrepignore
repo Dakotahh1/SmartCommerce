@@ -1,0 +1,15 @@
+# Semgrep: se excluyen artefactos generados, dependencias y código de pruebas
+# (las pruebas contienen credenciales ficticias a propósito y no se despliegan).
+node_modules/
+dist/
+coverage/
+.angular/
+.venv/
+frontend/android/
+**/*.min.js
+**/*.spec.ts
+**/*.e2e-spec.ts
+backend/test/
+backend/src/test-utils/
+frontend/src/app/testing/
+python-service/tests/

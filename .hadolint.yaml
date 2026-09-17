@@ -1,0 +1,5 @@
+# hadolint: cualquier hallazgo (incluido nivel info) hace fallar el pipeline.
+failure-threshold: info
+trustedRegistries:
+  - docker.io
+  - ghcr.io

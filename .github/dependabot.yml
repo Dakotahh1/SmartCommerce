@@ -1,0 +1,60 @@
+# Actualizaciones automáticas de dependencias (PRs semanales agrupados).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      angular-ionic-capacitor:
+        patterns: ["@angular/*", "@angular-devkit/*", "@ionic/*", "@capacitor/*", "ionicons"]
+      dev-tooling:
+        dependency-type: development
+    labels: [dependencies, frontend]
+
+  - package-ecosystem: npm
+    directory: /backend
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      nestjs:
+        patterns: ["@nestjs/*"]
+      dev-tooling:
+        dependency-type: development
+    labels: [dependencies, backend]
+
+  - package-ecosystem: uv
+    directory: /python-service
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels: [dependencies, python]
+
+  - package-ecosystem: docker
+    directories: [/frontend, /backend, /python-service]
+    schedule:
+      interval: weekly
+      day: monday
+    labels: [dependencies, docker]
+
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    labels: [dependencies, docker]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions:
+        patterns: ["*"]
+    labels: [dependencies, ci]
