@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tokens de marca SmartCommerce (mismos valores que src/theme/variables.scss y Figma). -->
+    <color name="colorPrimary">#5B3DF5</color>
+    <color name="colorPrimaryDark">#3A22C9</color>
+    <color name="colorAccent">#12C8A0</color>
+</resources>

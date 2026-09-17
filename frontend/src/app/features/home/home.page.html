@@ -1,0 +1,160 @@
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="load($event)">
+    <ion-refresher-content
+      pullingText="Desliza para actualizar"
+      refreshingSpinner="crescent"
+    ></ion-refresher-content>
+  </ion-refresher>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="top">
+        <span class="avatar" aria-hidden="true">{{ auth.firstName().charAt(0) || 'S' }}</span>
+        <div class="hello">
+          <h1>
+            {{
+              auth.isAuthenticated()
+                ? greeting() + ', ' + auth.firstName()
+                : 'Descubre qué te conviene'
+            }}
+          </h1>
+          <p>
+            {{
+              auth.isAuthenticated()
+                ? 'Recomendaciones según tus preferencias'
+                : 'Crea una cuenta para recibir recomendaciones personalizadas'
+            }}
+          </p>
+        </div>
+      </div>
+      <a class="search" routerLink="/app/explorar">
+        <ion-icon name="search-outline" aria-hidden="true"></ion-icon>
+        <span>Busca productos, marcas o categorías</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="sc-page content">
+    @if (auth.isAuthenticated()) {
+      <a class="profile-card" routerLink="/app/perfil">
+        <span class="spark" aria-hidden="true"><ion-icon name="sparkles-outline"></ion-icon></span>
+        <span class="text">
+          <strong>Tu perfil SmartMatch</strong>
+          <small>{{ learnedSummary() }}</small>
+        </span>
+        <ion-icon name="chevron-forward" aria-hidden="true"></ion-icon>
+      </a>
+
+      @if (cachedAt()) {
+        <app-status-banner
+          variant="offline"
+          title="Mostrando recomendaciones guardadas"
+          message="No pudimos actualizar. Se muestran las últimas recomendaciones guardadas en este dispositivo."
+        />
+      } @else if (recommendations()?.degraded) {
+        <app-status-banner
+          variant="degraded"
+          title="Motor SmartMatch no disponible"
+          [message]="recommendations()?.notice ?? null"
+        />
+      }
+
+      <div class="sc-section-title">
+        <h2>Recomendados para ti</h2>
+        @if (recommendations(); as rec) {
+          <span class="strategy" [class.base]="rec.strategy === 'baseline'">
+            {{ rec.strategy === 'personalized' ? 'Personalizado' : 'Ranking general' }}
+          </span>
+        }
+      </div>
+
+      @if (loading()) {
+        <div class="sc-grid" aria-busy="true" aria-label="Cargando recomendaciones">
+          @for (i of [1, 2, 3]; track i) {
+            <div class="sc-card skeleton">
+              <ion-skeleton-text [animated]="true"></ion-skeleton-text
+              ><ion-skeleton-text [animated]="true" style="width: 60%"></ion-skeleton-text>
+            </div>
+          }
+        </div>
+      } @else if (items().length) {
+        <div class="sc-grid">
+          @for (item of items(); track item.gtin) {
+            <app-product-card
+              [product]="item.product!"
+              [scored]="item"
+              [dismissible]="true"
+              (open)="open($event, item)"
+              (compare)="addToCompare($event)"
+              (dismiss)="dismiss($event)"
+            />
+          }
+        </div>
+        @if (recommendations()?.excludedCount) {
+          <p class="excluded">
+            <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+            {{ recommendations()?.excludedCount }} productos se excluyeron por tus restricciones de
+            dieta, alérgenos o sellos.
+          </p>
+        }
+      } @else if (failed()) {
+        <app-status-banner
+          variant="degraded"
+          title="No pudimos cargar tus recomendaciones"
+          message="Revisa tu conexión e intenta nuevamente."
+        />
+        <ion-button fill="outline" (click)="load()"
+          ><ion-icon slot="start" name="refresh-outline"></ion-icon>Reintentar</ion-button
+        >
+      } @else {
+        <div class="sc-card empty">
+          <h3>Aún no hay productos para recomendar</h3>
+          <p class="sc-muted">
+            Cuando el catálogo tenga productos compatibles con tus restricciones aparecerán aquí.
+          </p>
+          <ion-button routerLink="/app/explorar" fill="outline">Explorar catálogo</ion-button>
+        </div>
+      }
+    } @else {
+      <section class="cta">
+        <div>
+          <span class="chip"
+            ><ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon> SmartMatch</span
+          >
+          <h2>Recomendaciones hechas para ti, con explicación</h2>
+          <p>
+            Indica qué te importa (nutrición, precio, procesamiento…) y te diremos qué conviene y
+            por qué.
+          </p>
+        </div>
+        <div class="cta-actions">
+          <ion-button class="lime" routerLink="/auth/registro">Crear cuenta</ion-button>
+          <ion-button fill="outline" class="light" routerLink="/auth/login"
+            >Iniciar sesión</ion-button
+          >
+        </div>
+      </section>
+
+      <div class="sc-section-title"><h2>Mejor calidad de datos del catálogo</h2></div>
+      @if (loading()) {
+        <ion-skeleton-text [animated]="true" style="height: 120px"></ion-skeleton-text>
+      } @else if (failed()) {
+        <app-status-banner
+          variant="degraded"
+          title="No pudimos cargar el catálogo"
+          message="Revisa tu conexión e intenta nuevamente."
+        />
+      } @else {
+        <div class="sc-grid">
+          @for (product of topProducts(); track product.id) {
+            <app-product-card
+              [product]="product"
+              (open)="open($event)"
+              (compare)="addToCompare($event)"
+            />
+          }
+        </div>
+      }
+    }
+  </main>
+</ion-content>

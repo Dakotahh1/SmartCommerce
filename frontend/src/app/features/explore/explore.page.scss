@@ -1,0 +1,157 @@
+.explore {
+  display: grid;
+  gap: 12px;
+  padding-top: calc(16px + var(--ion-safe-area-top, 0px));
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.searchbar {
+  --background: #fff;
+  --border-radius: 16px;
+  --box-shadow: 0 6px 16px rgba(91, 61, 245, 0.1);
+  padding: 0;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--sc-line);
+  border-radius: 99px;
+  background: #fff;
+  color: var(--sc-slate);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &.on {
+    border-color: transparent;
+    background: var(--sc-primary);
+    color: #fff;
+  }
+
+  .count {
+    padding: 0 6px;
+    border-radius: 99px;
+    background: var(--sc-bg);
+    color: var(--sc-slate);
+    font-size: 10px;
+  }
+
+  &.on .count {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+}
+
+.meta {
+  min-height: 18px;
+  margin: 0;
+  color: var(--sc-slate);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(42, 27, 143, 0.05);
+  cursor: pointer;
+
+  &.skeleton {
+    min-height: 86px;
+  }
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+
+  strong {
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+
+  small {
+    color: var(--sc-muted);
+    font-size: 12px;
+  }
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.seal {
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: #111;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.compare {
+  display: grid;
+  place-items: center;
+  width: var(--sc-touch-target);
+  height: var(--sc-touch-target);
+  border: 0;
+  border-radius: 12px;
+  background: var(--sc-soft-violet);
+  color: var(--sc-primary);
+  font-size: 20px;
+  cursor: pointer;
+
+  &.added {
+    background: var(--sc-soft-mint);
+    color: var(--sc-mint-dark);
+  }
+}
+
+.empty h2 {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.source {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--sc-muted);
+  font-size: 11px;
+}

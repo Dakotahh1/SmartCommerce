@@ -1,0 +1,132 @@
+// Fuente autoalojada (funciona sin conexión en la PWA y en Android)
+@use '@fontsource/plus-jakarta-sans/latin-400.css';
+@use '@fontsource/plus-jakarta-sans/latin-500.css';
+@use '@fontsource/plus-jakarta-sans/latin-600.css';
+@use '@fontsource/plus-jakarta-sans/latin-700.css';
+@use '@fontsource/plus-jakarta-sans/latin-800.css';
+
+// Ionic
+@use '@ionic/angular/css/core.css';
+@use '@ionic/angular/css/normalize.css';
+@use '@ionic/angular/css/structure.css';
+@use '@ionic/angular/css/typography.css';
+@use '@ionic/angular/css/display.css';
+@use '@ionic/angular/css/padding.css';
+@use '@ionic/angular/css/flex-utils.css';
+@use '@ionic/angular/css/text-alignment.css';
+
+@use './theme/variables.scss';
+
+// ─── Base ────────────────────────────────────────────────────────────────────
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--sc-violet);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+// ─── Utilidades del design system ───────────────────────────────────────────
+.sc-card {
+  background: var(--sc-white);
+  border-radius: var(--sc-radius-card);
+  box-shadow: var(--sc-shadow-card);
+  padding: 16px;
+}
+
+.sc-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 20px 0 12px;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 800;
+  }
+}
+
+.sc-overline {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sc-muted);
+}
+
+.sc-muted {
+  color: var(--sc-slate);
+}
+
+.sc-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 16px 20px 32px;
+}
+
+.sc-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.sc-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+// Botón principal con degradado de marca
+ion-button.sc-primary {
+  --background: var(--sc-gradient-button);
+  --background-activated: var(--sc-primary-dark);
+  --border-radius: 16px;
+  --box-shadow: 0 10px 24px rgba(91, 61, 245, 0.28);
+  font-weight: 700;
+  min-height: 52px;
+  text-transform: none;
+}
+
+ion-button {
+  text-transform: none;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+ion-content {
+  --background: var(--sc-bg);
+}
+
+// Menú lateral de escritorio (split pane)
+ion-split-pane {
+  --side-width: 264px;
+  --side-max-width: 264px;
+  --border: none;
+}

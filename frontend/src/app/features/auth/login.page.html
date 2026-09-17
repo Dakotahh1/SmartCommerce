@@ -1,0 +1,93 @@
+<ion-content [fullscreen]="true" class="auth">
+  <header class="header">
+    <button type="button" class="back" (click)="back()" aria-label="Volver">
+      <ion-icon name="arrow-back"></ion-icon>
+    </button>
+    <h1>Hola de nuevo</h1>
+    <p>Inicia sesión para ver tus recomendaciones personalizadas y tus comparaciones guardadas.</p>
+  </header>
+
+  <main class="card">
+    @if (reason() === 'session-expired') {
+      <app-status-banner
+        variant="info"
+        title="Tu sesión expiró"
+        message="Vuelve a iniciar sesión para continuar."
+      />
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="login-email">Correo electrónico</label>
+        <div class="control" [class.invalid]="invalid('email')">
+          <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+          <input
+            id="login-email"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            inputmode="email"
+            placeholder="tu@correo.cl"
+            [attr.aria-invalid]="invalid('email')"
+            aria-describedby="login-email-error"
+          />
+        </div>
+        @if (invalid('email')) {
+          <p class="error" id="login-email-error">Ingresa un correo válido.</p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="login-password">Contraseña</label>
+        <div class="control" [class.invalid]="invalid('password')">
+          <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
+          <input
+            id="login-password"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            autocomplete="current-password"
+            placeholder="Tu contraseña"
+            [attr.aria-invalid]="invalid('password')"
+          />
+          <button
+            type="button"
+            class="toggle-visibility"
+            (click)="showPassword.set(!showPassword())"
+            [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <ion-icon [name]="showPassword() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </div>
+        @if (invalid('password')) {
+          <p class="error">Ingresa tu contraseña.</p>
+        }
+      </div>
+
+      @if (serverError()) {
+        <p class="error" role="alert">{{ serverError() }}</p>
+      }
+
+      <ion-button type="submit" expand="block" class="sc-primary" [disabled]="submitting()">
+        @if (submitting()) {
+          <ion-spinner name="crescent" aria-label="Iniciando sesión"></ion-spinner>
+        } @else {
+          Iniciar sesión
+        }
+      </ion-button>
+    </form>
+
+    <div class="divider">o</div>
+    <ion-button expand="block" fill="outline" class="ghost" routerLink="/app/explorar">
+      <ion-icon slot="start" name="eye-outline" aria-hidden="true"></ion-icon>
+      Continuar como visitante
+    </ion-button>
+  </main>
+
+  <footer class="footer">
+    <span class="secure">
+      <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+      Contraseñas con hash Argon2 · sesiones con expiración
+    </span>
+    <span>¿No tienes cuenta? <a routerLink="/auth/registro">Regístrate</a></span>
+  </footer>
+</ion-content>

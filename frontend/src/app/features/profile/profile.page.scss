@@ -1,0 +1,142 @@
+.profile {
+  display: grid;
+  gap: 16px;
+  padding-top: calc(16px + var(--ion-safe-area-top, 0px));
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  h1 {
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  p {
+    margin: 2px 0 6px;
+    font-size: 13px;
+  }
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sc-primary), var(--sc-mint));
+  box-shadow: 0 6px 16px rgba(91, 61, 245, 0.2);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.role {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 99px;
+  background: var(--sc-soft-violet);
+  color: var(--sc-primary);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.columns {
+  display: grid;
+  gap: 16px;
+
+  @media (min-width: 992px) {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.side {
+  display: grid;
+  gap: 16px;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.small {
+  margin: 4px 0 14px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.history {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+  }
+
+  time {
+    color: var(--sc-muted);
+    font-size: 12px;
+  }
+}
+
+.empty {
+  color: var(--sc-muted);
+  font-size: 13px;
+}
+
+.outline {
+  --border-radius: 12px;
+  --color: var(--sc-ink);
+  --border-color: var(--sc-line);
+}
+
+.privacy .row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--sc-line);
+  background: none;
+  color: var(--sc-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+
+  span:not(.ico) {
+    flex: 1;
+  }
+
+  &.danger {
+    color: #b42318;
+
+    .ico {
+      background: var(--sc-soft-coral);
+    }
+  }
+}
+
+.ico {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--sc-bg);
+}

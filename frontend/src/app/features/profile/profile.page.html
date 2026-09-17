@@ -1,0 +1,88 @@
+<ion-content [fullscreen]="true">
+  <main class="sc-page profile">
+    @if (auth.user(); as user) {
+      <header class="who">
+        <span class="avatar" aria-hidden="true">{{
+          user.displayName.charAt(0).toUpperCase()
+        }}</span>
+        <div>
+          <h1>{{ user.displayName }}</h1>
+          <p class="sc-muted">{{ user.email }}</p>
+          <span class="role"
+            ><ion-icon name="person-outline" aria-hidden="true"></ion-icon>
+            {{
+              user.role === 'admin'
+                ? 'Administrador'
+                : user.role === 'operator'
+                  ? 'Operador de datos'
+                  : 'Usuario registrado'
+            }}</span
+          >
+        </div>
+      </header>
+    }
+
+    <div class="columns">
+      <section class="sc-card">
+        <h2>Mis preferencias</h2>
+        <p class="sc-muted small">
+          SmartMatch usa estos valores para calcular el puntaje de cada producto.
+        </p>
+        @if (preferences(); as prefs) {
+          <app-preferences-form [value]="prefs" (save)="save($event)">
+            <ion-button type="submit" expand="block" class="sc-primary" [disabled]="saving()"
+              >Guardar cambios</ion-button
+            >
+          </app-preferences-form>
+        } @else {
+          <ion-skeleton-text [animated]="true" style="height: 240px"></ion-skeleton-text>
+        }
+      </section>
+
+      <div class="side">
+        <section class="sc-card">
+          <h2>Transparencia del aprendizaje</h2>
+          <p class="sc-muted small">
+            Tus interacciones ajustan levemente los pesos (máx. ±15 puntos) y la afinidad por
+            categorías y marcas. Las más recientes pesan más (vida media de 14 días).
+          </p>
+          @if (history().length) {
+            <ul class="history">
+              @for (item of history().slice(0, 8); track item.id) {
+                <li>
+                  <span>{{ labels[item.type] ?? item.type }}</span>
+                  <time [attr.datetime]="item.createdAt">{{
+                    item.createdAt | date: 'dd-MM HH:mm'
+                  }}</time>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="empty">Aún no hay interacciones registradas.</p>
+          }
+          <ion-button fill="outline" expand="block" class="outline" (click)="resetLearning()">
+            <ion-icon slot="start" name="refresh-outline" aria-hidden="true"></ion-icon>Restablecer
+            aprendizaje
+          </ion-button>
+        </section>
+
+        <section class="sc-card privacy">
+          <h2>Privacidad y datos</h2>
+          <p class="sc-muted small">
+            No vendemos ni compartimos tus datos. Puedes eliminarlos cuando quieras.
+          </p>
+          <button type="button" class="row" (click)="logout()">
+            <span class="ico"><ion-icon name="log-out-outline" aria-hidden="true"></ion-icon></span>
+            <span>Cerrar sesión</span>
+            <ion-icon name="chevron-forward" aria-hidden="true"></ion-icon>
+          </button>
+          <button type="button" class="row danger" (click)="deleteAccount()">
+            <span class="ico"><ion-icon name="trash-outline" aria-hidden="true"></ion-icon></span>
+            <span>Eliminar mi cuenta y datos</span>
+            <ion-icon name="chevron-forward" aria-hidden="true"></ion-icon>
+          </button>
+        </section>
+      </div>
+    </div>
+  </main>
+</ion-content>

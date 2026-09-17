@@ -1,0 +1,144 @@
+<ion-content [fullscreen]="true">
+  <main class="sc-page explore">
+    <h1>Explorar</h1>
+
+    <ion-searchbar
+      [formControl]="search"
+      placeholder="Busca por nombre o marca (ej. avena)"
+      [debounce]="0"
+      aria-label="Buscar productos"
+      class="searchbar"
+    ></ion-searchbar>
+
+    <div class="filters" role="group" aria-label="Filtros">
+      <button
+        type="button"
+        class="chip"
+        [class.on]="filters().goodNutrition"
+        [attr.aria-pressed]="filters().goodNutrition"
+        (click)="toggle('goodNutrition')"
+      >
+        @if (filters().goodNutrition) {
+          <ion-icon name="checkmark" aria-hidden="true"></ion-icon>
+        }
+        Nutri-Score A–B
+      </button>
+      <button
+        type="button"
+        class="chip"
+        [class.on]="filters().lowProcessing"
+        [attr.aria-pressed]="filters().lowProcessing"
+        (click)="toggle('lowProcessing')"
+      >
+        @if (filters().lowProcessing) {
+          <ion-icon name="checkmark" aria-hidden="true"></ion-icon>
+        }
+        NOVA 1–2
+      </button>
+      <button
+        type="button"
+        class="chip"
+        [class.on]="filters().glutenFree"
+        [attr.aria-pressed]="filters().glutenFree"
+        (click)="toggle('glutenFree')"
+      >
+        @if (filters().glutenFree) {
+          <ion-icon name="checkmark" aria-hidden="true"></ion-icon>
+        }
+        Sin gluten
+      </button>
+      @for (category of categories(); track category.slug) {
+        <button
+          type="button"
+          class="chip cat"
+          [class.on]="filters().category === category.slug"
+          [attr.aria-pressed]="filters().category === category.slug"
+          (click)="selectCategory(category.slug)"
+        >
+          {{ category.name }} <span class="count">{{ category.productCount }}</span>
+        </button>
+      }
+    </div>
+
+    <p class="meta" role="status">
+      @if (!loading() && !failed()) {
+        {{ total() }} resultados · ordenados por calidad de datos
+      }
+    </p>
+
+    @if (loading()) {
+      <div class="list" aria-busy="true">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <div class="row skeleton"><ion-skeleton-text [animated]="true"></ion-skeleton-text></div>
+        }
+      </div>
+    } @else if (failed()) {
+      <app-status-banner
+        variant="degraded"
+        title="No pudimos cargar el catálogo"
+        message="Revisa tu conexión e intenta nuevamente."
+      />
+    } @else if (products().length === 0) {
+      <div class="sc-card empty">
+        <h2>Sin resultados</h2>
+        <p class="sc-muted">Prueba otra búsqueda o quita algunos filtros.</p>
+      </div>
+    } @else {
+      <ul class="list">
+        @for (product of products(); track product.id) {
+          <li>
+            <div
+              class="row"
+              role="link"
+              tabindex="0"
+              (click)="open(product)"
+              (keydown.enter)="open(product)"
+              [attr.aria-label]="'Ver ' + product.name"
+            >
+              <app-product-thumb [name]="product.name" [imageUrl]="product.imageUrl" [size]="62" />
+              <div class="info">
+                <strong>{{ product.name }}</strong>
+                <small
+                  >{{ product.brand ?? 'Marca no informada'
+                  }}{{ product.quantityText ? ' · ' + product.quantityText : '' }}</small
+                >
+                <div class="badges">
+                  <app-grade-badge label="Nutri" [value]="product.nutriscoreGrade" />
+                  <app-grade-badge label="NOVA" [value]="product.novaGroup" kind="nova" />
+                  @for (seal of product.highInSeals; track seal) {
+                    <span class="seal">ALTO EN {{ sealLabels[seal].toUpperCase() }}</span>
+                  }
+                </div>
+              </div>
+              <button
+                type="button"
+                class="compare"
+                [class.added]="inCompare(product.id)"
+                (click)="addToCompare(product, $event)"
+                [attr.aria-label]="
+                  inCompare(product.id)
+                    ? product.name + ' ya está en la comparación'
+                    : 'Comparar ' + product.name
+                "
+              >
+                <ion-icon
+                  [name]="inCompare(product.id) ? 'checkmark' : 'swap-horizontal-outline'"
+                ></ion-icon>
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+      <ion-infinite-scroll (ionInfinite)="loadMore($event)">
+        <ion-infinite-scroll-content
+          loadingText="Cargando más productos"
+        ></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    }
+
+    <p class="source">
+      <ion-icon name="server-outline" aria-hidden="true"></ion-icon>
+      Datos: Open Food Facts (ODbL) · procesados por SmartCommerce
+    </p>
+  </main>
+</ion-content>
