@@ -5,7 +5,7 @@
 #   build   → build de producción (PWA con service worker)
 #   runtime → Nginx unprivileged: SPA + proxy /api → NestJS + cabeceras de seguridad
 # ──────────────────────────────────────────────────────────────────────────────
-ARG NODE_IMAGE=node:24.21.0-alpine3.22
+ARG NODE_IMAGE=node:24.21.0-alpine3.24
 ARG NGINX_IMAGE=nginxinc/nginx-unprivileged:1.30.5-alpine3.24
 
 FROM ${NODE_IMAGE} AS deps

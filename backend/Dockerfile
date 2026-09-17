@@ -6,7 +6,7 @@
 #   prod    → solo dependencias de producción
 #   runtime → imagen mínima, usuario sin privilegios, healthcheck
 # ──────────────────────────────────────────────────────────────────────────────
-ARG NODE_IMAGE=node:24.21.0-alpine3.22
+ARG NODE_IMAGE=node:24.21.0-alpine3.24
 
 FROM ${NODE_IMAGE} AS deps
 WORKDIR /app
