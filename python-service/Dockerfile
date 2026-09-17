@@ -24,7 +24,14 @@ FROM ${PYTHON_IMAGE} AS runtime
 LABEL org.opencontainers.image.title="smartcommerce-python-service" \
       org.opencontainers.image.description="Ingesta Open Food Facts y motor SmartMatch" \
       org.opencontainers.image.licenses="MIT"
-RUN groupadd --system --gid 10001 app \
+# Parches de seguridad publicados después de la imagen base y sin pip en runtime: la app usa el
+# venv copiado desde builder y pip trae dependencias vendorizadas que solo amplían la superficie.
+RUN apt-get update \
+ && apt-get upgrade -y --no-install-recommends \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && python -m pip uninstall --yes pip \
+ && groupadd --system --gid 10001 app \
  && useradd --system --uid 10001 --gid app --no-create-home --shell /usr/sbin/nologin app
 WORKDIR /app
 COPY --from=builder --chown=root:root /app/.venv /app/.venv

@@ -32,8 +32,10 @@ ENV NODE_ENV=production \
     PORT=3000 \
     NODE_OPTIONS="--enable-source-maps"
 WORKDIR /app
-# Sin npm/yarn en runtime: reduce superficie de ataque y vulnerabilidades reportadas.
-RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx /opt/yarn* /usr/local/bin/yarn*
+# Parches de seguridad de Alpine publicados después de la imagen base, y sin npm/yarn en runtime
+# (reduce la superficie de ataque y las vulnerabilidades reportadas).
+RUN apk upgrade --no-cache \
+ && rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx /opt/yarn* /usr/local/bin/yarn*
 COPY --from=prod-deps --chown=root:root /app/node_modules ./node_modules
 COPY --from=build --chown=root:root /app/dist ./dist
 COPY --chown=root:root package.json ./
