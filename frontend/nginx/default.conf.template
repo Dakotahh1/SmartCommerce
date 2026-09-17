@@ -1,0 +1,82 @@
+# Gateway web de SmartCommerce: sirve la PWA y hace de proxy inverso hacia la API NestJS.
+# Las variables ${...} se sustituyen al iniciar el contenedor (envsubst de la imagen oficial):
+#   API_UPSTREAM     URL interna de la API (p. ej. http://backend:3000)
+#   DNS_RESOLVER     DNS interno de Docker (127.0.0.11) para resolver el upstream en cada request
+
+map $http_x_request_id $sc_request_id {
+    default $http_x_request_id;
+    ""      $request_id;
+}
+
+server {
+    listen 8080;
+    server_name _;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    server_tokens off;
+    client_max_body_size 1m;
+    charset utf-8;
+
+    gzip on;
+    gzip_comp_level 5;
+    gzip_min_length 1024;
+    gzip_vary on;
+    gzip_types text/css application/javascript application/json application/manifest+json image/svg+xml text/plain;
+
+    # Resolución dinámica: Nginx arranca aunque la API aún no esté lista y sigue sus reinicios.
+    resolver ${DNS_RESOLVER} valid=10s ipv6=off;
+    set $api_upstream ${API_UPSTREAM};
+
+    # Archivos ocultos (.env, .git, etc.): nunca se sirven.
+    location ~ /\. {
+        return 404;
+    }
+
+    # ── API ────────────────────────────────────────────────────────────────
+    # ^~ evita que las expresiones regulares de recursos estáticos capturen /api/docs/*.css
+    location ^~ /api/ {
+        proxy_pass $api_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Request-Id $sc_request_id;
+        proxy_set_header Connection "";
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 60s;
+        proxy_send_timeout 30s;
+        proxy_hide_header X-Powered-By;
+    }
+
+    # ── Salud del gateway (Docker healthcheck / smoke tests) ────────────────
+    location = /healthz {
+        access_log off;
+        default_type text/plain;
+        return 200 "ok\n";
+    }
+
+    # ── Archivos que nunca deben quedar en caché (actualizaciones de la PWA) ──
+    location ~ ^/(index\.html|ngsw-worker\.js|ngsw\.json|safety-worker\.js|worker-basic\.min\.js|manifest\.webmanifest)$ {
+        include /etc/nginx/snippets/security-headers.conf;
+        add_header Cache-Control "no-cache" always;
+        try_files $uri =404;
+    }
+
+    # ── Recursos con hash en el nombre: caché inmutable ──────────────────────
+    location ~* \.(?:js|css|woff2?|ttf|png|jpe?g|gif|svg|ico|webp)$ {
+        include /etc/nginx/snippets/security-headers.conf;
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
+        access_log off;
+        try_files $uri =404;
+    }
+
+    # ── Rutas de la SPA ──────────────────────────────────────────────────────
+    location / {
+        include /etc/nginx/snippets/security-headers.conf;
+        add_header Cache-Control "no-cache" always;
+        try_files $uri $uri/ /index.html;
+    }
+}
