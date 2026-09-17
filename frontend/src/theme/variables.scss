@@ -1,0 +1,118 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Tokens del Design System SmartCommerce (Figma → Ionic).
+// https://www.figma.com/design/vUBipEZdpxUtfokgU17hKu  (página "Design System")
+// ─────────────────────────────────────────────────────────────────────────────
+:root {
+  // Marca
+  --sc-primary: #5b3df5;
+  --sc-primary-dark: #3a22c9;
+  --sc-violet: #8b5cf6;
+  --sc-mint: #12c8a0;
+  --sc-mint-dark: #0a8f72;
+  --sc-lime: #c6f432;
+  --sc-coral: #ff5a5f;
+  --sc-amber: #ffb020;
+  --sc-ink: #0e1020;
+  --sc-ink-2: #1b1f3b;
+  --sc-slate: #5e6282;
+  --sc-muted: #6f7390; // contraste AA sobre fondo claro
+  --sc-line: #e7e4f5;
+  --sc-bg: #f5f4ff;
+  --sc-white: #ffffff;
+  --sc-soft-violet: #eeeafe;
+  --sc-soft-mint: #e3faf4;
+  --sc-soft-coral: #ffe9e9;
+  --sc-soft-amber: #fff4dc;
+  --sc-lavender: #c9c6e8;
+
+  // Escalas oficiales Nutri-Score / Eco-Score y NOVA
+  --sc-grade-a: #038141;
+  --sc-grade-b: #85bb2f;
+  --sc-grade-c: #fecb02;
+  --sc-grade-d: #ee8100;
+  --sc-grade-e: #e63e11;
+
+  // Degradados
+  --sc-gradient-brand: linear-gradient(135deg, #3a22c9 0%, #5b3df5 50%, #8b5cf6 100%);
+  --sc-gradient-button: linear-gradient(90deg, #5b3df5 0%, #8b5cf6 100%);
+  --sc-gradient-match: linear-gradient(90deg, #12c8a0 0%, #5b3df5 100%);
+  --sc-gradient-hero: linear-gradient(120deg, #3a22c9 0%, #5b3df5 40%, #8b5cf6 70%, #12c8a0 100%);
+
+  // Forma y elevación
+  --sc-radius-card: 22px;
+  --sc-radius-control: 14px;
+  --sc-shadow-card: 0 10px 30px rgba(42, 27, 143, 0.08);
+  --sc-shadow-strong: 0 16px 40px rgba(42, 27, 143, 0.18);
+  --sc-touch-target: 44px;
+
+  // Ionic
+  --ion-font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ion-background-color: var(--sc-bg);
+  --ion-background-color-rgb: 245, 244, 255;
+  --ion-text-color: var(--sc-ink);
+  --ion-text-color-rgb: 14, 16, 32;
+  --ion-border-color: var(--sc-line);
+
+  --ion-color-primary: #5b3df5;
+  --ion-color-primary-rgb: 91, 61, 245;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #5036d8;
+  --ion-color-primary-tint: #6b50f6;
+
+  --ion-color-secondary: #12c8a0;
+  --ion-color-secondary-rgb: 18, 200, 160;
+  --ion-color-secondary-contrast: #0e1020;
+  --ion-color-secondary-contrast-rgb: 14, 16, 32;
+  --ion-color-secondary-shade: #10b08d;
+  --ion-color-secondary-tint: #2acea9;
+
+  --ion-color-tertiary: #8b5cf6;
+  --ion-color-tertiary-rgb: 139, 92, 246;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #7a51d8;
+  --ion-color-tertiary-tint: #976cf7;
+
+  --ion-color-success: #0a8f72;
+  --ion-color-success-rgb: 10, 143, 114;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #097e64;
+  --ion-color-success-tint: #239a80;
+
+  --ion-color-warning: #ffb020;
+  --ion-color-warning-rgb: 255, 176, 32;
+  --ion-color-warning-contrast: #0e1020;
+  --ion-color-warning-contrast-rgb: 14, 16, 32;
+  --ion-color-warning-shade: #e09b1c;
+  --ion-color-warning-tint: #ffb836;
+
+  --ion-color-danger: #e5484d;
+  --ion-color-danger-rgb: 229, 72, 77;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #ca3f44;
+  --ion-color-danger-tint: #e85a5f;
+
+  --ion-color-dark: #0e1020;
+  --ion-color-dark-rgb: 14, 16, 32;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #0c0e1c;
+  --ion-color-dark-tint: #262836;
+
+  --ion-color-medium: #5e6282;
+  --ion-color-medium-rgb: 94, 98, 130;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #535672;
+  --ion-color-medium-tint: #6e728f;
+
+  --ion-color-light: #f5f4ff;
+  --ion-color-light-rgb: 245, 244, 255;
+  --ion-color-light-contrast: #0e1020;
+  --ion-color-light-contrast-rgb: 14, 16, 32;
+  --ion-color-light-shade: #d8d7e0;
+  --ion-color-light-tint: #f6f5ff;
+}
