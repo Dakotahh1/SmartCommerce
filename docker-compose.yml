@@ -1,0 +1,214 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# SmartCommerce · ambiente local integrado (EP1)
+#
+#   cp .env.example .env        # y reemplazar TODOS los valores "cambiar-..."
+#   docker compose up -d --build
+#   → http://localhost:8080 (app)  ·  http://localhost:8080/api/docs (Swagger)
+#
+# Redes (mínima exposición):
+#   edge      pública: solo el gateway frontend publica un puerto en el host
+#   services  interna: frontend → backend → python-service
+#   data      interna: backend / migrate → database
+#   egress    salida a Internet: solo python-service (Open Food Facts)
+#
+# Orden de arranque: database (healthy) → migrate (completed) + python-service (healthy)
+#                    → backend (healthy) → frontend
+# ──────────────────────────────────────────────────────────────────────────────
+name: smartcommerce
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+# Endurecimiento común de contenedores de aplicación.
+x-hardening: &hardening
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  logging: *logging
+
+x-backend-build: &backend-build
+  context: ./backend
+  dockerfile: Dockerfile
+
+x-db-connection: &db-connection
+  DB_HOST: database
+  DB_PORT: "5432"
+  DB_NAME: ${DB_NAME:-smartcommerce}
+  DB_USER: ${DB_APP_USER:-smartcommerce_app}
+  DB_PASSWORD: ${DB_APP_PASSWORD:?Define DB_APP_PASSWORD en .env}
+  DB_SSL: "false"
+
+services:
+  database:
+    image: postgres:17.11-alpine3.24
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-smartcommerce}
+      POSTGRES_USER: ${POSTGRES_SUPERUSER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:?Define POSTGRES_SUPERUSER_PASSWORD en .env}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+      # Usados solo por infra/docker/postgres/init/01-roles.sh en la primera inicialización.
+      DB_OWNER_USER: ${DB_OWNER_USER:-smartcommerce_owner}
+      DB_OWNER_PASSWORD: ${DB_OWNER_PASSWORD:?Define DB_OWNER_PASSWORD en .env}
+      DB_APP_USER: ${DB_APP_USER:-smartcommerce_app}
+      DB_APP_PASSWORD: ${DB_APP_PASSWORD:?Define DB_APP_PASSWORD en .env}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./infra/docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - data
+    # -h 127.0.0.1: durante la inicialización PostgreSQL solo escucha por socket, así el
+    # servicio no se declara sano hasta que los roles y la base de datos están listos.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
+    security_opt:
+      - no-new-privileges:true
+    shm_size: 128m
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+    logging: *logging
+
+  migrate:
+    image: ${IMAGE_PREFIX:-smartcommerce}-backend:${IMAGE_TAG:-local}
+    build: *backend-build
+    command: ["node", "dist/database/migrate.js", "run"]
+    restart: "no"
+    environment:
+      <<: *db-connection
+      NODE_ENV: ${APP_ENV:-staging}
+      DB_MIGRATION_USER: ${DB_OWNER_USER:-smartcommerce_owner}
+      DB_MIGRATION_PASSWORD: ${DB_OWNER_PASSWORD:?Define DB_OWNER_PASSWORD en .env}
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - data
+    healthcheck:
+      disable: true
+    <<: *hardening
+
+  python-service:
+    image: ${IMAGE_PREFIX:-smartcommerce}-python-service:${IMAGE_TAG:-local}
+    build:
+      context: ./python-service
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      APP_ENV: ${APP_ENV:-staging}
+      LOG_LEVEL: ${PYTHON_LOG_LEVEL:-INFO}
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:?Define INTERNAL_API_TOKEN en .env}
+      OFF_BASE_URL: ${OFF_BASE_URL:-https://world.openfoodfacts.org}
+      OFF_USER_AGENT: "${OFF_USER_AGENT:-SmartCommerce/0.1.0 (contacto: equipo@smartcommerce.example)}"
+      OFF_TIMEOUT_SECONDS: ${OFF_TIMEOUT_SECONDS:-10}
+      OFF_SEARCH_RATE_PER_MINUTE: ${OFF_SEARCH_RATE_PER_MINUTE:-8}
+      OFF_CACHE_TTL_SECONDS: ${OFF_CACHE_TTL_SECONDS:-300}
+    networks:
+      - services
+      - egress
+    tmpfs:
+      - /tmp:size=16m
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 384M
+    <<: *hardening
+
+  backend:
+    image: ${IMAGE_PREFIX:-smartcommerce}-backend:${IMAGE_TAG:-local}
+    build: *backend-build
+    restart: unless-stopped
+    environment:
+      <<: *db-connection
+      NODE_ENV: ${APP_ENV:-staging}
+      APP_VERSION: ${APP_VERSION:-0.1.0}
+      PORT: "3000"
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,https://localhost}
+      # Detrás del gateway Nginx: la IP real llega en X-Forwarded-For (rate limiting correcto).
+      TRUST_PROXY: "true"
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-true}
+      THROTTLE_ENABLED: ${THROTTLE_ENABLED:-true}
+      THROTTLE_LIMIT: ${THROTTLE_LIMIT:-120}
+      DB_POOL_MAX: ${DB_POOL_MAX:-10}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?Define JWT_ACCESS_SECRET en .env}
+      JWT_ACCESS_TTL_SECONDS: ${JWT_ACCESS_TTL_SECONDS:-900}
+      REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-7}
+      PYTHON_SERVICE_URL: http://python-service:8000
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:?Define INTERNAL_API_TOKEN en .env}
+      SMARTMATCH_TIMEOUT_MS: ${SMARTMATCH_TIMEOUT_MS:-5000}
+      SMARTMATCH_INGESTION_TIMEOUT_MS: ${SMARTMATCH_INGESTION_TIMEOUT_MS:-45000}
+    depends_on:
+      database:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      python-service:
+        condition: service_healthy
+    networks:
+      - services
+      - data
+    tmpfs:
+      - /tmp:size=16m
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+    <<: *hardening
+
+  frontend:
+    image: ${IMAGE_PREFIX:-smartcommerce}-frontend:${IMAGE_TAG:-local}
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      API_UPSTREAM: http://backend:3000
+      DNS_RESOLVER: 127.0.0.11
+    ports:
+      - "${FRONTEND_BIND:-127.0.0.1}:${FRONTEND_PORT:-8080}:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - edge
+      - services
+    # Nginx escribe su configuración generada y archivos temporales solo en memoria.
+    tmpfs:
+      - /tmp:size=32m,uid=101,gid=101
+      - /etc/nginx/conf.d:size=1m,uid=101,gid=101
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+    <<: *hardening
+
+networks:
+  edge:
+    name: smartcommerce-edge
+  services:
+    name: smartcommerce-services
+    internal: true
+  data:
+    name: smartcommerce-data
+    internal: true
+  egress:
+    name: smartcommerce-egress
+
+volumes:
+  db-data:
+    name: smartcommerce-db-data
