@@ -60,10 +60,11 @@ Detalle completo: [docs/01 · Definición del proyecto](docs/01-definicion-proye
 
 | Integrante | Rol principal | Responsabilidades |
 |---|---|---|
-| *(nombre)* | Frontend y UX | Angular + Ionic + Capacitor, prototipo Figma, accesibilidad |
-| *(nombre)* | Backend | NestJS, autenticación, API REST, PostgreSQL y migraciones |
-| *(nombre)* | Datos e inteligencia | Servicio Python, fuente web, motor SmartMatch |
-| *(nombre)* | DevSecOps | Docker, pipeline de GitHub Actions, Terraform, seguridad |
+| Diego Alvarado| Frontend y UX | Angular + Ionic + Capacitor, prototipo Figma, accesibilidad |
+| Vicente Palma | Backend | NestJS, autenticación, API REST, PostgreSQL y migraciones |
+| Vicente Palma | DevSecOps | Docker, pipeline de GitHub Actions, Terraform, seguridad |
+| Lucas Pinto| Datos e inteligencia | Servicio Python, fuente web, motor SmartMatch |
+
 
 El trabajo se organiza con **GitHub Flow**: ramas cortas por área, pull requests hacia `main` con plantilla y el check `Quality gate` obligatorio ([CONTRIBUTING.md](CONTRIBUTING.md), [ADR-0011](docs/adr/0011-estrategia-de-ramas-github-flow.md)).
 
