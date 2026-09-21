@@ -6,7 +6,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 ARG PYTHON_IMAGE=python:3.13.15-slim-trixie
 
-FROM astral/uv:0.12.15 AS uv
+FROM astral/uv:0.12.16 AS uv
 
 FROM ${PYTHON_IMAGE} AS builder
 ENV UV_COMPILE_BYTECODE=1 \
