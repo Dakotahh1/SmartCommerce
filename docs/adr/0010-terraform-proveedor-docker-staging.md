@@ -9,7 +9,7 @@ La infraestructura debe definirse con Terraform (proveedor, recursos, variables,
 
 ## Decisión
 
-- Usar el proveedor **`kreuzwerker/docker`** para describir el stack completo sobre un **host Docker** (VM Linux de staging): redes `edge`/`services`/`data` (internas), volumen persistente de PostgreSQL, contenedores de frontend, backend, servicio Python y base de datos con límites, healthchecks y variables.
+- Usar el proveedor **`kreuzwerker/docker`** para describir el stack completo sobre un **host Docker** (VM Linux de staging): redes `edge` (pública), `api`, `services` y `data` (internas) y `egress` (salida solo del servicio Python), volumen persistente de PostgreSQL, contenedores de frontend, backend, servicio Python y base de datos con límites, healthchecks y variables.
 - Estructura con **módulo reutilizable** (`infra/terraform/modules/smartcommerce-stack`) y **raíces por ambiente** (`environments/staging`, `environments/dev`), cada una con sus variables y backend de estado propio (fuera del repositorio).
 - En CI, `plan` se ejecuta contra el daemon Docker del runner (mismo proveedor y recursos), lo que valida la definición sin credenciales cloud; el `apply` a staging real se habilita cuando existan los secretos del host (`STAGING_DOCKER_HOST`, llave SSH) y requiere aprobación del *environment* `staging` de GitHub.
 
