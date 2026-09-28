@@ -11,7 +11,7 @@ Proyecto de la asignatura **Ingeniería Web Avanzada** — Ingeniería Civil Inf
 |---|---|
 | 🎨 Prototipo navegable y design system | [Figma · SmartCommerce](https://www.figma.com/design/vUBipEZdpxUtfokgU17hKu) |
 | ⚙️ Pipeline | [GitHub Actions](https://github.com/Dakotahh1/SmartCommerce/actions/workflows/ci.yml) |
-| 📋 Tablero de gestión | *(agregar enlace al tablero del equipo)* |
+| 📋 Tablero de gestión | [Trello · Kanban Board](https://trello.com/invite/b/6ab9e79ba3760eb1cc5d619d/ATTI6a53b4a4926cc415196729043f0e1f74E5264F6E/kanban-smartcommerce)|
 | 🌐 Ambiente desplegado | Staging efímero en cada ejecución del pipeline; staging persistente definido con Terraform ([docs/09](docs/09-staging-terraform.md)) |
 
 ---
