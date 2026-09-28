@@ -201,6 +201,36 @@ class TestRanking:
         assert "Similar a productos que te interesaron" in response.items[0].reasons
 
 
+class TestDocumentedExample:
+    """Mantiene sincronizado el ejemplo resuelto de docs/05-motor-smartmatch.md (sección 5.5)."""
+
+    def test_personalized_score_matches_the_documented_example(self) -> None:
+        avena = candidate(unit_price=None)
+
+        # Profile() trae los pesos por defecto 30/25/20/15/10; sin perfil el motor usaría la base.
+        item = rank(
+            RankRequest(strategy="personalized", profile=Profile(), candidates=[avena])
+        ).items[0]
+
+        assert item.score == 76.5
+        assert item.coverage == 0.75
+        assert {b.criterion: b.contribution for b in item.breakdown} == {
+            "nutrition": 29.6,
+            "price": 0.0,
+            "processing": 24.7,
+            "environment": 14.8,
+            "availability": 7.4,
+        }
+
+    def test_baseline_score_matches_the_documented_example(self) -> None:
+        avena = candidate(unit_price=None)
+
+        item = rank(RankRequest(strategy="baseline", candidates=[avena])).items[0]
+
+        assert item.score == 84.0
+        assert item.coverage == 1.0
+
+
 class TestLearning:
     def test_decay_half_life(self) -> None:
         assert decay(0) == 1.0
