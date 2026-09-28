@@ -16,8 +16,12 @@ CRITERION_LABELS_ES: dict[str, str] = {
     "availability": "Disponibilidad",
 }
 
+# Escalas no lineales: el salto A→B importa menos que C→D, porque la diferencia real de calidad
+# se concentra en la cola baja. Se usan para Nutri-Score y Eco-Score (mismas letras A–E).
 GRADE_VALUES: dict[str, float] = {"a": 1.0, "b": 0.8, "c": 0.55, "d": 0.3, "e": 0.1}
+# NOVA 4 (ultraprocesado) queda muy castigado; NOVA 1 y 2 son casi equivalentes para decidir.
 NOVA_VALUES: dict[int, float] = {1: 1.0, 2: 0.8, 3: 0.5, 4: 0.15}
+# Estar en 5 o más tiendas ya se considera "fácil de encontrar".
 STORES_FOR_FULL_AVAILABILITY = 5
 
 
@@ -52,8 +56,11 @@ def build_price_context(products: Iterable[ProductCandidate]) -> PriceContext:
 
 
 def nutrition_value(product: ProductCandidate) -> float | None:
+    """Nutri-Score si existe; si no, una estimación a partir de los sellos ALTO EN."""
     if product.nutriscore_grade:
         return GRADE_VALUES[product.nutriscore_grade]
+    # Respaldo cuando Open Food Facts no trae Nutri-Score pero sí los nutrientes: se parte de 0,9
+    # y cada sello resta 0,2 (cuatro sellos ⇒ 0,1). Nunca llega a 0 porque es una estimación.
     if product.nutriments is not None and product.nutriments.complete_for_seals:
         return max(0.1, 0.9 - 0.2 * len(product.high_in_seals))
     return None
@@ -68,15 +75,22 @@ def environment_value(product: ProductCandidate) -> float | None:
 
 
 def price_value(product: ProductCandidate, context: PriceContext) -> float | None:
+    """Precio por unidad comparado con la mediana de su categoría, no en pesos absolutos.
+
+    Escala: igual a la mediana ⇒ 0,5; gratis ⇒ 1,0; el doble de la mediana o más ⇒ 0,0.
+    Así un aceite caro no compite contra unos fideos baratos, sino contra su propia categoría.
+    """
     if product.unit_price is None:
         return None
     reference = context.reference_for(product.main_category)
+    # Sin mediana de referencia (pocos precios conocidos) se devuelve el punto neutro.
     if reference is None or reference <= 0:
         return 0.5
     return min(1.0, max(0.0, 0.5 + 0.5 * (reference - product.unit_price) / reference))
 
 
 def availability_value(product: ProductCandidate, preferred_stores: Sequence[str]) -> float | None:
+    """Cuántas tiendas lo venden; estar en una tienda preferida vale casi lo máximo."""
     if not product.stores:
         return None
     value = min(1.0, len(product.stores) / STORES_FOR_FULL_AVAILABILITY)

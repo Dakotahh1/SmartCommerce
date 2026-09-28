@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from app.engine.criteria import CRITERIA, CRITERION_LABELS_ES, PriceContext, evaluate
 from app.schemas.engine import HistoryEvent, Weights
 
+# Intensidad de cada interacción: positiva si el usuario acercó el producto (favorito, aceptar)
+# y negativa si lo alejó (descartar, rechazar). Una vista pesa poco porque puede ser casual.
 SIGNALS: dict[str, float] = {
     "favorite": 1.0,
     "recommendation_accept": 0.8,
@@ -20,10 +22,16 @@ SIGNALS: dict[str, float] = {
     "dismiss": -0.8,
     "recommendation_reject": -1.0,
 }
+# A los 14 días una interacción vale la mitad: los gustos recientes mandan sobre los antiguos.
 HALF_LIFE_DAYS = 14.0
+# Cuánto mueve los pesos una interacción de intensidad 1 sobre un criterio muy destacado.
 LEARNING_RATE = 8.0
+# Tope duro del ajuste por criterio (en puntos de peso): lo declarado por el usuario siempre
+# pesa más que lo inferido, y el ajuste es explicable ("nutrición +15"), nunca una caja negra.
 MAX_ADJUSTMENT = 15.0
+# Escala del tanh que satura la afinidad: con ~3 puntos de señal acumulada se llega a ~0,9.
 AFFINITY_SCALE = 3.0
+# Con un solo criterio conocido no hay con qué comparar: el producto no enseña nada.
 MIN_CRITERIA_FOR_LEARNING = 2
 
 
@@ -91,6 +99,10 @@ def learn_profile(
         values = {c: v for c, v in evaluate(product, context).items() if v is not None}
         if len(values) < MIN_CRITERIA_FOR_LEARNING:
             continue
+        # Lo que enseña un producto no es cuán bueno es, sino en qué DESTACA respecto de sí
+        # mismo: cada criterio se compara con el promedio del propio producto. Así uno bueno en
+        # todo no mueve ningún peso, y marcar como favorito uno con Nutri-Score A pero caro sube
+        # nutrición y baja precio, que es la preferencia que ese gesto revela.
         mean_value = sum(values.values()) / len(values)
         for criterion, value in values.items():
             raw_adjustments[criterion] += LEARNING_RATE * strength * (value - mean_value)

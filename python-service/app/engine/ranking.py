@@ -27,6 +27,8 @@ from app.schemas.engine import (
     RankStats,
 )
 
+# Estrategia BASE (no adaptativa) contra la que se mide la personalizada. El precio pesa 0
+# porque la cobertura de precios en Chile es casi nula (ver docs/04-fuente-web.md).
 BASELINE_WEIGHTS: dict[str, float] = {
     "nutrition": 40.0,
     "price": 0.0,
@@ -34,9 +36,14 @@ BASELINE_WEIGHTS: dict[str, float] = {
     "environment": 20.0,
     "availability": 10.0,
 }
+# Confianza = 0,7 + 0,3 × cobertura: un producto con ficha incompleta nunca alcanza el puntaje
+# de uno con todos los datos, aunque destaque en los criterios que sí se pudieron evaluar.
 CONFIDENCE_FLOOR = 0.7
+# La afinidad aprendida mueve el puntaje ±10 % como máximo: ajusta el orden, no lo domina.
 AFFINITY_IMPACT = 0.1
+# Al estimar afinidad la categoría pesa más que la marca: se repite más y es mejor señal.
 CATEGORY_AFFINITY_SHARE = 0.6
+# Cada aparición previa de la misma marca multiplica su puntaje por 0,95 SOLO para ordenar.
 DIVERSITY_DECAY = 0.95
 
 
@@ -94,9 +101,12 @@ def score_product(product: ProductCandidate, ctx: EngineContext) -> ScoredProduc
     values = evaluate(product, ctx.price_context, preferred)
     weights = ctx.weights
     total_weight = sum(weights[c] for c in CRITERIA)
+    # Renormalización: solo participan los criterios con dato y con peso asignado. Un dato
+    # faltante reparte su peso entre los demás en vez de contar como cero (que sería inventar).
     available = [c for c in CRITERIA if values[c] is not None and weights[c] > 0]
     available_weight = sum(weights[c] for c in available)
 
+    # Cobertura = porción del peso que sí pudo evaluarse; alimenta el factor de confianza.
     coverage = available_weight / total_weight if total_weight > 0 else 0.0
     confidence = CONFIDENCE_FLOOR + (1 - CONFIDENCE_FLOOR) * coverage
     base = (
@@ -108,6 +118,8 @@ def score_product(product: ProductCandidate, ctx: EngineContext) -> ScoredProduc
     raw_score = base * confidence * (1 + AFFINITY_IMPACT * affinity)
     score = round(100 * min(1.0, max(0.0, raw_score)), 1)
 
+    # `contribution` reparte el puntaje entre los criterios (su suma es el puntaje sin afinidad):
+    # es exactamente lo que la app muestra en el desglose "por qué te lo recomendamos".
     contributions: dict[str, float] = {}
     breakdown: list[CriterionScore] = []
     for criterion in CRITERIA:
@@ -151,6 +163,8 @@ def diversify(scored: Sequence[ScoredProduct], limit: int) -> list[ScoredProduct
     remaining = sorted(scored, key=lambda s: s.sort_key())
     selected: list[ScoredProduct] = []
     brand_counts: dict[str, int] = {}
+    # En cada vuelta se elige el mejor candidato según su puntaje ya penalizado por las veces
+    # que su marca lleva seleccionada. El puntaje que ve el usuario no cambia: solo el orden.
     while remaining and len(selected) < limit:
         best = min(
             remaining,
