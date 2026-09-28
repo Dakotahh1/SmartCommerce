@@ -201,6 +201,36 @@ class TestRanking:
         assert "Similar a productos que te interesaron" in response.items[0].reasons
 
 
+class TestDocumentedExample:
+    """Mantiene sincronizado el ejemplo resuelto de docs/05-motor-smartmatch.md (sección 5.5)."""
+
+    def test_personalized_score_matches_the_documented_example(self) -> None:
+        avena = candidate(unit_price=None)
+
+        # Profile() trae los pesos por defecto 30/25/20/15/10; sin perfil el motor usaría la base.
+        item = rank(
+            RankRequest(strategy="personalized", profile=Profile(), candidates=[avena])
+        ).items[0]
+
+        assert item.score == 76.5
+        assert item.coverage == 0.75
+        assert {b.criterion: b.contribution for b in item.breakdown} == {
+            "nutrition": 29.6,
+            "price": 0.0,
+            "processing": 24.7,
+            "environment": 14.8,
+            "availability": 7.4,
+        }
+
+    def test_baseline_score_matches_the_documented_example(self) -> None:
+        avena = candidate(unit_price=None)
+
+        item = rank(RankRequest(strategy="baseline", candidates=[avena])).items[0]
+
+        assert item.score == 84.0
+        assert item.coverage == 1.0
+
+
 class TestLearning:
     def test_decay_half_life(self) -> None:
         assert decay(0) == 1.0
@@ -224,6 +254,63 @@ class TestLearning:
         assert learned.effective_weights["nutrition"] > 30
         assert learned.events_used == 1
         assert any(line.startswith("Nutrición +") for line in learned.explanations())
+
+    def test_a_product_good_at_everything_teaches_nothing(self) -> None:
+        events = [
+            history(
+                "favorite",
+                nutriscore_grade="a",
+                nova_group=1,
+                ecoscore_grade="a",
+                stores=[],
+                unit_price=None,
+            )
+        ]
+        learned = learn_profile(Weights(), events, build_price_context([]))
+
+        assert learned.adjustments == pytest.approx(dict.fromkeys(learned.adjustments, 0.0))
+        assert learned.effective_weights == learned.explicit_weights
+
+    def test_adjustment_is_relative_to_the_product_own_average(self) -> None:
+        # Nutrición 1,0 · procesamiento 1,0 · ambiental 0,1 → promedio del producto 0,7.
+        # Ajuste = 8 × 1 × (valor − 0,7). Precio y disponibilidad no tienen dato: no se tocan.
+        events = [
+            history(
+                "favorite",
+                nutriscore_grade="a",
+                nova_group=1,
+                ecoscore_grade="e",
+                stores=[],
+                unit_price=None,
+            )
+        ]
+        learned = learn_profile(Weights(), events, build_price_context([]))
+
+        assert learned.adjustments == pytest.approx(
+            {
+                "nutrition": 2.4,
+                "price": 0.0,
+                "processing": 2.4,
+                "environment": -4.8,
+                "availability": 0.0,
+            }
+        )
+
+    def test_dismissing_the_same_product_teaches_the_opposite(self) -> None:
+        product: dict[str, Any] = {
+            "nutriscore_grade": "a",
+            "nova_group": 1,
+            "ecoscore_grade": "e",
+            "stores": [],
+            "unit_price": None,
+        }
+        ctx = build_price_context([])
+        liked = learn_profile(Weights(), [history("favorite", **product)], ctx)
+        dismissed = learn_profile(Weights(), [history("dismiss", **product)], ctx)
+
+        # Favorito vale +1 y descartar −0,8: mismo patrón, sentido contrario y 80 % de la fuerza.
+        for criterion, adjustment in liked.adjustments.items():
+            assert dismissed.adjustments[criterion] == pytest.approx(-0.8 * adjustment)
 
     def test_adjustments_are_bounded(self) -> None:
         events = [

@@ -64,6 +64,46 @@ score      = 100 · clamp(base · confianza · (1 + 0,1 · afinidad), 0, 1)
 - **Diversificación**: selección voraz que multiplica por `0,95^k` el puntaje del k-ésimo producto repetido de la misma marca.
 - **Desempate**: mayor calidad del dato y luego GTIN.
 
+### Ejemplo resuelto
+
+Producto: **Avena Instantánea Quaker** (EAN 7802000014130), Nutri-Score B, NOVA 1, Eco-Score B, vendida en 3 tiendas y **sin precio conocido**, que es el caso más común en Chile. Usuario con los pesos por defecto y sin historial (afinidad 0).
+
+**1. Valor de cada criterio (0 a 1)**
+
+| Criterio | Dato | Valor | Peso del usuario | ¿Participa? | Peso × valor |
+|---|---|---|---|---|---|
+| Nutrición | Nutri-Score B | 0,8 | 30 | Sí | 24 |
+| Precio | sin dato | — | 25 | **No** | — |
+| Procesamiento | NOVA 1 | 1,0 | 20 | Sí | 20 |
+| Impacto ambiental | Eco-Score B | 0,8 | 15 | Sí | 12 |
+| Disponibilidad | 3 tiendas de 5 | 0,6 | 10 | Sí | 6 |
+| **Total** | | | **100** | **75** | **62** |
+
+**2. Renormalización.** El precio no se inventa: sus 25 puntos de peso salen del cálculo y el promedio se hace solo con los 75 puntos que sí tienen dato.
+
+```
+base = 62 / 75 = 0,8267
+```
+
+**3. Cobertura y confianza.** Se pudo evaluar el 75 % del peso que el usuario considera importante, y eso se refleja en la confianza:
+
+```
+cobertura = 75 / 100 = 0,75
+confianza = 0,7 + 0,3 × 0,75 = 0,925
+```
+
+**4. Puntaje.** Sin historial la afinidad es 0, así que el último factor vale 1:
+
+```
+score = 100 × 0,8267 × 0,925 × (1 + 0,1 × 0) = 76,5
+```
+
+**5. Desglose que ve el usuario.** Cada contribución es `100 × confianza × peso × valor / 75` y entre todas suman el puntaje: nutrición **29,6** + procesamiento **24,7** + impacto ambiental **14,8** + disponibilidad **7,4** = **76,5**. El precio aparece con contribución 0 y la advertencia "Precio no disponible".
+
+**Comparación con la versión base.** El mismo producto obtiene **84,0** con la estrategia base, porque en ella el precio pesa 0: la cobertura es 1,0 y no hay descuento por confianza. La diferencia muestra el diseño: a este usuario le importa el precio (25 %), ese dato falta, y el motor lo dice bajando la confianza en vez de suponer un precio.
+
+Estos números están fijados en la prueba `TestDocumentedExample` de `python-service/tests/test_engine.py`: si alguien cambia la fórmula sin actualizar este ejemplo, el pipeline falla.
+
 ### Versión base no adaptativa (control)
 
 Mismos datos, **mismo resultado para todos**: pesos fijos `nutrition 40 · processing 30 · environment 20 · availability 10 · price 0`, sin filtros personales, sin afinidad ni aprendizaje. Se usa para visitantes, cuando el usuario desactiva la personalización y como **línea base de evaluación**. NestJS tiene una implementación equivalente en TypeScript como **respaldo** si el servicio Python no responde (respuesta marcada `degraded: true`).
