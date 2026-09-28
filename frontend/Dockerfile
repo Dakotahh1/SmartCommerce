@@ -26,8 +26,11 @@ LABEL org.opencontainers.image.title="smartcommerce-frontend" \
 ENV API_UPSTREAM=http://backend:3000 \
     DNS_RESOLVER=127.0.0.11 \
     NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
-# /etc/nginx pertenece al uid 101 en la imagen unprivileged: no hace falta root.
-RUN rm -f /etc/nginx/conf.d/default.conf
+# Parches de seguridad de Alpine publicados después de la imagen base (el escaneo del pipeline
+# bloquea vulnerabilidades con parche disponible). apk necesita root; el proceso vuelve al uid 101.
+USER 0
+RUN apk upgrade --no-cache \
+ && rm -f /etc/nginx/conf.d/default.conf
 COPY --chown=root:root nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --chown=root:root nginx/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build --chown=root:root /app/dist/frontend/browser /usr/share/nginx/html
