@@ -116,15 +116,16 @@ La información está **dispersa**, usa **unidades distintas** (precio por envas
 
 | Funcionalidad | Estado EP1 | Entrega objetivo |
 |---|---|---|
-| Autenticación (registro, login, refresh, logout) y roles | Implementada (básica) | EP1 |
-| Catálogo: listado, búsqueda y detalle de productos | API + UI inicial | EP1–EP2 |
-| Ingesta Open Food Facts vía servicio Python | Endpoint funcional + persistencia | EP1–EP2 |
+| Autenticación (registro, login, refresh rotativo, logout, eliminación de cuenta) y roles | Implementada | EP1 |
+| Catálogo: listado, búsqueda con filtros y detalle de productos | API + UI implementadas | EP1–EP2 |
+| Ingesta Open Food Facts vía servicio Python | Endpoint funcional + persistencia + reporte de calidad + UI de administración | EP1–EP2 |
 | Normalización, validación, deduplicación y cálculo de sellos Ley 20.606 | Implementada en Python | EP1–EP2 |
-| Recomendaciones SmartMatch con explicación | Ranking multicriterio funcional (v0.1) | EP1 → EF |
-| Comparación de productos | API + UI inicial | EP2 |
-| Aprendizaje de preferencias por interacción | Diseño + función inicial | EF |
-| Modo sin conexión y degradación controlada | Base (banner + fallback) | EP1 → EF |
-| Panel de ingesta y estado del sistema | UI inicial + `/api/health` | EP1 → EP2 |
+| Recomendaciones SmartMatch con explicación | Ranking multicriterio funcional (v0.1) con UI explicable | EP1 → EF |
+| Comparación de productos | API + UI implementadas (2–4 productos, ganador por criterio) | EP1 → EP2 |
+| Aprendizaje de preferencias por interacción | Función inicial acotada (ajustes de pesos y afinidades) + restablecer | EF |
+| Modo sin conexión y degradación controlada | Caché de recomendaciones, banners y ranking de respaldo | EP1 → EF |
+| Panel de ingesta y estado del sistema | UI + `/api/health` + métricas por ruta | EP1 → EP2 |
+| App Android | Proyecto Capacitor; APK debug generado por el pipeline | EP1 → EF |
 
 ## 1.13 Fuente de información web considerada
 
