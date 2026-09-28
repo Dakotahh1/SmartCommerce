@@ -104,6 +104,8 @@ export class HomePage implements ViewWillEnter {
         this.topProducts.set(page.items);
       }
     } catch {
+      // Sin red o con la API caída se muestran las últimas recomendaciones guardadas, avisando
+      // desde cuándo son (cachedAt): es el modo sin conexión de la PWA, pensado para la tienda.
       const cached = await this.storage.get<CachedRecommendations>(STORAGE_KEYS.recommendations);
       if (cached && this.auth.isAuthenticated()) {
         this.recommendations.set(cached.data);

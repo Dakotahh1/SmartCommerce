@@ -5,7 +5,7 @@
 @use '@fontsource/plus-jakarta-sans/latin-700.css';
 @use '@fontsource/plus-jakarta-sans/latin-800.css';
 
-// Ionic
+// Solo las capas de Ionic que se usan, no el bundle completo: reduce el CSS inicial.
 @use '@ionic/angular/css/core.css';
 @use '@ionic/angular/css/normalize.css';
 @use '@ionic/angular/css/structure.css';

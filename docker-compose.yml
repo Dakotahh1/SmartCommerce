@@ -1,7 +1,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 # SmartCommerce · ambiente local integrado (EP1)
 #
-#   cp .env.example .env        # y reemplazar TODOS los valores "cambiar-..."
+#   scripts/init-env.sh         # crea .env con secretos aleatorios (o copiar .env.example a mano)
 #   docker compose up -d --build
 #   → http://localhost:8080 (app)  ·  http://localhost:8080/api/docs (Swagger)
 #

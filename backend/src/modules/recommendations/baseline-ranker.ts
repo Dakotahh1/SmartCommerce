@@ -61,6 +61,8 @@ function values(product: ProductCandidate): Record<Criterion, number | null> {
     nutrition: product.nutriscoreGrade
       ? GRADE_VALUES[product.nutriscoreGrade]
       : nutritionFromSeals,
+    // El precio se compara contra la mediana de la categoría, y ese cálculo vive en el motor
+    // Python. Sin él, aquí se trata como dato faltante y su peso se reparte entre los demás.
     price: null,
     processing: product.novaGroup
       ? (NOVA_VALUES[product.novaGroup] ?? null)
@@ -68,6 +70,7 @@ function values(product: ProductCandidate): Record<Criterion, number | null> {
     environment: product.ecoscoreGrade
       ? GRADE_VALUES[product.ecoscoreGrade]
       : null,
+    // 5 tiendas o más = disponibilidad máxima (mismo umbral que el motor).
     availability: product.stores.length
       ? Math.min(1, product.stores.length / 5)
       : null,
@@ -88,6 +91,7 @@ export function scoreBaseline(
     0,
   );
   const coverage = total ? availableWeight / total : 0;
+  // Misma fórmula que el motor Python: confianza = 0,7 + 0,3 × cobertura.
   const confidence = 0.7 + 0.3 * coverage;
   const base = availableWeight
     ? available.reduce(

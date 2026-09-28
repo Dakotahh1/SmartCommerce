@@ -134,6 +134,9 @@ export class AuthService {
     });
     if (!stored) throw INVALID_REFRESH();
 
+    // Un token ya rotado que vuelve a aparecer significa que alguien tiene una copia: el usuario
+    // legítimo ya recibió el reemplazo. Ante la duda se corta toda la familia (todas las
+    // rotaciones de ese login), no solo este token.
     if (stored.revokedAt) {
       await this.revokeFamily(stored.familyId);
       this.logger.warn(
