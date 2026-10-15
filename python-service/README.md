@@ -12,8 +12,8 @@ Servicio especializado **sin estado** invocado solo por el backend NestJS. Imple
 |---|---|---|---|
 | GET | `/health` | Pública | Liveness (versión, versión del motor, uptime) |
 | GET | `/health/ready?deep=true` | Pública | Readiness; con `deep` verifica Open Food Facts (caché 60 s) |
-| GET | `/v1/metrics` | `X-Internal-Token` | Conteo, errores 5xx, latencia promedio y p95 por ruta |
-| POST | `/v1/ingestion/openfoodfacts/search` | `X-Internal-Token` | Busca en Open Food Facts por país/categoría/marca y devuelve productos normalizados + reporte de calidad |
+| GET | `/v1/metrics` | `X-Internal-Token` | Conteo, errores 5xx, latencia promedio y p95 por ruta; `upstream.openfoodfacts`: solicitudes, errores por tipo, tasa de error, latencia y último error de la fuente |
+| POST | `/v1/ingestion/openfoodfacts/search` | `X-Internal-Token` | Busca en Open Food Facts por país/categoría/marca y devuelve productos normalizados (incluye `searchPrimary`/`searchSecondary` para el índice de búsqueda) + reporte de calidad |
 | POST | `/v1/products/normalize` | `X-Internal-Token` | Normaliza registros crudos (hasta 500) |
 | POST | `/v1/recommendations/rank` | `X-Internal-Token` | Ranking personalizado o base con desglose, razones y exclusiones |
 | POST | `/v1/comparisons` | `X-Internal-Token` | Compara 2–4 productos: ganador, ganadores por criterio y resumen |
@@ -36,6 +36,15 @@ Documentación OpenAPI interactiva en `/docs` (deshabilitada cuando `APP_ENV=pro
 ```
 
 Códigos: `UNAUTHORIZED` (401), `VALIDATION_ERROR` (422), `TOO_MANY_CANDIDATES` (413), `UPSTREAM_UNAVAILABLE` (502), `UPSTREAM_INVALID_RESPONSE` (502), `INTERNAL_ERROR` (500).
+
+## Scripts
+
+| Script | Uso |
+|---|---|
+| `scripts/build_search_corpus.py` | Regenera `evaluation/retrieval/corpus.json` (corpus de evaluación del buscador) desde la instantánea real de `tests/fixtures` |
+| `scripts/off_mock_server.py` | Fuente Open Food Facts simulada (solo biblioteca estándar) para las pruebas de integración del pipeline (`docker-compose.source-mock.yml`) |
+
+Reglas de tokenización del índice: `app/normalization/text.py`; casos compartidos con el backend en `tests/fixtures/text_normalization_cases.json`.
 
 ## Desarrollo local
 
