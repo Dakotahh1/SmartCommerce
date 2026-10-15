@@ -550,4 +550,148 @@ describe('SmartCommerce API (e2e)', () => {
       metrics.body.routes['POST /api/v1/auth/login'].count,
     ).toBeGreaterThan(0);
   });
+
+  it('ingesta programada: estado, lote asíncrono por objetivos y protección por rol', async () => {
+    const regular = await loginAs('usuario@correo.cl');
+    await http
+      .post('/api/v1/admin/ingestions/schedule/run')
+      .set('Authorization', `Bearer ${regular.accessToken}`)
+      .expect(403);
+
+    const admin = await loginAs('admin@correo.cl');
+    const auth = `Bearer ${admin.accessToken}`;
+    const status = await http
+      .get('/api/v1/admin/ingestions/schedule')
+      .set('Authorization', auth)
+      .expect(200);
+    expect(status.body).toMatchObject({ enabled: false, running: false });
+    const targets = status.body.targets as { category: string }[];
+    expect(targets.length).toBeGreaterThan(0);
+
+    fake.on('POST', '/v1/ingestion/openfoodfacts/search', (req) => {
+      const body = req.body as { category: string };
+      if (body.category === targets[0].category) {
+        return { status: 502, body: { code: 'UPSTREAM_UNAVAILABLE' } };
+      }
+      return {
+        status: 200,
+        body: ingestionResponse([
+          normalizedProduct('7802000014130', 'Avena Instantánea', {
+            searchPrimary: 'avena instantanea quaker',
+            searchSecondary: 'cereal desayuno',
+            rawHash: 'c'.repeat(64),
+          }),
+        ]),
+      };
+    });
+    const started = await http
+      .post('/api/v1/admin/ingestions/schedule/run')
+      .set('Authorization', auth)
+      .expect(202);
+    expect(started.body.accepted).toBe(true);
+
+    await vi.waitFor(
+      async () => {
+        const res = await http
+          .get('/api/v1/admin/ingestions/schedule')
+          .set('Authorization', auth)
+          .expect(200);
+        expect(res.body.running).toBe(false);
+        expect(res.body.lastBatch?.requestId).toBe(started.body.requestId);
+      },
+      { timeout: 10_000, interval: 100 },
+    );
+    const final = await http
+      .get('/api/v1/admin/ingestions/schedule')
+      .set('Authorization', auth)
+      .expect(200);
+    const batch = final.body.lastBatch;
+    // La fuente cae en el primer objetivo: se registra y el lote continúa con los demás.
+    expect(batch.status).toBe(targets.length > 1 ? 'partial' : 'failed');
+    expect(batch.targets[0].error).toMatch(/Open Food Facts/);
+    expect(
+      batch.targets.slice(1).every((t: { error: unknown }) => t.error === null),
+    ).toBe(true);
+    // Cada página llevó su X-Request-Id derivado del lote (correlación en los logs).
+    expect(fake.requests[0].headers['x-request-id']).toContain(
+      started.body.requestId,
+    );
+
+    const runs = await http
+      .get('/api/v1/admin/ingestions')
+      .set('Authorization', auth)
+      .expect(200);
+    expect(runs.body.items[0].params.trigger).toBe('scheduled');
+
+    // El producto quedó indexado con los campos de búsqueda de Python.
+    const found = await http
+      .get('/api/v1/products')
+      .query({ q: 'instantánea quaker' })
+      .expect(200);
+    expect(found.body.items[0]).toMatchObject({ gtin: '7802000014130' });
+    expect(found.body.items[0].relevance).toBeGreaterThan(0);
+  });
+
+  it('reporte de calidad de datos: validez, cobertura, actualidad, errores y fuente', async () => {
+    const regular = await loginAs('usuario@correo.cl');
+    await http
+      .get('/api/v1/admin/data-quality')
+      .set('Authorization', `Bearer ${regular.accessToken}`)
+      .expect(403);
+
+    fake.on('GET', '/v1/metrics', () => ({
+      status: 200,
+      body: {
+        uptimeSeconds: 10,
+        routes: {},
+        upstream: {
+          openfoodfacts: {
+            requests: 4,
+            errors: 1,
+            errorRate: 0.25,
+            outcomes: { ok: 3, timeout: 1 },
+            avgMs: 420.5,
+            p95Ms: 900,
+            lastError: {
+              outcome: 'timeout',
+              detail: '/api/v2/search',
+              at: '2026-10-15T12:00:00+00:00',
+            },
+          },
+        },
+      },
+    }));
+    const admin = await loginAs('admin@correo.cl');
+    const report = await http
+      .get('/api/v1/admin/data-quality')
+      .query({ days: 7 })
+      .set('Authorization', `Bearer ${admin.accessToken}`)
+      .expect(200);
+    const body = report.body;
+    expect(body.windowDays).toBe(7);
+    expect(body.catalog.products).toBeGreaterThan(0);
+    expect(body.catalog.fieldCoverage.brand).toBeGreaterThan(0);
+    expect(body.validity.fetched).toBeGreaterThan(0);
+    expect(body.validity.validRatio).toBeGreaterThan(0);
+    expect(body.validity.topRejectionReasons[0]).toMatchObject({
+      reason: 'Producto sin nombre',
+    });
+    expect(body.freshness.tracked).toBeGreaterThan(0);
+    expect(body.reliability.failed).toBeGreaterThan(0);
+    expect(body.reliability.errorRate).toBeGreaterThan(0);
+    expect(body.reliability.recentFailures[0].error).toMatch(/Fuente externa/);
+    expect(
+      body.sourceCoverage.find(
+        (row: { category: string }) => row.category === 'breakfast-cereals',
+      ),
+    ).toMatchObject({ totalAvailable: 117, coverageRatio: expect.any(Number) });
+    expect(body.source).toMatchObject({ requests: 4, errorRate: 0.25 });
+    expect(Array.isArray(body.alerts)).toBe(true);
+
+    await http
+      .get('/api/v1/admin/data-quality')
+      .query({ days: 0 })
+      .set('Authorization', `Bearer ${admin.accessToken}`)
+      .expect(400);
+  });
 });
