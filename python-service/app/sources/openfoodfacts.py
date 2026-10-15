@@ -17,6 +17,7 @@ import httpx
 
 from app.config import Settings
 from app.errors import UpstreamInvalidResponseError, UpstreamUnavailableError
+from app.metrics import metrics
 
 logger = logging.getLogger("app.sources.openfoodfacts")
 
@@ -47,6 +48,11 @@ PRODUCT_FIELDS: tuple[str, ...] = (
 )
 RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 504})
 PING_PRODUCT_CODE = "3017620422003"
+SOURCE = "openfoodfacts"
+
+
+def _elapsed_ms(started: float) -> float:
+    return round((time.perf_counter() - started) * 1000, 2)
 
 
 class Limiter(Protocol):
@@ -168,13 +174,18 @@ class OpenFoodFactsClient:
         attempt = 0
         while True:
             await self._limiter.acquire()
+            started = time.perf_counter()
             try:
                 response = await self._client.get(path, params=params)
             except httpx.TimeoutException as exc:
+                metrics.observe_upstream(SOURCE, "timeout", _elapsed_ms(started), path)
                 logger.warning("off timeout", extra={"path": path, "attempt": attempt})
                 if attempt >= self._max_retries:
                     raise UpstreamUnavailableError("Open Food Facts no respondió a tiempo") from exc
             except httpx.TransportError as exc:
+                metrics.observe_upstream(
+                    SOURCE, "network", _elapsed_ms(started), type(exc).__name__
+                )
                 logger.warning("off transport error", extra={"path": path, "attempt": attempt})
                 if attempt >= self._max_retries:
                     raise UpstreamUnavailableError(
@@ -183,9 +194,17 @@ class OpenFoodFactsClient:
             else:
                 if response.status_code == 200:
                     try:
-                        return response.json()
+                        data = response.json()
                     except ValueError as exc:
+                        metrics.observe_upstream(
+                            SOURCE, "invalid", _elapsed_ms(started), "JSON inválido"
+                        )
                         raise UpstreamInvalidResponseError() from exc
+                    metrics.observe_upstream(SOURCE, "ok", _elapsed_ms(started))
+                    return data
+                metrics.observe_upstream(
+                    SOURCE, f"http_{response.status_code}", _elapsed_ms(started), path
+                )
                 logger.warning(
                     "off unexpected status",
                     extra={"path": path, "statusCode": response.status_code, "attempt": attempt},
