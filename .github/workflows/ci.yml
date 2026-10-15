@@ -275,7 +275,7 @@ jobs:
           done
           docker logs postgres-it; exit 1
 
-      - name: Pruebas de integración (API + PostgreSQL real + migraciones up/down)
+      - name: Pruebas de integración (API + PostgreSQL real + migraciones up/down + evaluación del buscador)
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: "5432"
@@ -290,7 +290,9 @@ jobs:
         if: always()
         with:
           name: coverage-backend
-          path: backend/coverage/
+          path: |
+            backend/coverage/
+            backend/reports/
           retention-days: 7
           if-no-files-found: ignore
 

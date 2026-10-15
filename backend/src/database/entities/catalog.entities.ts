@@ -166,6 +166,19 @@ export class Product {
   })
   dataQualityScore!: number;
 
+  /** Tokens normalizados de nombre y marcas (peso A en `search_vector`). */
+  @Column({ name: 'search_primary', type: 'varchar', length: 500, default: '' })
+  searchPrimary!: string;
+
+  /** Tokens de nombre genérico, categorías y sellos (peso B en `search_vector`). */
+  @Column({
+    name: 'search_secondary',
+    type: 'varchar',
+    length: 1000,
+    default: '',
+  })
+  searchSecondary!: string;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 

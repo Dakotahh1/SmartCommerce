@@ -55,6 +55,28 @@ CATEGORY_TERMS_ES: dict[str, str] = {
     "cocoa-and-its-products": "chocolate cacao",
 }
 
+# Sellos y etiquetas frecuentes → español ("sin azúcar", "sin gluten", "vegano"...).
+LABEL_TERMS_ES: dict[str, str] = {
+    "no-added-sugar": "sin azucar anadida",
+    "no-sugar": "sin azucar",
+    "low-sugar": "bajo azucar",
+    "no-gluten": "sin gluten",
+    "gluten-free": "sin gluten",
+    "no-lactose": "sin lactosa",
+    "lactose-free": "sin lactosa",
+    "vegan": "vegano",
+    "vegetarian": "vegetariano",
+    "organic": "organico",
+    "low-or-no-sodium": "bajo sodio",
+    "low-salt": "bajo sodio",
+    "source-of-fibre": "fuente fibra",
+    "high-fibre": "alto fibra",
+    "source-of-proteins": "fuente proteina",
+    "high-proteins": "alto proteina",
+    "no-preservatives": "sin preservante",
+    "no-colorings": "sin colorante",
+}
+
 
 def fold(text: str) -> str:
     """Minúsculas y sin diacríticos; deja solo `a-z0-9` separados por un espacio."""
@@ -109,12 +131,16 @@ def build_search_fields(
 ) -> tuple[str, str]:
     """Campos del índice: primario (nombre y marca, peso A) y secundario (resto, peso B)."""
     primary = _join([name, brand])
+    # Primero los términos en español (vocabulario controlado), luego las etiquetas originales:
+    # así el recorte por longitud nunca elimina lo más útil para el usuario.
     category_terms = [CATEGORY_TERMS_ES.get(slug) for slug in categories]
+    label_terms = [LABEL_TERMS_ES.get(slug) for slug in labels]
     category_words = [slug.replace("-", " ") for slug in categories]
     secondary = _join(
         [
             generic_name,
             *category_terms,
+            *label_terms,
             *category_words,
             *(lbl.replace("-", " ") for lbl in labels),
         ],

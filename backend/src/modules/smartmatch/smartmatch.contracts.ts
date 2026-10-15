@@ -174,6 +174,9 @@ export const normalizedProductSchema = z.object({
   countries: z.array(z.string()),
   completeness: z.number().min(0).max(1),
   dataQualityScore: z.number().min(0).max(1),
+  // Índice de búsqueda (EP2); por defecto vacío para tolerar versiones previas del servicio.
+  searchPrimary: z.string().max(500).default(''),
+  searchSecondary: z.string().max(1000).default(''),
   warnings: z.array(z.string()),
   source: z.object({
     code: z.string(),

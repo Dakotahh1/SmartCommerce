@@ -19,6 +19,14 @@ import {
 } from '../../common/enums.js';
 import { PaginationQueryDto } from '../../common/pagination.js';
 
+export const PRODUCT_SORTS = [
+  'relevance',
+  'quality',
+  'name',
+  'recent',
+] as const;
+export type ProductSort = (typeof PRODUCT_SORTS)[number];
+
 const csv = ({ value }: { value: unknown }) =>
   typeof value === 'string'
     ? value
@@ -78,10 +86,11 @@ export class ProductQueryDto extends PaginationQueryDto {
   excludeAllergens?: Allergen[];
 
   @ApiPropertyOptional({
-    enum: ['quality', 'name', 'recent'],
-    default: 'quality',
+    enum: PRODUCT_SORTS,
+    description:
+      'Orden de resultados. Por defecto `relevance` si hay texto (`q`) y `quality` si no.',
   })
   @IsOptional()
-  @IsIn(['quality', 'name', 'recent'])
-  sort: 'quality' | 'name' | 'recent' = 'quality';
+  @IsIn(PRODUCT_SORTS)
+  sort?: ProductSort;
 }

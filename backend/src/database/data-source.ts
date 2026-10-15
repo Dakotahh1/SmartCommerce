@@ -17,6 +17,7 @@ import { RefreshToken } from './entities/refresh-token.entity.js';
 import { UserPreferences } from './entities/user-preferences.entity.js';
 import { User } from './entities/user.entity.js';
 import { InitialSchema1758067200000 } from './migrations/1758067200000-InitialSchema.js';
+import { SearchIndex1760500000000 } from './migrations/1760500000000-SearchIndex.js';
 
 export const ENTITIES = [
   User,
@@ -33,7 +34,10 @@ export const ENTITIES = [
   RecommendationLog,
 ];
 
-export const MIGRATIONS = [InitialSchema1758067200000];
+export const MIGRATIONS = [
+  InitialSchema1758067200000,
+  SearchIndex1760500000000,
+];
 
 type DbEnv = Pick<
   Env,

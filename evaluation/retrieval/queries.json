@@ -1,0 +1,66 @@
+{
+  "description": "Consultas de evaluación del buscador del catálogo con juicios de relevancia binarios sobre corpus.json (23 cereales de desayuno reales de Open Food Facts Chile). Un producto es relevante si una persona que escribe la consulta en el supermercado querría verlo. Juicios definidos por el equipo antes de medir, a partir del nombre, la marca, la categoría y los sellos del producto.",
+  "k": 5,
+  "queries": [
+    {
+      "id": "q01",
+      "query": "avena",
+      "intent": "Hojuelas de avena (no mezclas donde la avena es un ingrediente)",
+      "relevant": ["7802000011719", "7800120170170", "7800120170125", "7802000013546", "7802000014949", "7803515020005"]
+    },
+    {
+      "id": "q02",
+      "query": "granola",
+      "intent": "Cualquier granola",
+      "relevant": ["7804646450297", "7804673913673", "7802000017803", "7804000002759"]
+    },
+    {
+      "id": "q03",
+      "query": "cereal chocolate",
+      "intent": "Cereales de desayuno sabor chocolate",
+      "relevant": ["7613287521507", "7804000003022", "7804000002100", "7802215168895"]
+    },
+    {
+      "id": "q04",
+      "query": "proteína",
+      "intent": "Cereales o granolas altos en proteína",
+      "relevant": ["7804673913673", "7804000002100", "7804000002759"]
+    },
+    {
+      "id": "q05",
+      "query": "semillas",
+      "intent": "Productos con mezcla de semillas",
+      "relevant": ["7802000011719", "7802000013546", "7804646450297", "7804000002131"]
+    },
+    {
+      "id": "q06",
+      "query": "sin azúcar",
+      "intent": "Productos sin azúcar añadida",
+      "relevant": ["7613287521507", "7804000003022", "7804000002100", "7804000002131", "7804000002759"]
+    },
+    {
+      "id": "q07",
+      "query": "quaker",
+      "intent": "Productos de la marca Quaker (incluye un registro con la marca mal escrita en la fuente)",
+      "relevant": ["7802000011719", "7802000011306", "7802000013546", "7802000017803", "7802000014949"]
+    },
+    {
+      "id": "q08",
+      "query": "nestlé",
+      "intent": "Productos de la marca Nestlé",
+      "relevant": ["7613287521507", "7613287593467", "7613032269586", "7613287193834"]
+    },
+    {
+      "id": "q09",
+      "query": "almendras",
+      "intent": "Productos con almendras",
+      "relevant": ["7802000017803", "7804000002759"]
+    },
+    {
+      "id": "q10",
+      "query": "fibra",
+      "intent": "Productos altos o fuente de fibra",
+      "relevant": ["7790045823094", "7800120170170", "7804000003022"]
+    }
+  ]
+}

@@ -149,9 +149,14 @@ export class IngestionService {
     const categoryIds = await this.upsertCategories(manager, items);
     const existing = await manager.find(Product, {
       where: { gtin: In(items.map((i) => i.gtin)) },
-      select: { id: true, gtin: true },
+      select: {
+        id: true,
+        gtin: true,
+        searchPrimary: true,
+        searchSecondary: true,
+      },
     });
-    const productIdByGtin = new Map(existing.map((p) => [p.gtin, p.id]));
+    const productByGtin = new Map(existing.map((p) => [p.gtin, p]));
     const provenance = await manager.find(ProductSource, {
       where: { sourceId, externalId: In(items.map((i) => i.gtin)) },
       select: { externalId: true, rawHash: true },
@@ -161,9 +166,24 @@ export class IngestionService {
     );
 
     for (const item of items) {
-      const currentId = productIdByGtin.get(item.gtin);
-      if (currentId && hashByGtin.get(item.gtin) === item.rawHash) {
+      const current = productByGtin.get(item.gtin);
+      const currentId = current?.id;
+      if (current && hashByGtin.get(item.gtin) === item.rawHash) {
         counts.unchanged += 1;
+        // El dato de origen no cambió, pero las reglas del índice pueden haber cambiado.
+        if (
+          current.searchPrimary !== item.searchPrimary ||
+          current.searchSecondary !== item.searchSecondary
+        ) {
+          await manager.update(
+            Product,
+            { id: current.id },
+            {
+              searchPrimary: item.searchPrimary,
+              searchSecondary: item.searchSecondary,
+            },
+          );
+        }
         await manager.update(
           ProductSource,
           { sourceId, externalId: item.gtin },
@@ -196,6 +216,8 @@ export class IngestionService {
         stores: item.stores,
         completeness: item.completeness,
         dataQualityScore: item.dataQualityScore,
+        searchPrimary: item.searchPrimary,
+        searchSecondary: item.searchSecondary,
       };
 
       let productId = currentId;

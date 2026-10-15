@@ -1,0 +1,1641 @@
+{
+  "source": "Open Food Facts · /api/v2/search?countries_tags_en=chile&categories_tags_en=breakfast-cereals (instantánea de tests/fixtures)",
+  "license": "ODbL-1.0",
+  "generatedFrom": "off_search_chile_breakfast_cereals.json",
+  "report": {
+    "received": 24,
+    "valid": 23,
+    "rejected": 1,
+    "duplicates": 0,
+    "warnings": 0,
+    "validRatio": 0.958,
+    "duplicateRatio": 0.0,
+    "fieldCoverage": {
+      "brand": 0.913,
+      "category": 1.0,
+      "quantity": 0.609,
+      "nutriscore": 0.609,
+      "nova": 0.565,
+      "ecoscore": 0.957,
+      "nutriments": 0.609,
+      "stores": 0.13,
+      "image": 0.957
+    },
+    "rejections": [
+      {
+        "index": 14,
+        "code": "7804646450624",
+        "reason": "Producto sin nombre"
+      }
+    ],
+    "tookMs": 8.3
+  },
+  "products": [
+    {
+      "gtin": "7802000011719",
+      "name": "Avena Multisemillas",
+      "brand": "Quaker",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "flakes",
+        "cereal-flakes",
+        "rolled-flakes"
+      ],
+      "mainCategory": "rolled-flakes",
+      "quantityText": null,
+      "netQuantity": null,
+      "unit": null,
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/200/001/1719/front_en.3.400.jpg",
+      "nutriscoreGrade": null,
+      "novaGroup": null,
+      "ecoscoreGrade": "d",
+      "nutriments": {
+        "energyKcal": null,
+        "sugars": null,
+        "saturatedFat": null,
+        "sodiumMg": null,
+        "salt": null,
+        "proteins": null,
+        "fiber": null
+      },
+      "highInSeals": [],
+      "allergens": [
+        "gluten"
+      ],
+      "traces": [],
+      "labels": [],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": false,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.475,
+      "dataQualityScore": 0.415,
+      "searchPrimary": "avena multisemilla semilla quaker",
+      "searchSecondary": "cereal desayuno plant based food beverage breakfast potatoe their product flake rolled",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7802000011719",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-09-09T03:47:17Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "e16027a4ceb30bdbea8dae0749c220aa6aaeb4e84305820a04ec0a6867fda6a9"
+    },
+    {
+      "gtin": "7613287521507",
+      "name": "Chocapic Sin Azúcar Añadida",
+      "brand": "Nestlé",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "chocolate-cereals",
+        "breakfast-cereals-fortified-with-vitamins-and-chemical-elements"
+      ],
+      "mainCategory": "breakfast-cereals-fortified-with-vitamins-and-chemical-elements",
+      "quantityText": "350 g",
+      "netQuantity": 350.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/761/328/752/1507/front_es.21.400.jpg",
+      "nutriscoreGrade": "a",
+      "novaGroup": 4,
+      "ecoscoreGrade": "d",
+      "nutriments": {
+        "energyKcal": 328.0,
+        "sugars": 1.5,
+        "saturatedFat": 1.1,
+        "sodiumMg": 376.0,
+        "salt": 0.94,
+        "proteins": 9.2,
+        "fiber": 12.3
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "traces": [
+        "milk",
+        "tree_nuts"
+      ],
+      "labels": [
+        "no-added-sugar",
+        "cpu"
+      ],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": false,
+        "lactoseFree": null
+      },
+      "stores": [
+        "farmacorp",
+        "hipermaxi"
+      ],
+      "countries": [
+        "bolivia",
+        "chile"
+      ],
+      "completeness": 0.9,
+      "dataQualityScore": 0.98,
+      "searchPrimary": "chocapic sin azucar anadida nestle",
+      "searchSecondary": "cereal desayuno base maiz integral trigo sabor chocolate plant based food beverage breakfast potatoe their product fortified with vitamin chemical element no added sugar cpu",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7613287521507",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-09-07T01:05:13Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "3dcabe4706d57f893140553bfaa3214195b50aa1ab83b5eee70802f6a8b24888"
+    },
+    {
+      "gtin": "7800120170170",
+      "name": "Avena instantánea",
+      "brand": "Vivo",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals"
+      ],
+      "mainCategory": "breakfast-cereals",
+      "quantityText": null,
+      "netQuantity": null,
+      "unit": null,
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/012/017/0170/front_en.15.400.jpg",
+      "nutriscoreGrade": null,
+      "novaGroup": null,
+      "ecoscoreGrade": "d",
+      "nutriments": {
+        "energyKcal": 366.666666666667,
+        "sugars": 0.0,
+        "saturatedFat": null,
+        "sodiumMg": null,
+        "salt": null,
+        "proteins": 11.0,
+        "fiber": null
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [],
+      "traces": [],
+      "labels": [
+        "source-of-fibre"
+      ],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.375,
+      "dataQualityScore": 0.395,
+      "searchPrimary": "avena instantanea vivo",
+      "searchSecondary": "cereal desayuno fuente fibra plant based food beverage breakfast potatoe their product source fibre",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7800120170170",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-08-31T02:22:00Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "1af957d97460645bb05785c4bb2429112871a2a4e3945620ca28015a3729641c"
+    },
+    {
+      "gtin": "7802000011306",
+      "name": "Quadritos",
+      "brand": "Quaker",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals"
+      ],
+      "mainCategory": "breakfast-cereals",
+      "quantityText": null,
+      "netQuantity": null,
+      "unit": null,
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/200/001/1306/front_fr.4.400.jpg",
+      "nutriscoreGrade": "e",
+      "novaGroup": null,
+      "ecoscoreGrade": "d",
+      "nutriments": {
+        "energyKcal": 361.0,
+        "sugars": 12.0,
+        "saturatedFat": 1.1,
+        "sodiumMg": 1356.0,
+        "salt": 3.39,
+        "proteins": 11.0,
+        "fiber": null
+      },
+      "highInSeals": [
+        "calories",
+        "sugars",
+        "sodium"
+      ],
+      "allergens": [],
+      "traces": [],
+      "labels": [],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.475,
+      "dataQualityScore": 0.655,
+      "searchPrimary": "quadrito quaker",
+      "searchSecondary": "cereal desayuno plant based food beverage breakfast potatoe their product",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7802000011306",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-08-28T13:14:59Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "ebae37796ab504d1b4fef3aaa0665b66699a6c04d0f96faf4ab31eaad36eac1d"
+    },
+    {
+      "gtin": "7800120170125",
+      "name": "Avena Instantanea",
+      "brand": null,
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals"
+      ],
+      "mainCategory": "breakfast-cereals",
+      "quantityText": null,
+      "netQuantity": null,
+      "unit": null,
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/012/017/0125/front_en.3.400.jpg",
+      "nutriscoreGrade": null,
+      "novaGroup": null,
+      "ecoscoreGrade": "d",
+      "nutriments": {
+        "energyKcal": null,
+        "sugars": null,
+        "saturatedFat": null,
+        "sodiumMg": null,
+        "salt": null,
+        "proteins": null,
+        "fiber": null
+      },
+      "highInSeals": [],
+      "allergens": [],
+      "traces": [],
+      "labels": [],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.375,
+      "dataQualityScore": 0.315,
+      "searchPrimary": "avena instantanea",
+      "searchSecondary": "cereal desayuno plant based food beverage breakfast potatoe their product",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7800120170125",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-08-28T13:14:15Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "9b87dd683f12b0bbcd2b989d78ea4fd5212270d76df66c19cf3411cd3e8ccc19"
+    },
+    {
+      "gtin": "7613287593467",
+      "name": "cheerios",
+      "brand": "Cheerios",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "extruded-cereals"
+      ],
+      "mainCategory": "extruded-cereals",
+      "quantityText": null,
+      "netQuantity": null,
+      "unit": null,
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/761/328/759/3467/front_fr.3.400.jpg",
+      "nutriscoreGrade": "c",
+      "novaGroup": null,
+      "ecoscoreGrade": "d",
+      "nutriments": {
+        "energyKcal": 371.0,
+        "sugars": 19.8,
+        "saturatedFat": 1.1,
+        "sodiumMg": 399.0,
+        "salt": 0.9975,
+        "proteins": 7.2,
+        "fiber": 6.5
+      },
+      "highInSeals": [
+        "calories",
+        "sugars"
+      ],
+      "allergens": [],
+      "traces": [],
+      "labels": [
+        "no-colorings"
+      ],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.475,
+      "dataQualityScore": 0.655,
+      "searchPrimary": "cheerio nestle",
+      "searchSecondary": "cereal desayuno sin colorante plant based food beverage breakfast potatoe their product extruded no coloring",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7613287593467",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-08-27T16:45:57Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "d23e6519d4badc872ad4ff20f09a88805b10d55f2afbbad0460ad832dcc014fb"
+    },
+    {
+      "gtin": "7804646450297",
+      "name": "Granola Mix Semillas",
+      "brand": "MIZOS",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "mueslis",
+        "cereales",
+        "cereales-para-el-desayuno"
+      ],
+      "mainCategory": "cereales-para-el-desayuno",
+      "quantityText": null,
+      "netQuantity": null,
+      "unit": null,
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/464/645/0297/front_es.13.400.jpg",
+      "nutriscoreGrade": null,
+      "novaGroup": 4,
+      "ecoscoreGrade": "c",
+      "nutriments": {
+        "energyKcal": 402.0,
+        "sugars": 16.7,
+        "saturatedFat": 2.7,
+        "sodiumMg": null,
+        "salt": null,
+        "proteins": 11.4,
+        "fiber": 9.8
+      },
+      "highInSeals": [
+        "calories",
+        "sugars"
+      ],
+      "allergens": [],
+      "traces": [],
+      "labels": [
+        "vegetarian",
+        "no-gluten",
+        "vegan"
+      ],
+      "diets": {
+        "vegan": true,
+        "vegetarian": true,
+        "glutenFree": true,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.675,
+      "dataQualityScore": 0.575,
+      "searchPrimary": "granola mix semilla mizo",
+      "searchSecondary": "cereal desayuno muesli vegetariano sin gluten vegano plant based food beverage breakfast potatoe their product vegetarian no vegan",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7804646450297",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-08-11T13:08:38Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "5e1ab968ea5eb9a8c0088447bbbe3d3e63dde9d7d40e1de8a4cae15c4d037a2f"
+    },
+    {
+      "gtin": "7804000003022",
+      "name": "Cereal relleno sabor chocolate",
+      "brand": "Enlinea",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "extruded-cereals",
+        "filled-cereals",
+        "breakfast-cereals-filled-with-chocolate"
+      ],
+      "mainCategory": "breakfast-cereals-filled-with-chocolate",
+      "quantityText": "360 g",
+      "netQuantity": 360.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/400/000/3022/front_es.3.400.jpg",
+      "nutriscoreGrade": "e",
+      "novaGroup": 4,
+      "ecoscoreGrade": "d",
+      "nutriments": {
+        "energyKcal": 363.0,
+        "sugars": 1.4,
+        "saturatedFat": 2.4,
+        "sodiumMg": 18.0,
+        "salt": 60.0,
+        "proteins": 15.0,
+        "fiber": 13.0
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [
+        "gluten",
+        "milk",
+        "peanuts"
+      ],
+      "traces": [],
+      "labels": [
+        "low-or-no-sodium",
+        "source-of-fibre",
+        "low-sodium",
+        "no-added-sugar"
+      ],
+      "diets": {
+        "vegan": false,
+        "vegetarian": null,
+        "glutenFree": false,
+        "lactoseFree": false
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.688,
+      "dataQualityScore": 0.897,
+      "searchPrimary": "cereal relleno sabor chocolate enlinea",
+      "searchSecondary": "desayuno bajo sodio fuente fibra sin azucar anadida plant based food beverage breakfast potatoe their product extruded filled with low or no sodium source fibre added sugar",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7804000003022",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-06-25T07:45:58Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "468f91c7fcbdb3351b79f8aa3896659a9a5f3c2e83f12de7357203d032380d4f"
+    },
+    {
+      "gtin": "7802000013546",
+      "name": "Avena Multisemillas",
+      "brand": "Quaker",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "flakes",
+        "cereal-flakes",
+        "rolled-flakes",
+        "rolled-oats"
+      ],
+      "mainCategory": "rolled-oats",
+      "quantityText": null,
+      "netQuantity": null,
+      "unit": null,
+      "isBeverage": false,
+      "imageUrl": null,
+      "nutriscoreGrade": null,
+      "novaGroup": null,
+      "ecoscoreGrade": "b",
+      "nutriments": {
+        "energyKcal": 375.0,
+        "sugars": 1.3,
+        "saturatedFat": null,
+        "sodiumMg": null,
+        "salt": null,
+        "proteins": 13.0,
+        "fiber": 11.0
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [],
+      "traces": [],
+      "labels": [],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.475,
+      "dataQualityScore": 0.375,
+      "searchPrimary": "avena multisemilla semilla quaker",
+      "searchSecondary": "cereal desayuno plant based food beverage breakfast potatoe their product flake rolled oat",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7802000013546",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-06-23T22:23:05Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "268bcb71392f654ff85b3fb8ab805fc5ef8da306dc3eeefa3e50c7885e659a9c"
+    },
+    {
+      "gtin": "7804673913673",
+      "name": "PROTEIN Granola GOLDEN CRUNCHY",
+      "brand": "WILD",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "mueslis",
+        "cereales",
+        "cereales-para-desayuno",
+        "granola-proteica"
+      ],
+      "mainCategory": "granola-proteica",
+      "quantityText": "300 g",
+      "netQuantity": 300.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/467/391/3673/front_en.8.400.jpg",
+      "nutriscoreGrade": "a",
+      "novaGroup": null,
+      "ecoscoreGrade": "c",
+      "nutriments": {
+        "energyKcal": 346.0,
+        "sugars": 2.4,
+        "saturatedFat": 1.6,
+        "sodiumMg": 348.6,
+        "salt": 0.8715,
+        "proteins": 29.5,
+        "fiber": 11.9
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [],
+      "traces": [],
+      "labels": [],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.675,
+      "dataQualityScore": 0.775,
+      "searchPrimary": "protein granola golden crunchy wild",
+      "searchSecondary": "cereal desayuno muesli plant based food beverage breakfast potatoe their product proteica",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7804673913673",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-06-23T10:36:51Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "c12917e18cc8a08625946a2fea04f3f6e780b99b18058cfc8404ffdcc94eab47"
+    },
+    {
+      "gtin": "7804000002100",
+      "name": "Enlinea Cereal de Proteína Bolitas Sabor Chocolate",
+      "brand": "Enlinea",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "cereales",
+        "cereales-para-desayuno"
+      ],
+      "mainCategory": "cereales-para-desayuno",
+      "quantityText": "300g",
+      "netQuantity": 300.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/400/000/2100/front_es.29.400.jpg",
+      "nutriscoreGrade": "b",
+      "novaGroup": 4,
+      "ecoscoreGrade": "c",
+      "nutriments": {
+        "energyKcal": 337.0,
+        "sugars": 2.2,
+        "saturatedFat": 1.2,
+        "sodiumMg": 371.0,
+        "salt": 0.94,
+        "proteins": 34.0,
+        "fiber": 0.0
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [
+        "gluten",
+        "milk",
+        "soy"
+      ],
+      "traces": [],
+      "labels": [
+        "no-added-sugar",
+        "with-stevia"
+      ],
+      "diets": {
+        "vegan": false,
+        "vegetarian": null,
+        "glutenFree": false,
+        "lactoseFree": false
+      },
+      "stores": [
+        "bonjour-sant"
+      ],
+      "countries": [
+        "bolivia",
+        "chile"
+      ],
+      "completeness": 0.787,
+      "dataQualityScore": 0.958,
+      "searchPrimary": "enlinea cereal proteina bolita sabor chocolate",
+      "searchSecondary": "base maiz concentrada suero forma desayuno sin azucar anadida plant based food beverage breakfast potatoe their product no added sugar with stevia",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7804000002100",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-06-19T23:26:31Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "2c65426135a4884af1f96ba63487497533e4b221022c69f23912c2890549a7dc"
+    },
+    {
+      "gtin": "7800120162212",
+      "name": "Check 3 Cereales",
+      "brand": "Vivo",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "breakfast-cereals-fortified-with-vitamins-and-chemical-elements",
+        "extruded-cereals"
+      ],
+      "mainCategory": "extruded-cereals",
+      "quantityText": "360 g / 12.7 oz",
+      "netQuantity": 360.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/012/016/2212/front_en.3.400.jpg",
+      "nutriscoreGrade": "a",
+      "novaGroup": 4,
+      "ecoscoreGrade": "c",
+      "nutriments": {
+        "energyKcal": 340.0,
+        "sugars": 1.0,
+        "saturatedFat": 1.6,
+        "sodiumMg": 310.0,
+        "salt": 0.775,
+        "proteins": 9.0,
+        "fiber": 16.0
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [
+        "gluten"
+      ],
+      "traces": [
+        "eggs",
+        "gluten",
+        "milk",
+        "peanuts",
+        "sesame",
+        "soy",
+        "sulphites",
+        "tree_nuts"
+      ],
+      "labels": [
+        "incorrect-data-on-label",
+        "incorrect-nutrition-facts-on-label",
+        "no-added-sugar",
+        "pefc"
+      ],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": false,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "bolivia",
+        "canada",
+        "chile",
+        "costa-rica",
+        "cuba",
+        "dominican-republic",
+        "ecuador",
+        "el-salvador",
+        "guatemala",
+        "honduras",
+        "nicaragua",
+        "panama",
+        "paraguay",
+        "peru",
+        "puerto-rico",
+        "united-states",
+        "uruguay"
+      ],
+      "completeness": 0.688,
+      "dataQualityScore": 0.897,
+      "searchPrimary": "check cereal vivo carozzi",
+      "searchSecondary": "desayuno base avena integral trigo maiz fortificado hierro calcio zinc acido folico niacina vitamina b1 b2 b6 b12 sin azucar anadida plant based food beverage breakfast potatoe their product fortified with vitamin chemical element extruded incorrect data on label nutrition fact no added sugar pefc",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7800120162212",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-06-15T08:34:26Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "db23e019979f91a0f76590c97d37dcce2ca0a23719dea337cd3cd74006f423ca"
+    },
+    {
+      "gtin": "7804000002131",
+      "name": "Muesli Multi Semilla",
+      "brand": "En Línea",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "mueslis"
+      ],
+      "mainCategory": "mueslis",
+      "quantityText": "700 g",
+      "netQuantity": 700.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/400/000/2131/front_es.18.400.jpg",
+      "nutriscoreGrade": null,
+      "novaGroup": 4,
+      "ecoscoreGrade": "b",
+      "nutriments": {
+        "energyKcal": 358.0,
+        "sugars": 1.8,
+        "saturatedFat": null,
+        "sodiumMg": 74.0,
+        "salt": 0.185,
+        "proteins": 18.0,
+        "fiber": 8.8
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [
+        "gluten"
+      ],
+      "traces": [
+        "eggs",
+        "milk",
+        "peanuts",
+        "soy",
+        "sulphites",
+        "tree_nuts"
+      ],
+      "labels": [
+        "no-added-sugar",
+        "with-stevia"
+      ],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": false,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "bolivia",
+        "chile"
+      ],
+      "completeness": 0.787,
+      "dataQualityScore": 0.677,
+      "searchPrimary": "muesli multi semilla linea",
+      "searchSecondary": "base avena maiz linaza chia pepa zapallo maravilla quinoa cereal desayuno sin azucar anadida plant based food beverage breakfast potatoe their product no added sugar with stevia",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7804000002131",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-05-31T18:39:51Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "c076b083570a13324ae2c311085990a178e8513aaf99566aa2fe805ba2c2d795"
+    },
+    {
+      "gtin": "7802000017803",
+      "name": "Granola Avena, Almendras y Miel",
+      "brand": "Quaker",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "mueslis",
+        "cereales"
+      ],
+      "mainCategory": "cereales",
+      "quantityText": "320 g",
+      "netQuantity": 320.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/200/001/7803/front_es.24.400.jpg",
+      "nutriscoreGrade": "c",
+      "novaGroup": 4,
+      "ecoscoreGrade": "c",
+      "nutriments": {
+        "energyKcal": 371.0,
+        "sugars": 6.9,
+        "saturatedFat": 2.3,
+        "sodiumMg": 59.0,
+        "salt": 0.15,
+        "proteins": 10.0,
+        "fiber": 0.0
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [
+        "milk",
+        "soy",
+        "tree_nuts"
+      ],
+      "traces": [
+        "gluten",
+        "milk",
+        "soy",
+        "sulphites",
+        "tree_nuts"
+      ],
+      "labels": [],
+      "diets": {
+        "vegan": false,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": false
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.787,
+      "dataQualityScore": 0.917,
+      "searchPrimary": "granola avena almendra miel quaker",
+      "searchSecondary": "cereal desayuno muesli plant based food beverage breakfast potatoe their product",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7802000017803",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-05-26T15:21:47Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "fd203bd4a306f5cdaf818796208041bd77d340e4e7175eadc7f0a611eb2cc678"
+    },
+    {
+      "gtin": "7613032269586",
+      "name": "Cerelac 5 Cereales y leche",
+      "brand": "Cerelac",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "baby-foods",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "from-6-months",
+        "main-meals-for-babies",
+        "instant-cereal-powder-to-be-reconstituted-for-baby-from-6-months"
+      ],
+      "mainCategory": "instant-cereal-powder-to-be-reconstituted-for-baby-from-6-months",
+      "quantityText": "400 g",
+      "netQuantity": 400.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/761/303/226/9586/front_es.61.400.jpg",
+      "nutriscoreGrade": null,
+      "novaGroup": 4,
+      "ecoscoreGrade": null,
+      "nutriments": {
+        "energyKcal": null,
+        "sugars": null,
+        "saturatedFat": null,
+        "sodiumMg": null,
+        "salt": null,
+        "proteins": null,
+        "fiber": null
+      },
+      "highInSeals": [],
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "traces": [
+        "soy"
+      ],
+      "labels": [
+        "con-probi-tico"
+      ],
+      "diets": {
+        "vegan": false,
+        "vegetarian": null,
+        "glutenFree": false,
+        "lactoseFree": false
+      },
+      "stores": [
+        "amarket",
+        "fsa",
+        "farmacias-ch-vez",
+        "farmacorp"
+      ],
+      "countries": [
+        "bolivia",
+        "chile",
+        "spain"
+      ],
+      "completeness": 1.0,
+      "dataQualityScore": 0.76,
+      "searchPrimary": "cerelac cereal leche nestle",
+      "searchSecondary": "instantaneo base desayuno plant based food beverage breakfast potatoe baby their product from month main meal for babie instant powder to be reconstituted probi tico",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7613032269586",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-05-08T15:47:22Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "e755041fb1c7fe132d72f2487dd2bdc21243575bd09c291c41a1573df6235280"
+    },
+    {
+      "gtin": "7802215168895",
+      "name": "Mono balls",
+      "brand": null,
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "chocolate-cereals"
+      ],
+      "mainCategory": "chocolate-cereals",
+      "quantityText": null,
+      "netQuantity": null,
+      "unit": null,
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/221/516/8895/front_es.9.400.jpg",
+      "nutriscoreGrade": "c",
+      "novaGroup": null,
+      "ecoscoreGrade": "d",
+      "nutriments": {
+        "energyKcal": 119.0,
+        "sugars": 10.2,
+        "saturatedFat": 1.2,
+        "sodiumMg": 50.0,
+        "salt": 0.125,
+        "proteins": 1.8,
+        "fiber": 0.9
+      },
+      "highInSeals": [
+        "sugars"
+      ],
+      "allergens": [],
+      "traces": [],
+      "labels": [
+        "sistema-de-etiquetado-frontal-de-alimentos-y-bebidas",
+        "exceso-grasas-saturadas"
+      ],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.375,
+      "dataQualityScore": 0.555,
+      "searchPrimary": "mono ball",
+      "searchSecondary": "cereal desayuno plant based food beverage breakfast potatoe their product chocolate sistema etiquetado frontal alimento bebida exceso grasa saturada",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7802215168895",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-04-29T02:17:09Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "e88ec0d14c0580edff902558205abd043ea675dd58aaff3e472ebd1a49745ba6"
+    },
+    {
+      "gtin": "7804000002759",
+      "name": "Granola de Proteína Almendras y Coco",
+      "brand": "Enlinea",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "mueslis",
+        "cereales"
+      ],
+      "mainCategory": "cereales",
+      "quantityText": "300g",
+      "netQuantity": 300.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/400/000/2759/front_es.6.400.jpg",
+      "nutriscoreGrade": "a",
+      "novaGroup": 4,
+      "ecoscoreGrade": "c",
+      "nutriments": {
+        "energyKcal": 459.0,
+        "sugars": 1.0,
+        "saturatedFat": 1.8,
+        "sodiumMg": 150.0,
+        "salt": 0.38,
+        "proteins": 22.0,
+        "fiber": 0.0
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [
+        "milk",
+        "soy",
+        "tree_nuts"
+      ],
+      "traces": [],
+      "labels": [
+        "no-added-sugar"
+      ],
+      "diets": {
+        "vegan": false,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": false
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.675,
+      "dataQualityScore": 0.895,
+      "searchPrimary": "granola proteina almendra coco enlinea",
+      "searchSecondary": "cereal desayuno muesli sin azucar anadida plant based food beverage breakfast potatoe their product no added sugar",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7804000002759",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-04-28T13:36:10Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "f5f04dd729e4db604bcb7e2b443eda0a04b40d01d78f14fdf7ec2dca91dcfbea"
+    },
+    {
+      "gtin": "7802215168970",
+      "name": "Mono Rolls",
+      "brand": "Costa",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals"
+      ],
+      "mainCategory": "breakfast-cereals",
+      "quantityText": "400g",
+      "netQuantity": 400.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/221/516/8970/front_en.12.400.jpg",
+      "nutriscoreGrade": "d",
+      "novaGroup": 4,
+      "ecoscoreGrade": "d",
+      "nutriments": {
+        "energyKcal": 396.0,
+        "sugars": 34.0,
+        "saturatedFat": 4.3,
+        "sodiumMg": 145.0,
+        "salt": 0.3625,
+        "proteins": 6.0,
+        "fiber": 3.5
+      },
+      "highInSeals": [
+        "calories",
+        "sugars",
+        "saturated_fat"
+      ],
+      "allergens": [
+        "gluten",
+        "milk",
+        "peanuts",
+        "soy",
+        "tree_nuts"
+      ],
+      "traces": [
+        "milk",
+        "soy",
+        "tree_nuts"
+      ],
+      "labels": [
+        "high-in-calories",
+        "high-in-saturated-fats",
+        "high-in-sugars",
+        "pefc"
+      ],
+      "diets": {
+        "vegan": false,
+        "vegetarian": null,
+        "glutenFree": false,
+        "lactoseFree": false
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.775,
+      "dataQualityScore": 0.915,
+      "searchPrimary": "mono roll costa",
+      "searchSecondary": "cereal desayuno plant based food beverage breakfast potatoe their product high in calorie saturated fat sugar pefc",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7802215168970",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-04-26T15:23:37Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "a699f590f22e4f8269f3ca8234984e537bc632dd7c7cb400c1b82d31adca4d9c"
+    },
+    {
+      "gtin": "7702103127693",
+      "name": "Zucaritas",
+      "brand": "Kellogs",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals"
+      ],
+      "mainCategory": "breakfast-cereals",
+      "quantityText": "30g",
+      "netQuantity": 30.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/770/210/312/7693/front_es.3.400.jpg",
+      "nutriscoreGrade": "e",
+      "novaGroup": 3,
+      "ecoscoreGrade": "c",
+      "nutriments": {
+        "energyKcal": 375.0,
+        "sugars": 41.0,
+        "saturatedFat": 0.1,
+        "sodiumMg": 361.0,
+        "salt": 0.9,
+        "proteins": 3.9,
+        "fiber": 1.8
+      },
+      "highInSeals": [
+        "calories",
+        "sugars"
+      ],
+      "allergens": [],
+      "traces": [
+        "gluten",
+        "soy"
+      ],
+      "labels": [
+        "high-in-calories",
+        "high-in-sugars"
+      ],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.8,
+      "dataQualityScore": 0.92,
+      "searchPrimary": "zucarita kellog",
+      "searchSecondary": "cereal desayuno plant based food beverage breakfast potatoe their product high in calorie sugar",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7702103127693",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-04-23T14:08:45Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "381f0ec2a50138ba087ec19d9d112d7b9f1075931362d4871aba9ce0678bfcf1"
+    },
+    {
+      "gtin": "7790045823094",
+      "name": "Fibra Total 4 Fibras",
+      "brand": "Granix",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "bran",
+        "cereal-brans",
+        "wheat-brans",
+        "oat-brans"
+      ],
+      "mainCategory": "oat-brans",
+      "quantityText": "250 g",
+      "netQuantity": 250.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/779/004/582/3094/front_es.22.400.jpg",
+      "nutriscoreGrade": null,
+      "novaGroup": 4,
+      "ecoscoreGrade": "a",
+      "nutriments": {
+        "energyKcal": 296.666666666667,
+        "sugars": null,
+        "saturatedFat": 0.3,
+        "sodiumMg": 100.0,
+        "salt": 0.25,
+        "proteins": 14.0,
+        "fiber": 15.0
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [
+        "gluten",
+        "sulphites"
+      ],
+      "traces": [
+        "milk",
+        "peanuts",
+        "soy",
+        "tree_nuts"
+      ],
+      "labels": [
+        "low-or-no-sodium",
+        "low-sodium"
+      ],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": false,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "argentina",
+        "chile",
+        "paraguay",
+        "spain",
+        "uruguay"
+      ],
+      "completeness": 0.9,
+      "dataQualityScore": 0.7,
+      "searchPrimary": "fibra total granix",
+      "searchSecondary": "cereal desayuno bajo sodio plant based food beverage breakfast potatoe their product bran wheat oat low or no sodium",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7790045823094",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-04-22T22:09:09Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "442831f6286787d234f9ef876963553e3f98a066d353dc70bcd1b58a677fd1d6"
+    },
+    {
+      "gtin": "7802000014949",
+      "name": "Avena",
+      "brand": "Quajer",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "flakes",
+        "cereal-flakes",
+        "rolled-flakes",
+        "rolled-oats"
+      ],
+      "mainCategory": "rolled-oats",
+      "quantityText": null,
+      "netQuantity": null,
+      "unit": null,
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/200/001/4949/front_en.4.400.jpg",
+      "nutriscoreGrade": "a",
+      "novaGroup": null,
+      "ecoscoreGrade": "b",
+      "nutriments": {
+        "energyKcal": 402.0,
+        "sugars": 1.2,
+        "saturatedFat": 1.4,
+        "sodiumMg": 0.0,
+        "salt": 0.0,
+        "proteins": 13.1,
+        "fiber": 9.71
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [],
+      "traces": [],
+      "labels": [],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.475,
+      "dataQualityScore": 0.655,
+      "searchPrimary": "avena quajer",
+      "searchSecondary": "cereal desayuno plant based food beverage breakfast potatoe their product flake rolled oat",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7802000014949",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-04-21T22:19:42Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "9c4775a7ccf21835ae173c9107baee335315cf552c9c1c6bf95a8711af01d060"
+    },
+    {
+      "gtin": "7803515020005",
+      "name": "Avena Integral",
+      "brand": "La Fuente Natural",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals",
+        "flakes",
+        "cereal-flakes",
+        "rolled-flakes",
+        "rolled-oats"
+      ],
+      "mainCategory": "rolled-oats",
+      "quantityText": "500g",
+      "netQuantity": 500.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/780/351/502/0005/front_es.3.400.jpg",
+      "nutriscoreGrade": "a",
+      "novaGroup": 1,
+      "ecoscoreGrade": "b",
+      "nutriments": {
+        "energyKcal": 384.0,
+        "sugars": 1.66666666666667,
+        "saturatedFat": 1.33333333333333,
+        "sodiumMg": 10.7,
+        "salt": 0.0266666666666667,
+        "proteins": 14.3333333333333,
+        "fiber": 9.0
+      },
+      "highInSeals": [
+        "calories"
+      ],
+      "allergens": [],
+      "traces": [],
+      "labels": [
+        "no-additives"
+      ],
+      "diets": {
+        "vegan": true,
+        "vegetarian": true,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.675,
+      "dataQualityScore": 0.895,
+      "searchPrimary": "avena integral fuente natural",
+      "searchSecondary": "cereal desayuno plant based food beverage breakfast potatoe their product flake rolled oat no additive",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7803515020005",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-04-21T04:37:38Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "88692b64415d9e343558e82997fd844b9904f95e07922f3b83355a0ee38deef6"
+    },
+    {
+      "gtin": "7613287193834",
+      "name": "trix",
+      "brand": "Nestlé",
+      "categories": [
+        "plant-based-foods-and-beverages",
+        "plant-based-foods",
+        "breakfasts",
+        "cereals-and-potatoes",
+        "cereals-and-their-products",
+        "breakfast-cereals"
+      ],
+      "mainCategory": "breakfast-cereals",
+      "quantityText": "220g",
+      "netQuantity": 220.0,
+      "unit": "g",
+      "isBeverage": false,
+      "imageUrl": "https://images.openfoodfacts.org/images/products/761/328/719/3834/front_es.4.400.jpg",
+      "nutriscoreGrade": null,
+      "novaGroup": null,
+      "ecoscoreGrade": "c",
+      "nutriments": {
+        "energyKcal": null,
+        "sugars": null,
+        "saturatedFat": null,
+        "sodiumMg": null,
+        "salt": null,
+        "proteins": null,
+        "fiber": null
+      },
+      "highInSeals": [],
+      "allergens": [],
+      "traces": [],
+      "labels": [],
+      "diets": {
+        "vegan": null,
+        "vegetarian": null,
+        "glutenFree": null,
+        "lactoseFree": null
+      },
+      "stores": [],
+      "countries": [
+        "chile"
+      ],
+      "completeness": 0.562,
+      "dataQualityScore": 0.513,
+      "searchPrimary": "trix nestle",
+      "searchSecondary": "cereal desayuno plant based food beverage breakfast potatoe their product",
+      "warnings": [],
+      "source": {
+        "code": "openfoodfacts",
+        "name": "Open Food Facts",
+        "url": "https://world.openfoodfacts.org/product/7613287193834",
+        "license": "ODbL-1.0",
+        "lastModifiedAt": "2026-04-21T04:24:54Z",
+        "fetchedAt": "2026-10-01T12:00:00Z"
+      },
+      "rawHash": "dd362b4ea2f4691960c722bff14a9e67e14fa4d2a0228f7c7516abd4007530ef"
+    }
+  ]
+}

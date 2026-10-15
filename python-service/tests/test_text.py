@@ -51,8 +51,8 @@ def test_build_search_fields_separates_primary_and_secondary() -> None:
         labels=["no-added-sugar"],
     )
     assert primary == "avena instantanea quaker pepsico"
-    # "avena" ya está en el primario; las categorías aportan términos en español.
-    assert secondary.split()[:3] == ["hojuela", "cereal", "desayuno"]
+    # "avena" ya está en el primario; categorías y sellos aportan términos en español.
+    assert secondary.split()[:6] == ["hojuela", "cereal", "desayuno", "sin", "azucar", "anadida"]
     assert "avena" not in secondary.split()
     assert "sugar" in secondary.split()
 
