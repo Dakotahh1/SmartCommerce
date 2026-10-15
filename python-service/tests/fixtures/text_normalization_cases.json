@@ -1,0 +1,20 @@
+{
+  "_comment": "Casos compartidos: python-service (app/normalization/text.py) y backend (src/common/text-normalization.ts) deben producir exactamente estos tokens.",
+  "cases": [
+    { "input": "Avena Instantánea", "tokens": ["avena", "instantanea"] },
+    { "input": "Chocapic Sin Azúcar Añadida", "tokens": ["chocapic", "sin", "azucar", "anadida"] },
+    { "input": "Cerelac 5 Cereales y leche", "tokens": ["cerelac", "cereal", "leche"] },
+    { "input": "Granola Avena, Almendras y Miel", "tokens": ["granola", "avena", "almendra", "miel"] },
+    { "input": "Avena Multisemillas", "tokens": ["avena", "multisemilla", "semilla"] },
+    { "input": "PROTEIN Granola GOLDEN CRUNCHY", "tokens": ["protein", "granola", "golden", "crunchy"] },
+    { "input": "Muesli de la Fuente   Natural", "tokens": ["muesli", "fuente", "natural"] },
+    { "input": "Galletas con chocolates", "tokens": ["galleta", "chocolate"] },
+    { "input": "Néctar de piña 1,5 L", "tokens": ["nectar", "pina"] },
+    { "input": "Bebida 100% natural x 6", "tokens": ["bebida", "100", "natural"] },
+    { "input": "  ", "tokens": [] },
+    { "input": "<script>alert(1)</script>", "tokens": ["script", "alert"] },
+    { "input": "lácteos lácteos LÁCTEOS", "tokens": ["lacteo"] },
+    { "input": "cross", "tokens": ["cross"] },
+    { "input": "mas", "tokens": ["mas"] }
+  ]
+}

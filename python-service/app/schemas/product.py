@@ -74,6 +74,9 @@ class NormalizedProduct(CamelModel):
     countries: list[str] = Field(default_factory=list, max_length=60)
     completeness: float = Field(ge=0, le=1)
     data_quality_score: float = Field(ge=0, le=1)
+    # Índice de búsqueda: tokens normalizados (ver app/normalization/text.py).
+    search_primary: str = Field(default="", max_length=500)
+    search_secondary: str = Field(default="", max_length=1000)
     warnings: list[str] = Field(default_factory=list)
     source: SourceInfo
     raw_hash: str = Field(pattern=r"^[0-9a-f]{64}$")
