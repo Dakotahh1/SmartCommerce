@@ -22,6 +22,8 @@ import type {
 } from './ingestion.dto.js';
 import { ProductsService } from './products.service.js';
 
+export type IngestionTrigger = 'manual' | 'scheduled';
+
 export interface PersistCounts {
   inserted: number;
   updated: number;
@@ -45,14 +47,24 @@ export class IngestionService {
     private readonly smartmatch: SmartMatchClient,
   ) {}
 
-  async start(dto: StartIngestionDto, userId: string, requestId?: string) {
+  /**
+   * Ejecuta una página de ingesta: Open Food Facts → Python (validación, limpieza,
+   * normalización, deduplicación) → PostgreSQL (upsert idempotente con procedencia).
+   * `userId` es null cuando la dispara el programador.
+   */
+  async start(
+    dto: StartIngestionDto,
+    userId: string | null,
+    requestId?: string,
+    trigger: IngestionTrigger = 'manual',
+  ) {
     const source = await this.products.sourceByCode('openfoodfacts');
     const run = await this.runs.save(
       this.runs.create({
         sourceId: source.id,
         triggeredBy: userId,
         status: IngestionStatus.RUNNING,
-        params: { ...dto },
+        params: { ...dto, trigger },
         requestId: requestId?.slice(0, 64) ?? null,
       }),
     );
@@ -93,7 +105,7 @@ export class IngestionService {
       });
       await this.runs.save(run);
       this.logger.log(
-        { runId: run.id, ...counts, requestId },
+        { runId: run.id, ...counts, trigger, requestId },
         'Ingesta completada',
       );
       return this.serialize(run);
@@ -103,7 +115,7 @@ export class IngestionService {
       run.errorMessage = this.describe(error);
       await this.runs.save(run);
       this.logger.error(
-        { runId: run.id, error: run.errorMessage, requestId },
+        { runId: run.id, error: run.errorMessage, trigger, requestId },
         'Ingesta fallida',
       );
       throw this.toHttpError(error);

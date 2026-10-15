@@ -540,6 +540,8 @@ jobs:
               APP_VERSION) printf 'APP_VERSION=%s\n' "$V_APP_VERSION" >> .env ;;
               OFF_USER_AGENT) printf 'OFF_USER_AGENT=%s\n' "$V_OFF_USER_AGENT" >> .env ;;
               IMAGE_TAG) printf 'IMAGE_TAG=ci\n' >> .env ;;
+              # Las pruebas controlan cuándo se ingiere; el lote programado se prueba vía API.
+              INGESTION_SCHEDULE_ENABLED) printf 'INGESTION_SCHEDULE_ENABLED=false\n' >> .env ;;
               *) printf '%s\n' "$line" >> .env ;;
             esac
           done < .env.generated

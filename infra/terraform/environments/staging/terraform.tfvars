@@ -12,6 +12,14 @@ cors_origins     = ["https://staging.smartcommerce.example", "https://localhost"
 swagger_enabled  = true
 off_user_agent   = "SmartCommerce-staging/0.1.0 (contacto: equipo@smartcommerce.example)"
 
+# Estrategia de actualización: refresco cada 6 h de las categorías del catálogo (EP2).
+ingestion = {
+  enabled          = true
+  interval_minutes = 360
+  targets          = ["chile/breakfast-cereals", "chile/dairies", "chile/beverages", "chile/snacks"]
+  max_pages        = 2
+}
+
 resources = {
   database       = { memory_mb = 1024, cpus = "1.0" }
   python_service = { memory_mb = 512, cpus = "1.0" }

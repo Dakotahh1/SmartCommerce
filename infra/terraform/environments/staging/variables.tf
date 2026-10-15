@@ -66,6 +66,16 @@ variable "off_user_agent" {
   type        = string
 }
 
+variable "ingestion" {
+  description = "Ingesta programada desde Open Food Facts (ver módulo smartcommerce-stack)."
+  type = object({
+    enabled          = bool
+    interval_minutes = number
+    targets          = list(string)
+    max_pages        = number
+  })
+}
+
 variable "resources" {
   description = "Límites de memoria (MB) y CPU por servicio."
   type = map(object({
