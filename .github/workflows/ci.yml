@@ -164,7 +164,8 @@ jobs:
         run: |
           scripts/init-env.sh .env.ci
           docker compose --env-file .env.ci config --quiet
-          echo "✔ docker-compose.yml válido"
+          docker compose -f docker-compose.yml -f docker-compose.source-mock.yml --env-file .env.ci config --quiet
+          echo "✔ docker-compose.yml y docker-compose.source-mock.yml válidos"
           rm .env.ci
 
   # ════════════════════════════════════════════════════════════════════════════
@@ -485,15 +486,18 @@ jobs:
   # 4 · Staging efímero (Docker Compose con las imágenes escaneadas)
   # ════════════════════════════════════════════════════════════════════════════
   staging-e2e:
-    name: Staging efímero (Compose + humo + resiliencia)
+    name: Staging efímero (Compose + humo + integración + resiliencia)
     needs: [images]
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 30
     environment: staging
     env:
       IMAGE_PREFIX: smartcommerce
       IMAGE_TAG: ci
       BASE_URL: http://localhost:8080
+      # Fuente web simulada (instantánea real de Open Food Facts): integración determinista.
+      # El acceso a la fuente real se verifica en la prueba de aislamiento y tras desplegar.
+      COMPOSE_FILE: docker-compose.yml:docker-compose.source-mock.yml
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -541,6 +545,7 @@ jobs:
                 ;;
               APP_VERSION) printf 'APP_VERSION=%s\n' "$V_APP_VERSION" >> .env ;;
               OFF_USER_AGENT) printf 'OFF_USER_AGENT=%s\n' "$V_OFF_USER_AGENT" >> .env ;;
+              OFF_BASE_URL) printf 'OFF_BASE_URL=http://off-mock:8080\n' >> .env ;;
               IMAGE_TAG) printf 'IMAGE_TAG=ci\n' >> .env ;;
               # Las pruebas controlan cuándo se ingiere; el lote programado se prueba vía API.
               INGESTION_SCHEDULE_ENABLED) printf 'INGESTION_SCHEDULE_ENABLED=false\n' >> .env ;;
@@ -562,6 +567,9 @@ jobs:
 
       - name: Aislamiento de red
         run: scripts/network-isolation-test.sh
+
+      - name: Integración EP2 (fuente → Python → NestJS → PostgreSQL → consulta, calidad, lote y caída de la fuente)
+        run: scripts/integration-test.sh
 
       - name: Resiliencia (fallo controlado del servicio Python)
         run: scripts/resilience-test.sh
@@ -642,7 +650,8 @@ jobs:
 
       - name: Plan de staging contra el daemon Docker del runner (terraform plan)
         env:
-          DOCKER_HOST_TARGET: ${{ vars.STAGING_DOCKER_HOST || 'unix:///var/run/docker.sock' }}
+          # El plan se valida contra el daemon del runner; el host real solo lo usa deploy-staging.
+          DOCKER_HOST_TARGET: unix:///var/run/docker.sock
         run: |
           dir="$TF_ROOT/environments/staging"
           terraform -chdir="$dir" init -lockfile=readonly
@@ -734,3 +743,70 @@ jobs:
             docker push "${target}:${tag}"
             echo "- \`${target}:${tag}\`" >> "$GITHUB_STEP_SUMMARY"
           done
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 7 · Despliegue automático en staging (solo main, tras el quality gate y la publicación)
+  #
+  # Se activa cuando existe la variable STAGING_DOCKER_HOST (ssh://deploy@<host>). Usa las
+  # imágenes inmutables recién publicadas (sha-<commit>), verifica salud y humo contra la URL
+  # pública y, si algo falla, vuelve automáticamente a la versión anterior (rollback).
+  # ════════════════════════════════════════════════════════════════════════════
+  deploy-staging:
+    name: Despliegue en staging (apply + salud + humo + rollback)
+    needs: [publish]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.STAGING_DOCKER_HOST != ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment:
+      name: staging
+      url: ${{ vars.STAGING_URL }}
+    concurrency:
+      group: deploy-staging
+      cancel-in-progress: false
+    env:
+      TF_IN_AUTOMATION: "true"
+      TF_INPUT: "false"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: "1.16.3"
+          terraform_wrapper: false
+
+      - name: Acceso SSH al host de staging (llave dedicada y host verificado)
+        env:
+          SSH_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
+        run: |
+          if [ -z "$SSH_KEY" ] || [ -z "$KNOWN_HOSTS" ]; then
+            echo "::error::Faltan los secretos STAGING_SSH_PRIVATE_KEY o STAGING_SSH_KNOWN_HOSTS"; exit 1
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Secretos del ambiente staging (obligatorios, nunca efímeros)
+        env:
+          S_POSTGRES_SUPERUSER_PASSWORD: ${{ secrets.POSTGRES_SUPERUSER_PASSWORD }}
+          S_DB_OWNER_PASSWORD: ${{ secrets.DB_OWNER_PASSWORD }}
+          S_DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
+          S_JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          S_INTERNAL_API_TOKEN: ${{ secrets.INTERNAL_API_TOKEN }}
+        run: |
+          for name in POSTGRES_SUPERUSER_PASSWORD DB_OWNER_PASSWORD DB_APP_PASSWORD JWT_ACCESS_SECRET INTERNAL_API_TOKEN; do
+            provided="S_${name}"
+            value="${!provided}"
+            if [ -z "$value" ]; then echo "::error::Falta el secreto ${name} en el ambiente staging"; exit 1; fi
+            echo "::add-mask::${value}"
+            echo "TF_VAR_${name,,}=${value}" >> "$GITHUB_ENV"
+          done
+
+      - name: Desplegar sha-${{ github.sha }}, verificar y revertir si falla
+        env:
+          STAGING_DOCKER_HOST: ${{ vars.STAGING_DOCKER_HOST }}
+          STAGING_URL: ${{ vars.STAGING_URL }}
+          APP_VERSION: ${{ vars.APP_VERSION || '0.2.0' }}
+        run: scripts/deploy-staging.sh "sha-${GITHUB_SHA::12}"
