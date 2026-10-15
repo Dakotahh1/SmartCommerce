@@ -76,6 +76,15 @@ interface NavItem {
               </a>
               <a
                 class="nav-item"
+                routerLink="/app/admin/calidad"
+                routerLinkActive="active"
+                ariaCurrentWhenActive="page"
+              >
+                <ion-icon name="bar-chart-outline" aria-hidden="true"></ion-icon
+                ><span>Calidad de datos</span>
+              </a>
+              <a
+                class="nav-item"
                 routerLink="/app/admin/estado"
                 routerLinkActive="active"
                 ariaCurrentWhenActive="page"

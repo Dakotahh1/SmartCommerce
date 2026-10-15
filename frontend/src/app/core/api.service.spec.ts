@@ -86,4 +86,19 @@ describe('ApiService', () => {
     expect(req.request.context.get(SILENT_ERRORS)).toBe(true);
     req.flush({});
   });
+
+  it('consulta la calidad de datos y el programador de ingesta', () => {
+    api.getDataQuality(7).subscribe();
+    const quality = http.expectOne((r) => r.url === `${base}/admin/data-quality`);
+    expect(quality.request.params.get('days')).toBe('7');
+    quality.flush({});
+
+    api.getIngestionSchedule().subscribe();
+    http.expectOne(`${base}/admin/ingestions/schedule`).flush({});
+
+    api.runScheduledIngestion().subscribe();
+    const run = http.expectOne(`${base}/admin/ingestions/schedule/run`);
+    expect(run.request.method).toBe('POST');
+    run.flush({ accepted: true, requestId: 'ingest-1' });
+  });
 });

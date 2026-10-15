@@ -48,6 +48,68 @@
       }
     </section>
 
+    @if (schedule(); as s) {
+      <section class="sc-card schedule" aria-labelledby="schedule-title">
+        <div class="table-head">
+          <h2 id="schedule-title">Ingesta programada</h2>
+          <ion-button
+            size="small"
+            fill="outline"
+            [disabled]="s.running || batchStarting()"
+            (click)="runBatch()"
+          >
+            @if (s.running) {
+              <ion-spinner name="crescent" aria-label="Lote en ejecución"></ion-spinner>
+            } @else {
+              <ion-icon slot="start" name="refresh-outline" aria-hidden="true"></ion-icon>
+              Ejecutar lote ahora
+            }
+          </ion-button>
+        </div>
+        <dl>
+          <div>
+            <dt>Estado</dt>
+            <dd>
+              {{ s.enabled ? 'Activa' : 'Desactivada (solo manual)'
+              }}{{ s.running ? ' · en curso' : '' }}
+            </dd>
+          </div>
+          <div>
+            <dt>Frecuencia</dt>
+            <dd>Cada {{ s.intervalMinutes / 60 | number: '1.0-1' }} h</dd>
+          </div>
+          <div>
+            <dt>Próxima ejecución</dt>
+            <dd>{{ s.nextRunAt ? (s.nextRunAt | date: 'dd-MM HH:mm') : '—' }}</dd>
+          </div>
+          <div>
+            <dt>Objetivos</dt>
+            <dd>{{ s.targets.length }} categorías · hasta {{ s.maxPages }} páginas</dd>
+          </div>
+        </dl>
+        @if (s.lastBatch; as batch) {
+          <p class="note">
+            Último lote:
+            <span [class]="'status ' + batch.status">{{ batchLabel(batch.status) }}</span> ·
+            {{ batch.finishedAt | date: 'dd-MM HH:mm' }}
+          </p>
+          <ul class="reasons">
+            @for (t of batch.targets; track t.category) {
+              <li>
+                <span>{{ t.category }} · {{ t.pages }} pág.</span>
+                <strong [class.bad]="t.error">{{
+                  t.error ? 'Error' : t.inserted + ' nuevos · ' + t.updated + ' act.'
+                }}</strong>
+                @if (t.error) {
+                  <small>{{ t.error }}</small>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    }
+
     @if (lastRun(); as run) {
       <section class="kpis" aria-label="Resultado de la última ingesta">
         <div class="kpi">

@@ -68,6 +68,8 @@ export interface ProductSummary {
   highInSeals: HighInSeal[];
   allergens: string[];
   dataQualityScore: number;
+  /** Puntaje de relevancia (ts_rank_cd) cuando la búsqueda se ordena por relevancia. */
+  relevance?: number;
   price: ProductPrice | null;
 }
 
@@ -232,4 +234,105 @@ export interface HealthReport {
 export interface MetricsSnapshot {
   uptimeSeconds: number;
   routes: Record<string, { count: number; errors5xx: number; avgMs: number; p95Ms: number }>;
+}
+
+export interface IngestionTarget {
+  country: string;
+  category: string;
+}
+
+export interface ScheduledBatch {
+  status: 'completed' | 'partial' | 'failed' | 'skipped';
+  reason?: string;
+  requestId: string;
+  startedAt: string;
+  finishedAt: string;
+  targets: (IngestionTarget & {
+    pages: number;
+    fetched: number;
+    inserted: number;
+    updated: number;
+    unchanged: number;
+    rejected: number;
+    error: string | null;
+  })[];
+}
+
+export interface IngestionSchedule {
+  enabled: boolean;
+  running: boolean;
+  intervalMinutes: number;
+  maxPages: number;
+  pageSize: number;
+  targets: IngestionTarget[];
+  nextRunAt: string | null;
+  lastBatch: ScheduledBatch | null;
+}
+
+export interface QualityAlert {
+  code: string;
+  message: string;
+}
+
+export interface DataQualityReport {
+  generatedAt: string;
+  windowDays: number;
+  thresholds: {
+    minValidRatio: number;
+    maxDuplicateRatio: number;
+    maxStaleRatio: number;
+    maxErrorRate: number;
+  };
+  catalog: {
+    products: number;
+    indexedRatio: number | null;
+    avgDataQualityScore: number | null;
+    fieldCoverage: Record<string, number | null>;
+  };
+  validity: {
+    fetched: number;
+    valid: number;
+    rejected: number;
+    duplicates: number;
+    validRatio: number | null;
+    duplicateRatio: number | null;
+    topRejectionReasons: { reason: string; count: number }[];
+  };
+  freshness: {
+    staleAfterDays: number;
+    tracked: number;
+    stale: number;
+    staleRatio: number | null;
+    oldestFetchAt: string | null;
+    newestFetchAt: string | null;
+    medianAgeHours: number | null;
+    medianSourceAgeDays: number | null;
+  };
+  sourceCoverage: {
+    category: string;
+    totalAvailable: number | null;
+    stored: number;
+    coverageRatio: number | null;
+    lastRunAt: string;
+  }[];
+  reliability: {
+    runs: number;
+    failed: number;
+    scheduled: number;
+    errorRate: number | null;
+    avgDurationMs: number | null;
+    p95DurationMs: number | null;
+    lastSuccessAt: string | null;
+    recentFailures: { id: string; error: string | null; trigger: string; startedAt: string }[];
+    changes: { inserted: number; updated: number; unchanged: number };
+  };
+  source: {
+    requests: number;
+    errors: number;
+    errorRate: number;
+    avgMs: number;
+    p95Ms: number;
+    lastError?: { outcome: string; detail: string | null; at: string } | null;
+  } | null;
+  alerts: QualityAlert[];
 }

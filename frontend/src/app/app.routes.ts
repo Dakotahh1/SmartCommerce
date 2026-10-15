@@ -67,6 +67,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/ingestion.page').then((m) => m.IngestionPage),
       },
       {
+        path: 'admin/calidad',
+        title: 'Calidad de datos · SmartCommerce',
+        canActivate: [roleGuard('admin', 'operator')],
+        loadComponent: () =>
+          import('./features/admin/data-quality.page').then((m) => m.DataQualityPage),
+      },
+      {
         path: 'admin/estado',
         title: 'Estado del sistema · SmartCommerce',
         canActivate: [roleGuard('admin', 'operator')],
