@@ -1,5 +1,8 @@
 .admin {
   display: grid;
+  // minmax(0, 1fr): las tablas anchas hacen scroll dentro de .table-wrap en vez de
+  // ensanchar toda la página en móviles.
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   padding-top: calc(16px + var(--ion-safe-area-top, 0px));
 }
