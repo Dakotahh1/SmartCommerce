@@ -43,6 +43,10 @@ export class ProductQueryDto extends PaginationQueryDto {
   @IsOptional()
   @IsString()
   @MaxLength(100)
+  // Sin caracteres de control ni U+FFFD (texto mal codificado): se rechaza con 400.
+  @Matches(/^[^\p{Cc}\uFFFD]*$/u, {
+    message: 'q contiene caracteres no válidos',
+  })
   q?: string;
 
   @ApiPropertyOptional({
