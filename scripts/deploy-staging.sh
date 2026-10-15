@@ -36,7 +36,7 @@ summary() { if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then printf '%s\n' "$*" >>"$
 
 remote() { ssh -o BatchMode=yes "$SSH_TARGET" "$@"; }
 
-# shellcheck disable=SC2329 # se invoca desde `trap ... EXIT`
+# shellcheck disable=SC2317,SC2329 # se invoca desde `trap ... EXIT` (SC2317 en 0.9, SC2329 en 0.11)
 push_state() {
   if [[ -s "$STATE" ]]; then
     # Escritura atómica y solo legible por el usuario de despliegue (contiene secretos).
