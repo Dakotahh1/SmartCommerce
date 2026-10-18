@@ -5,14 +5,14 @@
 > Plataforma **web, PWA y Android** que recomienda y compara productos de supermercado de forma **personalizada y explicable**, combinando calidad nutricional, procesamiento, impacto ambiental, precio, disponibilidad y preferencias con datos abiertos de **Open Food Facts**.
 
 Proyecto de la asignatura **Ingeniería Web Avanzada** — Ingeniería Civil Informática · Área de aplicación: **comercio y servicios**.
-**Entrega actual:** Entrega Parcial 1 — *Arquitectura y pipeline DevSecOps* (`v0.1.0-ep1`).
+**Entrega actual:** Entrega Parcial 2 — *Información web, procesamiento e integración del servicio Python* (`v0.2.0-ep2`). Entrega anterior: EP1 `v0.1.1-ep1`. Qué se hizo en la EP2 y cómo: [docs/EP2-registro-de-trabajo.md](docs/EP2-registro-de-trabajo.md).
 
 | Enlace | |
 |---|---|
 | 🎨 Prototipo navegable y design system | [Figma · SmartCommerce](https://www.figma.com/design/vUBipEZdpxUtfokgU17hKu) |
 | ⚙️ Pipeline | [GitHub Actions](https://github.com/Dakotahh1/SmartCommerce/actions/workflows/ci.yml) |
 | 📋 Tablero de gestión | [Trello · Kanban Board](https://trello.com/invite/b/6ab9e79ba3760eb1cc5d619d/ATTI6a53b4a4926cc415196729043f0e1f74E5264F6E/kanban-smartcommerce)|
-| 🌐 Ambiente desplegado | Staging efímero en cada ejecución del pipeline; staging persistente definido con Terraform ([docs/09](docs/09-staging-terraform.md)) |
+| 🌐 Ambiente desplegado | Staging desplegado automáticamente desde `main` por el job `deploy-staging` (URL en *Environments › staging* del repositorio; `/api/health` informa versión y commit) · staging efímero en cada PR ([docs/09](docs/09-staging-terraform.md)) |
 
 ---
 
@@ -29,7 +29,7 @@ Proyecto de la asignatura **Ingeniería Web Avanzada** — Ingeniería Civil Inf
 9. [API](#9-api)
 10. [Infraestructura y staging](#10-infraestructura-y-staging)
 11. [Pruebas](#11-pruebas)
-12. [Guía de demostración EP1](#12-guía-de-demostración-ep1)
+12. [Guía de demostración (EP1 y EP2)](#12-guía-de-demostración-ep1-y-ep2)
 13. [Limitaciones y trabajo futuro](#13-limitaciones-y-trabajo-futuro)
 14. [Documentación](#14-documentación)
 
@@ -54,7 +54,9 @@ Comparar productos **solo por precio** es insuficiente: para elegir en el superm
 3. *Adaptación*: ajustes acotados de pesos y afinidades aprendidos de favoritos, comparaciones y descartes, con decaimiento temporal; el usuario puede **desactivarla o restablecerla**.
 4. *Explicación*: desglose por criterio, razones y advertencias; *estrategia base* no adaptativa para evaluar la mejora.
 
-Detalle completo: [docs/01 · Definición del proyecto](docs/01-definicion-proyecto.md) · [docs/04 · Fuente web](docs/04-fuente-web.md).
+**Información web (EP2)** ([docs/10](docs/10-recuperacion-y-evaluacion.md)): ingesta **automatizada y programada** desde Open Food Facts (Chile) → validación, limpieza, normalización, deduplicación y tokenización en Python → persistencia con **procedencia** (fuente, licencia, URL, hash y fecha) e **índice de búsqueda** en PostgreSQL → buscador con **ranking por relevancia** y panel de **calidad de datos** con alertas. Evaluación reproducible: datos reales 95 % válidos y 0 % duplicados; buscador **P@5 0,70 · MRR 1,00 · nDCG@5 0,93** (orden base de la EP1: 0,62 · 0,93 · 0,84).
+
+Detalle completo: [docs/01 · Definición del proyecto](docs/01-definicion-proyecto.md) · [docs/04 · Fuente web](docs/04-fuente-web.md) · [docs/10 · Recuperación y evaluación](docs/10-recuperacion-y-evaluacion.md).
 
 ## 2. Equipo
 
@@ -92,6 +94,8 @@ flowchart LR
 | `backend` | NestJS 12 · TypeORM · PostgreSQL 17 · Pino · Swagger | Punto único de acceso: autenticación JWT + refresh rotativo, RBAC, validación DTO, negocio, persistencia, coordinación resiliente con Python |
 | `python-service` | Python 3.13 · FastAPI · Pydantic v2 · httpx | Obtención, validación y normalización de datos web; motor SmartMatch; métricas de calidad |
 | `database` | PostgreSQL 17 | Usuarios, preferencias, catálogo normalizado, procedencia, interacciones y registros de recomendación |
+
+**Flujo de la información web (EP2):** el programador de NestJS (o un operador) solicita `POST /v1/ingestion/openfoodfacts/search` a FastAPI → Python consulta Open Food Facts respetando sus límites, valida, normaliza, deduplica y tokeniza → NestJS valida el contrato, hace *upsert* idempotente con procedencia y registra la ejecución → `GET /api/v1/products?q=` busca en el índice `search_vector` y ordena por relevancia; `GET /api/v1/admin/data-quality` evalúa los datos.
 
 **Flujo principal (recomendaciones):** la app solicita `GET /api/v1/recommendations` → NestJS valida el JWT, lee preferencias, historial y candidatos de PostgreSQL → llama a `POST /v1/recommendations/rank` en FastAPI (timeout, reintentos, circuit breaker, contrato validado con zod) → guarda el registro de recomendación → responde con puntajes y explicaciones. Si Python no está disponible, NestJS responde con un **ranking base de respaldo** marcado `degraded: true`.
 
@@ -179,12 +183,13 @@ Workflow [`ci.yml`](.github/workflows/ci.yml) en cada pull request y push a `mai
 | Etapa | Controles | Bloquea si… |
 |---|---|---|
 | 1. Seguridad del repositorio | **gitleaks** (historial completo) · **Semgrep** (OWASP, TS, Python, Docker, Actions) · **hadolint** · **ShellCheck** · **actionlint** · `docker compose config` | Secreto, hallazgo SAST alto o configuración inválida |
-| 2. Componentes | `npm ci` / `uv sync --frozen` · ESLint/oxlint/Ruff · Prettier/Ruff format · `tsc`/mypy estricto · Vitest/pytest con cobertura · build · e2e con PostgreSQL real · **npm audit** · **pip-audit** · **Bandit** · APK Android | Error de lint, tipos, pruebas, build o dependencia vulnerable (alta/crítica) |
+| 2. Componentes | `npm ci` / `uv sync --frozen` · ESLint/oxlint/Ruff · Prettier/Ruff format · `tsc`/mypy estricto · Vitest/pytest con cobertura · build · e2e con PostgreSQL real · **evaluación del buscador (P@5, MRR, nDCG)** · **npm audit** · **pip-audit** · **Bandit** · APK Android | Error de lint, tipos, pruebas, build o dependencia vulnerable (alta/crítica) |
 | 3. Contenedores | Build de las 3 imágenes · verificación de usuario no root · **Trivy** · SBOM CycloneDX | Imagen root o vulnerabilidad CRITICAL/HIGH con parche |
-| 4. Staging efímero | Docker Compose con las imágenes escaneadas · pruebas de humo (incl. 401/403/400) · aislamiento de red · resiliencia | Cualquier prueba falla |
+| 4. Staging efímero | Docker Compose con las imágenes escaneadas y fuente simulada · humo (incl. 401/403/400) · **integración EP2** (fuente → Python → NestJS → PostgreSQL → consulta, caída de la fuente) · aislamiento de red · resiliencia | Cualquier prueba falla |
 | 4. Terraform | `fmt` · `validate` (dev y staging) · `plan` de staging | Formato, validación o plan inválidos |
 | 5. Quality gate | Resume todas las etapas | Alguna etapa no terminó en éxito |
 | 6. Publicación | Imágenes en GHCR (`sha-<commit>`, `main`, versión) | Solo en `main`/tags tras el gate |
+| 7. Despliegue en staging | `terraform apply` de `sha-<commit>` · salud con la versión exacta · humo en la URL pública · **rollback automático** | Verificación fallida (se revierte a la versión anterior) |
 
 Seguridad del pipeline: permisos `contents: read` por defecto, acciones fijadas por SHA, binarios con SHA-256 verificado, secretos por ambiente enmascarados y Dependabot. Detalle, evidencias de bloqueo y protección de `main`: [docs/07 · Pipeline DevSecOps](docs/07-pipeline-devsecops.md).
 
@@ -193,7 +198,7 @@ Seguridad del pipeline: permisos `contents: read` por defecto, acciones fijadas 
 | Dónde | No sensibles | Sensibles |
 |---|---|---|
 | Local / Compose | `.env` (desde [`.env.example`](.env.example)) | `.env` (ignorado por git; `scripts/init-env.sh` genera valores aleatorios) |
-| GitHub Actions | **Variables**: `APP_VERSION`, `OFF_USER_AGENT`, `SMOKE_INGEST`, `TRIVY_SEVERITY`, `STAGING_DOCKER_HOST` | **Secrets** (ambiente `staging`): `POSTGRES_SUPERUSER_PASSWORD`, `DB_OWNER_PASSWORD`, `DB_APP_PASSWORD`, `JWT_ACCESS_SECRET`, `INTERNAL_API_TOKEN` |
+| GitHub Actions | **Variables**: `APP_VERSION`, `OFF_USER_AGENT`, `SMOKE_INGEST`, `TRIVY_SEVERITY`, `STAGING_DOCKER_HOST`, `STAGING_URL` | **Secrets** (ambiente `staging`): `POSTGRES_SUPERUSER_PASSWORD`, `DB_OWNER_PASSWORD`, `DB_APP_PASSWORD`, `JWT_ACCESS_SECRET`, `INTERNAL_API_TOKEN`, `STAGING_SSH_PRIVATE_KEY`, `STAGING_SSH_KNOWN_HOSTS` |
 | Terraform | `environments/<ambiente>/terraform.tfvars` | `TF_VAR_*` |
 
 Variables requeridas por Docker Compose:
@@ -208,6 +213,8 @@ Variables requeridas por Docker Compose:
 | `APP_ENV`, `APP_VERSION`, `LOG_LEVEL` | Variable | Ambiente, versión y logs |
 | `FRONTEND_BIND`, `FRONTEND_PORT`, `CORS_ORIGINS` | Variable | Exposición del gateway y orígenes permitidos |
 | `OFF_USER_AGENT`, `OFF_*` | Variable | Identificación y límites hacia Open Food Facts |
+| `INGESTION_SCHEDULE_ENABLED`, `INGESTION_*` | Variable | Ingesta programada: activación, intervalo, objetivos `pais/categoria` y páginas |
+| `DATA_STALE_AFTER_DAYS` | Variable | Umbral de actualidad del reporte de calidad |
 
 Tabla completa, mínimo privilegio y configuración paso a paso en GitHub: [docs/08 · Variables y secretos](docs/08-variables-y-secretos.md).
 
@@ -220,13 +227,17 @@ Documentación interactiva **OpenAPI/Swagger**: `http://localhost:8080/api/docs`
 | POST | `/api/v1/auth/register` · `/login` · `/refresh` | Público (rate limit) | Registro, inicio de sesión y rotación de refresh token |
 | POST · GET · DELETE | `/api/v1/auth/logout` · `/me` | Autenticado | Cierre de sesión, perfil y eliminación de cuenta |
 | GET · PUT | `/api/v1/me/preferences` | Autenticado | Preferencias de personalización |
-| GET | `/api/v1/products` · `/products/:id` · `/categories` | Público | Catálogo con búsqueda y filtros |
+| GET | `/api/v1/products` · `/products/:id` · `/categories` | Público | Catálogo con búsqueda por relevancia (`relevance`), filtros y procedencia |
 | POST · GET · DELETE | `/api/v1/interactions` · `/me/interactions` · `/me/favorites` | Autenticado | Comportamiento, historial y aprendizaje |
 | GET | `/api/v1/recommendations` | Autenticado | Recomendaciones SmartMatch explicables |
 | POST | `/api/v1/comparisons` | Público (personalizada con sesión) | Comparación de 2–4 productos |
 | GET · POST | `/api/v1/admin/ingestions` | `admin`, `operator` | Ingestas desde Open Food Facts con reporte de calidad |
+| GET · POST | `/api/v1/admin/ingestions/schedule` · `/schedule/run` | `admin`, `operator` | Estado de la ingesta programada y ejecución inmediata de un lote (202, asíncrono) |
+| GET | `/api/v1/admin/data-quality?days=` | `admin`, `operator` | Calidad de la información recuperada: validez, duplicados, cobertura, actualidad, errores, tiempos y alertas |
 | GET · PATCH | `/api/v1/admin/users` | `admin` | Gestión de roles |
 | GET | `/api/health` · `/api/health/live` · `/api/health/metrics` | Público / `admin`,`operator` | Salud agregada y métricas por ruta |
+
+Servicio Python (interno; documentación interactiva en `/docs` de FastAPI fuera de producción): `POST /v1/ingestion/openfoodfacts/search`, `POST /v1/products/normalize`, `POST /v1/recommendations/rank`, `POST /v1/comparisons`, `GET /v1/metrics` (incluye métricas de la fuente), `GET /health`, `GET /health/ready`.
 
 Errores con formato uniforme `{ statusCode, code, message, details, path, timestamp, requestId }` y correlación extremo a extremo con `X-Request-Id`. Contratos internos del servicio Python: [python-service/README.md](python-service/README.md).
 
@@ -234,6 +245,7 @@ Errores con formato uniforme `{ statusCode, code, message, details, path, timest
 
 - **Terraform** con proveedor `kreuzwerker/docker` ([ADR-0010](docs/adr/0010-terraform-proveedor-docker-staging.md)): módulo `smartcommerce-stack` (redes segmentadas, volumen, imágenes y contenedores endurecidos) y ambientes `dev` y `staging` con variables, salidas y estado fuera del repositorio.
 - `terraform fmt`, `validate` y `plan` se ejecutan en el pipeline.
+- **Despliegue automático (EP2):** en cada push a `main` que pasa el quality gate, el job `deploy-staging` aplica la imagen `sha-<commit>`, verifica `/api/health` (versión `APP_VERSION+sha-<commit>`), ejecuta las pruebas de humo contra la URL pública y **revierte automáticamente** a la versión anterior si algo falla. Rollback manual: *Actions › Rollback staging*. Estado de Terraform fuera del repositorio ([ADR-0015](docs/adr/0015-despliegue-staging-rollback.md)).
 - **Staging:** VM Linux con Docker accesible por SSH, imágenes inmutables desde GHCR, gateway detrás de un proxy TLS y secretos del ambiente `staging` de GitHub.
 
 ```bash
@@ -249,11 +261,13 @@ Detalle: [docs/09 · Infraestructura y staging](docs/09-staging-terraform.md).
 | Componente | Herramientas | Alcance |
 |---|---|---|
 | Frontend | Vitest + TestBed | Sesión y refresh, interceptores, guards, formulario de login, contratos HTTP, store de comparación, componentes |
-| Backend | Vitest (unitarias) + e2e con PostgreSQL real | Auth y rotación de tokens, RBAC, validación, cliente resiliente de SmartMatch, migraciones up/down, flujo HTTP completo con servicio Python simulado |
-| Python | pytest + respx (cobertura ≥ 85 %) | Conector Open Food Facts, normalización y calidad, sellos Ley 20.606, motor y explicaciones, API y errores |
-| Integración | `scripts/*.sh` en el staging efímero | Flujo mínimo, controles de seguridad, aislamiento de red y resiliencia |
+| Backend | Vitest (unitarias) + e2e con PostgreSQL real | Auth y rotación de tokens, RBAC, validación, cliente resiliente de SmartMatch, migraciones up/down, flujo HTTP completo con servicio Python simulado, ingesta programada, reporte de calidad, normalización de consultas (paridad con Python) y **evaluación del buscador** (P@5, MRR, nDCG) |
+| Python | pytest + respx (cobertura ≥ 85 %) | Conector Open Food Facts (errores, reintentos y métricas de la fuente), normalización y calidad, tokenización, sellos Ley 20.606, motor y explicaciones, API y errores |
+| Integración | `scripts/*.sh` en el staging efímero | Flujo mínimo, controles de seguridad, **integración EP2 con la fuente simulada** (`integration-test.sh`), aislamiento de red y resiliencia |
 
-## 12. Guía de demostración EP1
+## 12. Guía de demostración (EP1 y EP2)
+
+**EP1**
 
 1. **Componentes corriendo:** `docker compose up -d --build` y `docker compose ps` (todos *healthy*).
 2. **Navegación:** abrir http://localhost:8080 → bienvenida → explorar → detalle → comparar; en escritorio se ve el menú lateral y en móvil (DevTools) la barra inferior.
@@ -265,16 +279,28 @@ Detalle: [docs/09 · Infraestructura y staging](docs/09-staging-terraform.md).
    - `docker compose stop python-service` → *Para ti* muestra el aviso de modo degradado y recomendaciones de respaldo; `docker compose start python-service` lo recupera.
    - Abrir un PR con un secreto ficticio o una prueba rota: el pipeline se detiene y el quality gate impide integrar ([docs/07 §7.5](docs/07-pipeline-devsecops.md#75-evidencia-de-bloqueo)).
 
+**EP2** (fuente web → Python → NestJS → PostgreSQL → Angular):
+
+1. **Recuperación automatizada:** con `INGESTION_SCHEDULE_ENABLED=true` en `.env` (así viene en `.env.example`) el primer lote corre un minuto después de arrancar; también *Administración › Ingesta de datos › Ejecutar lote ahora*. La tarjeta *Ingesta programada* muestra el resultado por categoría.
+2. **Validación y preparación:** tabla de ejecuciones (válidos, rechazados, nuevos, sin cambios) y cobertura de campos; repetir la ingesta muestra 0 nuevos (deduplicación por hash).
+3. **FastAPI y correlación:** `docker compose logs backend python-service | grep ingest-` muestra el mismo `X-Request-Id` en ambos servicios.
+4. **Persistencia e índice:** `docker compose exec database psql -U postgres -d smartcommerce -c "select gtin, name, search_primary from products limit 5"`.
+5. **Consulta y visualización:** *Explorar* → "sin azúcar" o "avena" (orden por relevancia) → detalle con procedencia y licencia.
+6. **Métricas:** *Administración › Calidad de datos* (validez, duplicados, actualidad, errores y alertas) y la tabla P@5/MRR/nDCG en el resumen del job *Backend*.
+7. **Error o indisponibilidad:** `docker compose stop python-service` (modo degradado) o sin Internet al ejecutar un lote → ejecución `failed`/`partial`, alerta en *Calidad de datos* y catálogo disponible.
+8. **Staging:** URL del ambiente `staging` y `…/api/health` (versión `0.2.0+sha-<commit>`).
+
 ## 13. Limitaciones y trabajo futuro
 
-**Limitaciones actuales (EP1)**
-- Precios colaborativos de Open Prices con baja cobertura en Chile: el criterio de precio se omite y se renormaliza cuando falta el dato.
-- La adaptación usa reglas acotadas y transparentes; aún no hay evaluación experimental con usuarios.
-- El staging persistente está definido en Terraform pero no desplegado; el pipeline valida cada versión en un staging efímero.
-- Sin iOS ni notificaciones push; la PWA cachea solo lecturas.
+**Limitaciones actuales (EP2)**
+- Precios de Open Prices aún no integrados (cobertura en Chile casi nula): el criterio de precio se omite y se renormaliza. Cobertura medida de tiendas 13 % y NOVA 58 %.
+- El buscador no corrige errores ortográficos ni traduce sinónimos (`protein`/`proteína`, `Quajer`/`Quaker`); su evaluación usa un corpus pequeño de una categoría y juicios de un solo equipo.
+- La ingesta programada vive en el proceso de NestJS: un reinicio a mitad de lote lo repite en el siguiente intervalo (es idempotente).
+- El despliegue automático requiere que el equipo configure el host de staging (variables y secretos); el estado de Terraform se guarda en ese host.
+- La adaptación usa reglas acotadas y transparentes; aún no hay evaluación experimental con usuarios. Sin iOS ni notificaciones push; la PWA cachea solo lecturas.
 
 **Trabajo futuro**
-- EP2: ingestas programadas y deduplicación avanzada, despliegue automático a staging con aprobación y rollback, observabilidad (métricas y trazas), pruebas E2E de interfaz.
+- Precios de Open Prices, sinónimos y tolerancia a errores en el buscador, trazas distribuidas, pruebas E2E de interfaz, respaldo programado de PostgreSQL.
 - Entrega final: evaluación del motor (Precision@5 personalizada vs. base), pruebas de usabilidad y accesibilidad WCAG AA, publicación del APK firmado.
 
 ## 14. Documentación
@@ -289,7 +315,9 @@ Detalle: [docs/09 · Infraestructura y staging](docs/09-staging-terraform.md).
 | [06 · Seguridad y privacidad](docs/06-seguridad-privacidad.md) | RBAC, STRIDE, privacidad, controles automáticos |
 | [07 · Pipeline DevSecOps](docs/07-pipeline-devsecops.md) | Etapas, quality gates, evidencias de bloqueo |
 | [08 · Variables y secretos](docs/08-variables-y-secretos.md) | Configuración por ambiente y mínimo privilegio |
-| [09 · Infraestructura y staging](docs/09-staging-terraform.md) | Terraform, ambiente de staging |
+| [09 · Infraestructura y staging](docs/09-staging-terraform.md) | Terraform, ambiente de staging, despliegue y rollback |
+| [10 · Recuperación y evaluación](docs/10-recuperacion-y-evaluacion.md) | Extracción, limpieza, indexación, buscador y métricas (EP2) |
+| [Registro EP2](docs/EP2-registro-de-trabajo.md) | Verificación de la EP1, lista de comprobación de la EP2, qué se hizo y cómo, pendientes |
 | [ADR](docs/adr/README.md) | Registro de decisiones de arquitectura |
 | [CONTRIBUTING](CONTRIBUTING.md) | Flujo de ramas, commits y pull requests |
 

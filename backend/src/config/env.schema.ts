@@ -82,7 +82,72 @@ export const envSchema = z.object({
     .min(1000)
     .max(600_000)
     .default(30_000),
+
+  // Ingesta programada desde Open Food Facts (estrategia de actualización, EP2).
+  INGESTION_SCHEDULE_ENABLED: booleanString,
+  INGESTION_INTERVAL_MINUTES: z.coerce
+    .number()
+    .int()
+    .min(5)
+    .max(10_080)
+    .default(360),
+  INGESTION_INITIAL_DELAY_SECONDS: z.coerce
+    .number()
+    .int()
+    .min(0)
+    .max(3600)
+    .default(60),
+  INGESTION_TARGETS: z
+    .string()
+    .default(
+      'chile/breakfast-cereals,chile/dairies,chile/beverages,chile/snacks',
+    )
+    .transform((value, ctx) => {
+      const targets = parseIngestionTargets(value);
+      if (!targets) {
+        ctx.addIssue({
+          code: 'custom',
+          message:
+            'INGESTION_TARGETS debe ser una lista "pais/categoria" separada por comas',
+        });
+        return z.NEVER;
+      }
+      return targets;
+    }),
+  INGESTION_MAX_PAGES: z.coerce.number().int().min(1).max(20).default(2),
+  INGESTION_PAGE_SIZE: z.coerce.number().int().min(1).max(100).default(50),
+  // Días tras los cuales un producto se considera desactualizado en las métricas de calidad.
+  DATA_STALE_AFTER_DAYS: z.coerce.number().int().min(1).max(365).default(14),
 });
+
+export interface IngestionTarget {
+  country: string;
+  category: string;
+}
+
+const COUNTRY_RE = /^[a-z][a-z-]{1,39}$/;
+const CATEGORY_RE = /^[a-z0-9][a-z0-9:-]{1,79}$/;
+
+/** "chile/breakfast-cereals,chile/dairies" → objetivos validados (o null si alguno es inválido). */
+export function parseIngestionTargets(raw: string): IngestionTarget[] | null {
+  const items = raw
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+  if (items.length === 0 || items.length > 20) return null;
+  const targets: IngestionTarget[] = [];
+  for (const item of items) {
+    const [country, category, ...rest] = item.split('/');
+    if (
+      rest.length ||
+      !COUNTRY_RE.test(country) ||
+      !CATEGORY_RE.test(category ?? '')
+    )
+      return null;
+    targets.push({ country, category });
+  }
+  return targets;
+}
 
 export type Env = z.infer<typeof envSchema>;
 

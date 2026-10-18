@@ -1,6 +1,8 @@
 # 2. Arquitectura
 
 > Modelo C4 (contexto → contenedores → componentes) + despliegue + flujos. Las decisiones se justifican en los [ADR](adr/README.md).
+>
+> **Cambios de la EP2:** ingesta programada en NestJS ([ADR-0013](adr/0013-ingesta-programada-sin-cola.md)), índice de búsqueda en PostgreSQL con tokens normalizados por Python ([ADR-0014](adr/0014-indice-busqueda-postgresql.md)), reporte de calidad de datos y métricas de la fuente, y despliegue automático en staging con rollback ([ADR-0015](adr/0015-despliegue-staging-rollback.md)). Flujo de la información web: §2.5.4 y [docs/10](10-recuperacion-y-evaluacion.md).
 
 ## 2.1 Vista general
 
@@ -103,7 +105,7 @@ flowchart LR
         welcome["welcome"] --- login["auth: login / register"]
         home["home: Para ti"] --- explore["explore"]
         detail["product-detail"] --- compare["compare"]
-        profile["profile + preferencias"] --- admin["admin: ingesta / estado"]
+        profile["profile + preferencias"] --- admin["admin: ingesta / calidad de datos / estado"]
     end
     subgraph shared["shared/"]
         comps["match-ring · grade-badge · nutri-score<br/>high-in-seal · product-card · reason-chips"]
@@ -245,6 +247,35 @@ sequenceDiagram
     A->>N: POST /api/v1/auth/logout {refreshToken}
     N->>D: revoca la familia de tokens
 ```
+
+### 2.5.4 Información web: recuperación, preparación e indexación (EP2)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as IngestionScheduler (NestJS)
+    participant N as IngestionService (NestJS)
+    participant P as FastAPI
+    participant O as Open Food Facts
+    participant D as PostgreSQL
+    S->>D: pg_try_advisory_lock (un lote a la vez)
+    loop cada objetivo país/categoría y página
+        S->>N: start(trigger=scheduled, X-Request-Id=ingest-…)
+        N->>D: INSERT ingestion_runs (running)
+        N->>P: POST /v1/ingestion/openfoodfacts/search (token interno)
+        P->>O: GET /api/v2/search (rate limit, reintentos, caché)
+        O-->>P: registros crudos
+        P->>P: validar · limpiar · normalizar · deduplicar · tokenizar
+        P-->>N: productos normalizados + reporte de calidad
+        N->>N: validar contrato (zod)
+        N->>D: upsert products + product_sources (hash) en una transacción
+        N->>D: UPDATE ingestion_runs (completed + métricas)
+    end
+    Note over P,O: Si la fuente falla → 502 SOURCE_UNAVAILABLE,<br/>ejecución failed, el lote sigue (partial)
+    S->>D: pg_advisory_unlock
+```
+
+Consulta: `GET /api/v1/products?q=` → NestJS normaliza el texto con las mismas reglas que Python → `search_vector @@ to_tsquery('simple', …)` ordenado por `ts_rank_cd` → resultados con `relevance` y procedencia.
 
 ## 2.6 Despliegue
 

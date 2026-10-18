@@ -46,6 +46,11 @@ Reglas:
 | `SMARTMATCH_TIMEOUT_MS` / `SMARTMATCH_INGESTION_TIMEOUT_MS` | Variable | backend | `5000` / `45000` | Timeouts hacia el servicio Python |
 | `OFF_BASE_URL` / `OFF_USER_AGENT` | Variable | python-service | API oficial / `SmartCommerce/0.1.0 (…)` | Fuente web y User-Agent identificable exigido por Open Food Facts |
 | `OFF_TIMEOUT_SECONDS` / `OFF_SEARCH_RATE_PER_MINUTE` / `OFF_CACHE_TTL_SECONDS` | Variable | python-service | `10` / `8` / `300` | Resiliencia y respeto de los límites de la fuente |
+| `INGESTION_SCHEDULE_ENABLED` | Variable | backend | `false` en Compose (`true` en `.env.example`) | Activa la ingesta programada (EP2) |
+| `INGESTION_INTERVAL_MINUTES` / `INGESTION_INITIAL_DELAY_SECONDS` | Variable | backend | `360` / `60` | Frecuencia del lote y espera tras el arranque |
+| `INGESTION_TARGETS` | Variable | backend | `chile/breakfast-cereals,chile/dairies,chile/beverages,chile/snacks` | Objetivos `pais/categoria` (validados al arrancar) |
+| `INGESTION_MAX_PAGES` / `INGESTION_PAGE_SIZE` | Variable | backend | `2` / `50` | Páginas y tamaño por objetivo |
+| `DATA_STALE_AFTER_DAYS` | Variable | backend | `14` | Umbral de actualidad del reporte de calidad |
 
 Variables fijadas por la topología (no configurables desde `.env`): `DB_HOST=database`, `PYTHON_SERVICE_URL=http://python-service:8000`, `API_UPSTREAM=http://backend:3000`, `TRUST_PROXY=true`.
 
@@ -60,19 +65,22 @@ Variables fijadas por la topología (no configurables desde `.env`): `DB_HOST=da
 | `DB_APP_PASSWORD` | ambiente `staging` | Staging efímero y Terraform | Aleatorio enmascarado |
 | `JWT_ACCESS_SECRET` | ambiente `staging` | Staging efímero y Terraform | Aleatorio enmascarado |
 | `INTERNAL_API_TOKEN` | ambiente `staging` | Staging efímero y Terraform | Aleatorio enmascarado |
+| `STAGING_SSH_PRIVATE_KEY` | ambiente `staging` | Llave privada (ed25519) del usuario `deploy` del host de staging | El job `deploy-staging` falla con un error explícito |
+| `STAGING_SSH_KNOWN_HOSTS` | ambiente `staging` | Huella del host (`ssh-keyscan -t ed25519 <host>`), evita ataques de intermediario | Idem |
 | `GITHUB_TOKEN` | automático | Publicar imágenes en GHCR (`packages: write` solo en ese job, solo en `main`) | — |
 
-Las pruebas de integración usan una base PostgreSQL de servicio del propio job con credenciales **efímeras** generadas en la ejecución (no reutilizables fuera del runner).
+Las pruebas de integración usan una base PostgreSQL de servicio del propio job con credenciales **efímeras** generadas en la ejecución (no reutilizables fuera del runner). En el despliegue real (`deploy-staging`) los cinco secretos de la aplicación son **obligatorios**: nunca se usan valores efímeros.
 
 ### Variables
 
 | Variable | Valor sugerido | Uso |
 |---|---|---|
-| `APP_VERSION` | `0.1.0` | Etiqueta de versión en imágenes y `/api/health` |
+| `APP_VERSION` | `0.2.0` | Etiqueta de versión en imágenes; en staging `/api/health` informa `APP_VERSION+sha-<commit>` |
 | `OFF_USER_AGENT` | `SmartCommerce/0.1.0 (contacto: <correo del equipo>)` | Identificación ante Open Food Facts en el staging efímero |
-| `SMOKE_INGEST` | `true` | Ejecuta una ingesta real en las pruebas de humo (si la fuente falla se informa sin bloquear) |
+| `SMOKE_INGEST` | `true` | Ejecuta una ingesta en las pruebas de humo del staging efímero (desde la fuente simulada) |
 | `TRIVY_SEVERITY` | `CRITICAL,HIGH` | Severidades que bloquean el escaneo de imágenes |
-| `STAGING_DOCKER_HOST` | `unix:///var/run/docker.sock` | Daemon Docker contra el que Terraform planifica el staging (en un host real: `ssh://deploy@<ip>`) |
+| `STAGING_DOCKER_HOST` | `ssh://deploy@<ip-o-dns>` | Host Docker del staging real. **Si existe, activa el job `deploy-staging`** en cada push a `main` (el `plan` del CI siempre usa el daemon del runner) |
+| `STAGING_URL` | `https://staging.<dominio>` | URL pública del staging: verificación posterior al despliegue y enlace del ambiente en GitHub |
 
 ### Configuración paso a paso
 

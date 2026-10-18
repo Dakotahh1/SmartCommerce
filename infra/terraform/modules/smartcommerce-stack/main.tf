@@ -308,6 +308,10 @@ resource "docker_container" "backend" {
     "PYTHON_SERVICE_URL=http://python-service:8000",
     "INTERNAL_API_TOKEN=${var.internal_api_token}",
     "SMARTMATCH_INGESTION_TIMEOUT_MS=45000",
+    "INGESTION_SCHEDULE_ENABLED=${var.ingestion.enabled}",
+    "INGESTION_INTERVAL_MINUTES=${var.ingestion.interval_minutes}",
+    "INGESTION_TARGETS=${join(",", var.ingestion.targets)}",
+    "INGESTION_MAX_PAGES=${var.ingestion.max_pages}",
   ])
 
   networks_advanced {

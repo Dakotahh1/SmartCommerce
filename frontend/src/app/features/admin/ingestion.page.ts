@@ -1,11 +1,18 @@
 import { DatePipe, DecimalPipe, KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonButton, IonContent, IonIcon, IonSpinner } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 import { ApiService } from '../../core/api.service';
 import { isApiError } from '../../core/http/interceptors';
-import type { IngestionRun } from '../../core/models';
+import type { IngestionRun, IngestionSchedule } from '../../core/models';
 import { NotifierService } from '../../core/notifier.service';
 import { StatusBannerComponent } from '../../shared/components/status-banner.component';
 
@@ -45,6 +52,13 @@ export class IngestionPage implements OnInit {
   protected readonly running = signal(false);
   protected readonly lastRun = signal<IngestionRun | null>(null);
   protected readonly error = signal<string | null>(null);
+  protected readonly schedule = signal<IngestionSchedule | null>(null);
+  protected readonly batchStarting = signal(false);
+  private poll?: ReturnType<typeof setInterval>;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => clearInterval(this.poll));
+  }
 
   protected readonly form = inject(FormBuilder).nonNullable.group({
     category: ['breakfast-cereals', Validators.required],
@@ -60,6 +74,54 @@ export class IngestionPage implements OnInit {
     this.api
       .listIngestions()
       .subscribe({ next: (page) => this.runs.set(page.items), error: () => undefined });
+    this.loadSchedule();
+  }
+
+  private loadSchedule(): void {
+    this.api.getIngestionSchedule().subscribe({
+      next: (schedule) => {
+        this.schedule.set(schedule);
+        if (!schedule.running && this.poll) {
+          clearInterval(this.poll);
+          this.poll = undefined;
+          this.api
+            .listIngestions()
+            .subscribe({ next: (page) => this.runs.set(page.items), error: () => undefined });
+        }
+      },
+      error: () => undefined,
+    });
+  }
+
+  /** Lote de todos los objetivos configurados; el backend lo ejecuta en segundo plano (202). */
+  async runBatch(): Promise<void> {
+    this.batchStarting.set(true);
+    try {
+      const result = await firstValueFrom(this.api.runScheduledIngestion());
+      if (result.accepted) {
+        this.notifier.success('Lote de ingesta iniciado; el progreso se actualiza solo');
+        clearInterval(this.poll);
+        this.poll = setInterval(() => this.loadSchedule(), 3000);
+      } else {
+        this.notifier.warning('Ya hay un lote de ingesta en ejecución');
+      }
+      this.loadSchedule();
+    } catch {
+      this.notifier.warning('No se pudo iniciar el lote de ingesta');
+    } finally {
+      this.batchStarting.set(false);
+    }
+  }
+
+  protected batchLabel(status: string): string {
+    return (
+      {
+        completed: 'Completado',
+        partial: 'Parcial',
+        failed: 'Fallido',
+        skipped: 'Omitido',
+      }[status] ?? status
+    );
   }
 
   async start(): Promise<void> {

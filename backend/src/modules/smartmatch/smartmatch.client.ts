@@ -7,6 +7,7 @@ import {
   compareResponseSchema,
   ingestionResponseSchema,
   rankResponseSchema,
+  pythonMetricsSchema,
   readinessSchema,
   type CompareRequest,
   type CompareResponse,
@@ -14,6 +15,7 @@ import {
   type IngestionResponse,
   type RankRequest,
   type RankResponse,
+  type PythonMetrics,
   type Readiness,
 } from './smartmatch.contracts.js';
 
@@ -133,6 +135,20 @@ export class SmartMatchClient {
     if (!response.ok)
       throw new SmartMatchUnavailableError('upstream_status', response.status);
     const parsed = readinessSchema.safeParse(await response.json());
+    if (!parsed.success)
+      throw new SmartMatchInvalidResponseError(parsed.error.message);
+    return parsed.data;
+  }
+
+  /** Métricas del servicio Python y de la fuente externa (no afecta al circuit breaker). */
+  async metrics(requestId?: string): Promise<PythonMetrics> {
+    const response = await fetch(`${this.baseUrl}/v1/metrics`, {
+      headers: this.headers(requestId),
+      signal: AbortSignal.timeout(2500),
+    });
+    if (!response.ok)
+      throw new SmartMatchUnavailableError('upstream_status', response.status);
+    const parsed = pythonMetricsSchema.safeParse(await response.json());
     if (!parsed.success)
       throw new SmartMatchInvalidResponseError(parsed.error.message);
     return parsed.data;

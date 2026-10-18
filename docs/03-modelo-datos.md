@@ -104,6 +104,9 @@ erDiagram
         text_array stores
         numeric completeness
         numeric data_quality_score
+        varchar search_primary
+        varchar search_secondary
+        tsvector search_vector
         timestamptz created_at
         timestamptz updated_at
     }
@@ -183,10 +186,10 @@ erDiagram
 | `user_preferences` | Perfil explícito del usuario | PK = FK a `users` (1:1, cascade); `CHECK` de pesos entre 0 y 100 validado en DTO |
 | `data_sources` | Catálogo de fuentes web con licencia | `code` único; se siembra en la migración inicial |
 | `categories` | Categorías normalizadas | `slug` único |
-| `products` | Producto normalizado | `gtin` único (deduplicación); `CHECK` en `nutriscore_grade`, `ecoscore_grade` (`a`–`e`), `nova_group` (1–4), `unit` (`g`,`ml`); índice GIN de texto completo en español sobre nombre y marca; GIN en `allergens`; índice en `category_id` |
-| `product_sources` | **Procedencia** y detección de cambios | `UNIQUE (source_id, external_id)`; `raw_hash` para saber si el dato cambió; FK a `ingestion_runs ON DELETE SET NULL` |
+| `products` | Producto normalizado | `gtin` único (deduplicación); `CHECK` en `nutriscore_grade`, `ecoscore_grade` (`a`–`e`), `nova_group` (1–4), `unit` (`g`,`ml`); `search_primary`/`search_secondary` (tokens normalizados por Python) y columna generada `search_vector` (pesos A/B) con índice GIN para búsqueda por relevancia (EP2, [ADR-0014](adr/0014-indice-busqueda-postgresql.md)); GIN en `allergens`; índice en `category_id` |
+| `product_sources` | **Procedencia** y detección de cambios | `UNIQUE (source_id, external_id)`; `raw_hash` para saber si el dato cambió; `fetched_at` indexado (métrica de actualidad, EP2); FK a `ingestion_runs ON DELETE SET NULL` |
 | `product_prices` | Observaciones de precio | `CHECK amount > 0`; `UNIQUE (source_id, external_id)`; índice `(product_id, observed_at DESC)` |
-| `ingestion_runs` | Trazabilidad de cada ingesta y métricas de calidad | enum de estado; `params` JSONB; `request_id` para correlacionar logs |
+| `ingestion_runs` | Trazabilidad de cada ingesta y métricas de calidad | enum de estado; `params` JSONB (incluye `trigger`: `manual` o `scheduled`); `request_id` para correlacionar logs |
 | `user_interactions` | Señales de comportamiento para la adaptación | enum de tipo; índice `(user_id, created_at DESC)` e índice `(product_id)` |
 | `favorites` | Favoritos | PK compuesta `(user_id, product_id)` evita duplicados |
 | `recommendation_logs` | Auditoría y evaluación (comparación con base no adaptativa) | índice `(user_id, created_at DESC)` |
@@ -201,6 +204,11 @@ Todas las marcas de tiempo usan `timestamptz` (UTC). Las claves primarias son UU
 - Se ejecutan en un contenedor **one-shot `migrate`** con el rol propietario, antes de que arranque el backend (que usa un rol sin permisos DDL).
 - En CI, las pruebas de integración levantan PostgreSQL, ejecutan todas las migraciones `up` y luego `down` para verificar reversibilidad.
 - Cambios incompatibles se hacen en dos pasos (expandir → migrar datos → contraer) para permitir **rollback** de la aplicación sin perder datos.
+
+| Migración | Entrega | Contenido |
+|---|---|---|
+| `1758067200000-InitialSchema` | EP1 | Esquema completo, tipos enum, índices y semilla de `data_sources` |
+| `1760500000000-SearchIndex` | EP2 | Columnas de búsqueda, `search_vector` generado + GIN (reemplaza el índice de texto de EP1), relleno inicial e índice `product_sources(fetched_at)`; aditiva, por lo que la versión EP1 sigue funcionando sobre el esquema nuevo (rollback seguro) |
 
 ## 3.5 Mínimo privilegio en la base de datos
 

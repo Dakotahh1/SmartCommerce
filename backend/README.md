@@ -47,6 +47,9 @@ Documentación interactiva: `GET /api/docs` (OpenAPI JSON en `/api/docs-json`) c
 | GET | `/api/v1/recommendations` | Autenticado | Recomendaciones SmartMatch (`degraded: true` si se usó el respaldo) |
 | POST | `/api/v1/comparisons` | Público (personalizada con sesión) | Compara 2–4 productos |
 | GET/POST | `/api/v1/admin/ingestions` | `admin`, `operator` | Lista / ejecuta ingestas desde Open Food Facts |
+| GET | `/api/v1/admin/ingestions/schedule` | `admin`, `operator` | Estado de la ingesta programada: configuración, próxima ejecución y último lote |
+| POST | `/api/v1/admin/ingestions/schedule/run` | `admin`, `operator` | Ejecuta un lote de todos los objetivos en segundo plano (202) |
+| GET | `/api/v1/admin/data-quality?days=30` | `admin`, `operator` | Reporte de calidad de los datos recuperados con alertas |
 | GET | `/api/v1/admin/users` | `admin` | Lista usuarios |
 | PATCH | `/api/v1/admin/users/:id/role` | `admin` | Cambia rol |
 | GET | `/api/health` | Público | `ok` · `degraded` (SmartMatch o fuente caídos) · `down` (sin BD → 503) |
@@ -100,8 +103,8 @@ npm audit --omit=dev --audit-level=critical
 
 | Suite | Qué verifica |
 |---|---|
-| Unitarias (47) | Guards JWT/roles (token expirado, falsificado, audiencia, rol desconocido, 403), filtro de errores sin fugas, validación de DTO (campos extra, rol auto-asignado, pesos fuera de rango), variables de entorno, Argon2id, circuit breaker, cliente SmartMatch contra servidor HTTP simulado (contrato, reintentos, timeout, 4xx, circuito abierto, red caída), ranking base y modo degradado |
-| E2E (8) | Migraciones `up → down → up`; registro, login, rotación y reutilización de refresh token, logout; RBAC; ingesta idempotente (insertados/sin cambios/fuente caída); catálogo con búsqueda, filtros y procedencia; flujo NestJS → Python → NestJS con preferencias e historial; degradación con Python caído; eliminación de cuenta; OpenAPI; métricas |
+| Unitarias (84) | Guards JWT/roles (token expirado, falsificado, audiencia, rol desconocido, 403), filtro de errores sin fugas, validación de DTO (campos extra, rol auto-asignado, pesos fuera de rango), variables de entorno, Argon2id, circuit breaker, cliente SmartMatch contra servidor HTTP simulado (contrato, reintentos, timeout, 4xx, circuito abierto, red caída), ranking base y modo degradado; programador de ingesta (paginación, advisory lock, fallo parcial, un lote a la vez); normalización de consultas con los casos compartidos con Python; métricas P@K, MRR y nDCG |
+| E2E (12) | Migraciones `up → down → up`; registro, login, rotación y reutilización de refresh token, logout; RBAC; ingesta idempotente (insertados/sin cambios/fuente caída); catálogo con búsqueda, filtros y procedencia; flujo NestJS → Python → NestJS con preferencias e historial; degradación con Python caído; eliminación de cuenta; OpenAPI; métricas; ingesta programada asíncrona con caída parcial de la fuente; reporte de calidad; **evaluación del buscador** sobre el corpus real (`test/retrieval.e2e-spec.ts`, reporte en `reports/retrieval-evaluation.json`) |
 
 ## Docker
 

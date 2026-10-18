@@ -18,6 +18,7 @@ module "smartcommerce" {
   cors_origins        = var.cors_origins
   swagger_enabled     = var.swagger_enabled
   off_user_agent      = var.off_user_agent
+  ingestion           = var.ingestion
   resources           = var.resources
 
   postgres_superuser_password = var.postgres_superuser_password

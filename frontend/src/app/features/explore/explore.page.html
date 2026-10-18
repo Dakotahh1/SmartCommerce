@@ -4,7 +4,7 @@
 
     <ion-searchbar
       [formControl]="search"
-      placeholder="Busca por nombre o marca (ej. avena)"
+      placeholder="Busca por nombre, marca o sello (ej. avena, sin azúcar)"
       [debounce]="0"
       aria-label="Buscar productos"
       class="searchbar"
@@ -62,7 +62,12 @@
 
     <p class="meta" role="status">
       @if (!loading() && !failed()) {
-        {{ total() }} resultados · ordenados por calidad de datos
+        {{ total() }} resultados ·
+        {{
+          rankedByRelevance()
+            ? 'ordenados por relevancia (nombre y marca pesan más que categoría y sellos)'
+            : 'ordenados por calidad de datos'
+        }}
       }
     </p>
 

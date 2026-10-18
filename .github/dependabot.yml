@@ -8,10 +8,13 @@ updates:
       day: monday
     open-pull-requests-limit: 5
     groups:
+      # Runtime y tooling de Angular deben subir juntos: sus peerDependencies son exactas
+      # (p. ej. @angular/compiler-cli exige la misma versión de @angular/compiler).
       angular-ionic-capacitor:
         patterns: ["@angular/*", "@angular-devkit/*", "@ionic/*", "@capacitor/*", "ionicons"]
       dev-tooling:
         dependency-type: development
+        exclude-patterns: ["@angular/*", "@angular-devkit/*", "@capacitor/*"]
     labels: [dependencies, frontend]
 
   - package-ecosystem: npm

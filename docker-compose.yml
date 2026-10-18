@@ -151,6 +151,14 @@ services:
       INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:?Define INTERNAL_API_TOKEN en .env}
       SMARTMATCH_TIMEOUT_MS: ${SMARTMATCH_TIMEOUT_MS:-5000}
       SMARTMATCH_INGESTION_TIMEOUT_MS: ${SMARTMATCH_INGESTION_TIMEOUT_MS:-45000}
+      # Ingesta programada (EP2): objetivos "pais/categoria" que se refrescan periódicamente.
+      INGESTION_SCHEDULE_ENABLED: ${INGESTION_SCHEDULE_ENABLED:-false}
+      INGESTION_INTERVAL_MINUTES: ${INGESTION_INTERVAL_MINUTES:-360}
+      INGESTION_INITIAL_DELAY_SECONDS: ${INGESTION_INITIAL_DELAY_SECONDS:-60}
+      INGESTION_TARGETS: ${INGESTION_TARGETS:-chile/breakfast-cereals,chile/dairies,chile/beverages,chile/snacks}
+      INGESTION_MAX_PAGES: ${INGESTION_MAX_PAGES:-2}
+      INGESTION_PAGE_SIZE: ${INGESTION_PAGE_SIZE:-50}
+      DATA_STALE_AFTER_DAYS: ${DATA_STALE_AFTER_DAYS:-14}
     depends_on:
       database:
         condition: service_healthy

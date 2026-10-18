@@ -14,6 +14,7 @@ from app.normalization.gtin import InvalidGtinError, canonicalize_gtin
 from app.normalization.quantity import parse_quantity
 from app.normalization.seals import compute_high_in_seals
 from app.normalization.tags import BEVERAGE_CATEGORIES, normalize_allergens, normalize_tags
+from app.normalization.text import build_search_fields
 from app.schemas.product import (
     DietFlags,
     NormalizationReport,
@@ -268,6 +269,13 @@ def normalize_product(raw: Mapping[str, Any], *, fetched_at: datetime) -> Normal
         raw_hash=raw_hash(raw),
     )
     product.data_quality_score = _quality_score(raw, product, completeness)
+    product.search_primary, product.search_secondary = build_search_fields(
+        name=name,
+        brand=brands,
+        generic_name=_clean_text(raw.get("generic_name_es") or raw.get("generic_name"), 255),
+        categories=categories,
+        labels=labels,
+    )
     return product
 
 

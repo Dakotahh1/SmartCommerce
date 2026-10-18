@@ -2,6 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { AppException } from '../../common/app.exception.js';
+import { toPrefixTsQuery } from '../../common/text-normalization.js';
 import { toPage, type Page } from '../../common/pagination.js';
 import {
   Category,
@@ -14,7 +15,7 @@ import {
   unitPriceOf,
   type ProductWithContext,
 } from '../smartmatch/candidate.mapper.js';
-import type { ProductQueryDto } from './products.dto.js';
+import type { ProductQueryDto, ProductSort } from './products.dto.js';
 
 export interface ProductSummary {
   id: string;
@@ -30,6 +31,8 @@ export interface ProductSummary {
   highInSeals: string[];
   allergens: string[];
   dataQualityScore: number;
+  /** Puntaje `ts_rank_cd` cuando la lista se ordena por relevancia. */
+  relevance?: number;
   price: {
     amount: number;
     currency: string;
@@ -38,7 +41,14 @@ export interface ProductSummary {
   } | null;
 }
 
-const SORTS: Record<ProductQueryDto['sort'], [string, 'ASC' | 'DESC']> = {
+// Normalización 1 = divide por 1 + log(largo del documento): a igual coincidencia, gana el
+// producto cuyo texto se centra en el término buscado (ver docs/10, comparación de variantes).
+const SEARCH_RANK = `ts_rank_cd(product.search_vector, to_tsquery('simple', :tsq), 1)`;
+
+const SORTS: Record<
+  Exclude<ProductSort, 'relevance'>,
+  [string, 'ASC' | 'DESC']
+> = {
   quality: ['product.dataQualityScore', 'DESC'],
   name: ['product.name', 'ASC'],
   recent: ['product.updatedAt', 'DESC'],
@@ -58,19 +68,49 @@ export class ProductsService {
     private readonly dataSources: Repository<DataSourceEntity>,
   ) {}
 
+  /**
+   * Búsqueda en el catálogo. Con texto, la consulta se normaliza igual que el índice
+   * (tokens, sin tildes, plurales) y se ordena por `ts_rank_cd` sobre `search_vector`
+   * (nombre/marca con peso A, categorías y sellos con peso B); empates por calidad del dato.
+   */
   async search(query: ProductQueryDto): Promise<Page<ProductSummary>> {
     const qb = this.products.createQueryBuilder('product');
     this.applyFilters(qb, query);
-    const [field, direction] = SORTS[query.sort];
-    qb.orderBy(field, direction)
-      .addOrderBy('product.gtin', 'ASC')
-      .skip((query.page - 1) * query.limit)
-      .take(query.limit);
+    const tsq = query.q ? toPrefixTsQuery(query.q) : null;
+    const sort: ProductSort = query.sort ?? (tsq ? 'relevance' : 'quality');
 
-    const [rows, total] = await qb.getManyAndCount();
-    const context = await this.loadContext(rows);
+    if (sort === 'relevance' && tsq) {
+      qb.addSelect(SEARCH_RANK, 'relevance')
+        .orderBy('relevance', 'DESC')
+        .addOrderBy('product.dataQualityScore', 'DESC');
+    } else {
+      const [field, direction] = SORTS[sort === 'relevance' ? 'quality' : sort];
+      qb.orderBy(field, direction);
+    }
+    qb.addOrderBy('product.gtin', 'ASC')
+      .offset((query.page - 1) * query.limit)
+      .limit(query.limit);
+
+    const [{ entities, raw }, total] = await Promise.all([
+      qb.getRawAndEntities<{ product_id: string; relevance?: number }>(),
+      qb.getCount(),
+    ]);
+    const rankById = new Map(
+      raw.map((row) => [row.product_id, Number(row.relevance ?? 0)]),
+    );
+    const context = await this.loadContext(entities);
     return toPage(
-      context.map((item) => this.toSummary(item)),
+      context.map((item) => {
+        const summary = this.toSummary(item);
+        return sort === 'relevance' && tsq
+          ? {
+              ...summary,
+              relevance: Number(
+                (rankById.get(item.product.id) ?? 0).toFixed(4),
+              ),
+            }
+          : summary;
+      }),
       total,
       query.page,
       query.limit,
@@ -226,14 +266,15 @@ export class ProductsService {
     query: Partial<ProductQueryDto>,
   ): void {
     if (query.q) {
+      const tsq = toPrefixTsQuery(query.q);
+      const like = `%${query.q.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
+      // Índice GIN sobre search_vector; ILIKE solo como respaldo para subcadenas.
       qb.andWhere(
-        `(to_tsvector('spanish', coalesce(product.name, '') || ' ' || coalesce(product.brand, ''))
-            @@ websearch_to_tsquery('spanish', :q)
-          OR product.name ILIKE :like OR product.brand ILIKE :like)`,
-        {
-          q: query.q,
-          like: `%${query.q.replace(/[\\%_]/g, (c) => `\\${c}`)}%`,
-        },
+        tsq
+          ? `(product.search_vector @@ to_tsquery('simple', :tsq)
+              OR product.name ILIKE :like OR product.brand ILIKE :like)`
+          : '(product.name ILIKE :like OR product.brand ILIKE :like)',
+        { tsq, like },
       );
     }
     if (query.category) {

@@ -75,6 +75,8 @@ export class ExplorePage implements OnInit {
     category: null,
   });
   protected readonly sealLabels = SEAL_LABELS;
+  /** Con texto de búsqueda el backend ordena por relevancia (ts_rank_cd). */
+  protected readonly rankedByRelevance = signal(false);
   private page = 1;
   private totalPages = 1;
 
@@ -130,9 +132,11 @@ export class ExplorePage implements OnInit {
   }
 
   private fetch(append: boolean): Promise<void> {
+    const query = this.query();
     return new Promise((resolve) => {
-      this.api.searchProducts(this.query()).subscribe({
+      this.api.searchProducts(query).subscribe({
         next: (page) => {
+          this.rankedByRelevance.set(Boolean(query.q));
           this.products.update((current) => (append ? [...current, ...page.items] : page.items));
           this.total.set(page.total);
           this.totalPages = page.totalPages;

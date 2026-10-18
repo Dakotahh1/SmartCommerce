@@ -27,3 +27,13 @@ output "images" {
   description = "Imágenes desplegadas."
   value       = module.smartcommerce.images
 }
+
+output "image_tag" {
+  description = "Etiqueta desplegada: el pipeline la lee antes de cada despliegue para poder volver atrás (rollback)."
+  value       = var.image_tag
+}
+
+output "app_version" {
+  description = "Versión informada por /api/health (versión + commit): identifica qué se desplegó."
+  value       = var.app_version
+}

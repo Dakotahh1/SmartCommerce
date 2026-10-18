@@ -6,8 +6,10 @@ import { SILENT_ERRORS } from './http-context';
 import type {
   Category,
   ComparisonResponse,
+  DataQualityReport,
   HealthReport,
   IngestionRun,
+  IngestionSchedule,
   InteractionRecord,
   InteractionType,
   MetricsSnapshot,
@@ -25,7 +27,8 @@ export interface ProductQuery {
   nutriscore?: string[];
   maxNova?: number;
   excludeAllergens?: string[];
-  sort?: 'quality' | 'name' | 'recent';
+  /** Sin valor: el backend usa `relevance` si hay texto y `quality` si no. */
+  sort?: 'relevance' | 'quality' | 'name' | 'recent';
   page?: number;
   limit?: number;
 }
@@ -129,6 +132,24 @@ export class ApiService {
   listIngestions(page = 1, limit = 20): Observable<Page<IngestionRun>> {
     return this.http.get<Page<IngestionRun>>(`${this.base}/admin/ingestions`, {
       params: new HttpParams().set('page', page).set('limit', limit),
+    });
+  }
+
+  getIngestionSchedule(): Observable<IngestionSchedule> {
+    return this.http.get<IngestionSchedule>(`${this.base}/admin/ingestions/schedule`);
+  }
+
+  /** Dispara un lote de todos los objetivos; responde 202 sin esperar a que termine. */
+  runScheduledIngestion(): Observable<{ accepted: boolean; requestId: string | null }> {
+    return this.http.post<{ accepted: boolean; requestId: string | null }>(
+      `${this.base}/admin/ingestions/schedule/run`,
+      {},
+    );
+  }
+
+  getDataQuality(days = 30): Observable<DataQualityReport> {
+    return this.http.get<DataQualityReport>(`${this.base}/admin/data-quality`, {
+      params: new HttpParams().set('days', days),
     });
   }
 

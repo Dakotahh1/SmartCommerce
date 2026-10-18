@@ -72,3 +72,32 @@ def test_ping(respx_mock: respx.MockRouter) -> None:
         return result
 
     assert asyncio.run(scenario()) is True
+
+
+@respx.mock(base_url=OFF_BASE)
+def test_upstream_metrics_record_errors_and_latency(respx_mock: respx.MockRouter) -> None:
+    from app.metrics import metrics
+
+    metrics.reset()
+    respx_mock.get("/api/v2/search").mock(
+        side_effect=[
+            httpx.Response(503),
+            httpx.ConnectError("caída"),
+            httpx.Response(200, json={"count": 0, "products": []}),
+        ]
+    )
+
+    async def scenario() -> None:
+        client = make_off_client()
+        await client.search(country="chile")
+        await client.aclose()
+
+    asyncio.run(scenario())
+    upstream = metrics.snapshot()["upstream"]["openfoodfacts"]
+    assert upstream["requests"] == 3
+    assert upstream["errors"] == 2
+    assert upstream["errorRate"] == pytest.approx(0.667, abs=0.001)
+    assert upstream["outcomes"] == {"http_503": 1, "network": 1, "ok": 1}
+    assert upstream["lastError"]["outcome"] == "network"
+    assert upstream["avgMs"] >= 0
+    metrics.reset()

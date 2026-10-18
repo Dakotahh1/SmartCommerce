@@ -1,0 +1,42 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Fuente web simulada para pruebas de integración deterministas (EP2).
+#
+# Agrega `off-mock`: sirve una instantánea REAL de Open Food Facts con el contrato de la API v2,
+# en la red egress (la única que ve python-service). Se combina con el archivo principal:
+#
+#   COMPOSE_FILE=docker-compose.yml:docker-compose.source-mock.yml   (o -f ... -f ...)
+#   OFF_BASE_URL=http://off-mock:8080                                (en .env)
+#
+# `docker compose stop off-mock` simula la caída de la fuente. Reutiliza la imagen del servicio
+# Python (sin dependencias nuevas) y el mismo endurecimiento que el resto de los contenedores.
+# ──────────────────────────────────────────────────────────────────────────────
+services:
+  off-mock:
+    image: ${IMAGE_PREFIX:-smartcommerce}-python-service:${IMAGE_TAG:-local}
+    command: ["python", "/mock/off_mock_server.py", "8080"]
+    environment:
+      FIXTURE: /mock/fixtures/off_search_chile_breakfast_cereals.json
+    volumes:
+      - ./python-service/scripts/off_mock_server.py:/mock/off_mock_server.py:ro
+      - ./python-service/tests/fixtures:/mock/fixtures:ro
+    networks:
+      - egress
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import sys, urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=2).status == 200 else 1)"
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  python-service:
+    depends_on:
+      off-mock:
+        condition: service_healthy

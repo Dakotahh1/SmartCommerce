@@ -174,6 +174,9 @@ export const normalizedProductSchema = z.object({
   countries: z.array(z.string()),
   completeness: z.number().min(0).max(1),
   dataQualityScore: z.number().min(0).max(1),
+  // Índice de búsqueda (EP2); por defecto vacío para tolerar versiones previas del servicio.
+  searchPrimary: z.string().max(500).default(''),
+  searchSecondary: z.string().max(1000).default(''),
   warnings: z.array(z.string()),
   source: z.object({
     code: z.string(),
@@ -227,3 +230,26 @@ export const readinessSchema = z.object({
   checks: z.record(z.string(), z.enum(['up', 'down', 'skipped'])),
 });
 export type Readiness = z.infer<typeof readinessSchema>;
+
+/** Métricas de la fuente externa medidas por el servicio Python (`GET /v1/metrics`). */
+export const upstreamMetricsSchema = z.object({
+  requests: z.number().int().min(0),
+  errors: z.number().int().min(0),
+  errorRate: z.number().min(0).max(1),
+  outcomes: z.record(z.string(), z.number().int()),
+  avgMs: z.number().min(0),
+  p95Ms: z.number().min(0),
+  lastError: z
+    .object({
+      outcome: z.string(),
+      detail: z.string().nullable(),
+      at: z.string(),
+    })
+    .nullable()
+    .optional(),
+});
+export const pythonMetricsSchema = z.object({
+  uptimeSeconds: z.number(),
+  upstream: z.record(z.string(), upstreamMetricsSchema).default({}),
+});
+export type PythonMetrics = z.infer<typeof pythonMetricsSchema>;

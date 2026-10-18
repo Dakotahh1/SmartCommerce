@@ -37,7 +37,7 @@
 - **User-Agent identificable** exigido por Open Food Facts: `SmartCommerce/<versión> (<correo de contacto>)`.
 - **Límites de uso respetados** (documentados por Open Food Facts): máx. 100 solicitudes/minuto a lecturas de producto y 10/minuto a búsquedas. El cliente aplica un *rate limiter* conservador (≤ 8 búsquedas/min), paginación y **reintentos acotados con backoff exponencial** solo ante errores 5xx/429/timeout.
 - **Caché** en memoria con TTL para evitar solicitudes repetidas durante una misma ingesta.
-- Las ingestas las dispara un usuario `admin`/`operator` desde la API de NestJS (EP1–EP2); en EP2 se agregará una ejecución **programada nocturna** incremental.
+- Las ingestas se disparan de dos formas: **manual** por un `admin`/`operator` (`POST /api/v1/admin/ingestions`) y **programada** (EP2) por el `IngestionScheduler` de NestJS, que recorre periódicamente los objetivos `pais/categoria` configurados ([10 · §10.2](10-recuperacion-y-evaluacion.md#102-extracción-automatizada), [ADR-0013](adr/0013-ingesta-programada-sin-cola.md)).
 
 Ejemplo de solicitud que realiza el servicio:
 
@@ -52,12 +52,15 @@ User-Agent: SmartCommerce/0.1.0 (smartcommerce.equipo@example.com)
 
 ## 4.4 Frecuencia y estrategia de actualización
 
-| Estrategia | Frecuencia | Detalle |
-|---|---|---|
-| Carga inicial por categorías | Una vez por categoría | Paginación completa de categorías relevantes con país Chile |
-| Actualización incremental | Diaria (EP2, tarea programada) | Productos con `last_modified_t` posterior a la última ingesta exitosa |
-| Detección de cambios | En cada ingesta | Se compara el `raw_hash` (SHA-256) del registro crudo; si no cambió, no se actualiza |
-| Precios | Semanal | Precios de Open Prices por GTIN; se conserva historial (`product_prices`) |
+| Estrategia | Frecuencia | Estado | Detalle |
+|---|---|---|---|
+| Carga inicial por categorías | Bajo demanda | ✅ EP1 | Ingesta manual paginada desde *Administración › Ingesta* |
+| Refresco programado | Cada 6 h en staging (`INGESTION_INTERVAL_MINUTES=360`) | ✅ EP2 | Lote de 4 categorías (`chile/breakfast-cereals`, `dairies`, `beverages`, `snacks`), hasta 2 páginas de 50 por categoría; la búsqueda de la fuente se ordena por `last_modified_t`, así cada lote trae primero lo modificado recientemente |
+| Detección de cambios | En cada ingesta | ✅ | Se compara el `raw_hash` (SHA-256) del registro crudo; si no cambió, no se reescribe (`unchanged`) y solo se actualiza la fecha de recuperación |
+| Actualidad | Continua | ✅ EP2 | Métrica de % desactualizado (> 14 días sin recuperar) con alerta en el reporte de calidad |
+| Precios | Semanal | ⏳ EF | Open Prices por GTIN con historial (`product_prices`); cobertura en Chile casi nula (§4.1) |
+
+Por qué cada 6 h y no más seguido: los productos envasados cambian poco (mediana de 120 días desde la última edición en la fuente, medida en EP2) y la búsqueda de Open Food Facts está limitada a 10 solicitudes por minuto; 6 h deja el catálogo al día con 8 solicitudes por lote.
 
 ## 4.5 Limpieza y normalización
 
@@ -120,6 +123,18 @@ Cada producto guarda en `product_sources`: fuente, identificador externo, **URL 
 
 Los datos no solo se muestran: **alimentan el buscador**, son la base de las **comparaciones multicriterio**, permiten **filtrar por restricciones** y son las variables de entrada del **motor SmartMatch**.
 
-## 4.12 Métricas de calidad que se reportarán (EP2)
+## 4.12 Métricas de calidad (implementadas en EP2)
 
-% de registros válidos · % de duplicados · cobertura de campos clave (Nutri-Score, NOVA, nutrientes, precio) · tiempo de recuperación por página · tasa de errores de la fuente · antigüedad media de los datos.
+% de registros válidos · % de duplicados · cobertura de campos clave y de la fuente · tiempo de recuperación (promedio y p95) · tasa de errores de la fuente por tipo · actualidad. Definiciones, umbrales de alerta y resultados reales: [10 · §10.6.1](10-recuperacion-y-evaluacion.md#1061-métricas-de-calidad-de-los-datos). La calidad del **buscador** construido sobre estos datos se mide con Precision@K, MRR y nDCG ([10 · §10.6.2](10-recuperacion-y-evaluacion.md#1062-evaluación-del-buscador-precisionk-mrr-ndcg)).
+
+## 4.13 Revisión de uso responsable (EP2)
+
+| Aspecto | Verificación |
+|---|---|
+| Método autorizado | Solo la API pública v2 documentada para aplicaciones; sin scraping de páginas HTML |
+| `robots.txt` | No se rastrea el sitio; las consultas son puntuales a la API (§4.10). La prueba de aislamiento del CI lee `robots.txt` solo para verificar la salida a Internet |
+| Límites de uso | ≤ 8 búsquedas/min (límite oficial 10), caché de 5 min, reintentos acotados; los lotes programados son secuenciales |
+| Identificación | User-Agent con nombre, versión y contacto, configurable por ambiente (`OFF_USER_AGENT`) |
+| Licencia y atribución | ODbL/DbCL atribuidas en la interfaz, el README y cada detalle de producto (procedencia con licencia y URL) |
+| Privacidad | Los datos de la fuente no son personales; los logs no guardan datos de usuarios de la fuente |
+| Pruebas sin cargar la fuente | El CI usa una fuente simulada con una instantánea real (`docker-compose.source-mock.yml`), así cada ejecución del pipeline no genera tráfico a Open Food Facts |

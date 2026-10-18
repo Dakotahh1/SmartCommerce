@@ -1,0 +1,81 @@
+# Rollback manual de staging: vuelve a desplegar una etiqueta inmutable ya publicada en GHCR
+# (p. ej. sha-<commit> de la última versión estable o una versión 0.1.1). Usa el mismo script
+# del despliegue automático, por lo que también verifica salud y humo.
+name: Rollback staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Etiqueta a desplegar (sha-<12 caracteres del commit> o versión publicada)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    name: Desplegar ${{ inputs.image_tag }} en staging
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment:
+      name: staging
+      url: ${{ vars.STAGING_URL }}
+    env:
+      TF_IN_AUTOMATION: "true"
+      TF_INPUT: "false"
+    steps:
+      - name: Validar la etiqueta
+        env:
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          if ! [[ "$IMAGE_TAG" =~ ^(sha-[0-9a-f]{12}|[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "::error::Etiqueta inválida: usa sha-<12 hex> o una versión x.y.z"; exit 1
+          fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: "1.16.3"
+          terraform_wrapper: false
+
+      - name: Acceso SSH al host de staging
+        env:
+          SSH_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Secretos del ambiente staging
+        env:
+          S_POSTGRES_SUPERUSER_PASSWORD: ${{ secrets.POSTGRES_SUPERUSER_PASSWORD }}
+          S_DB_OWNER_PASSWORD: ${{ secrets.DB_OWNER_PASSWORD }}
+          S_DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
+          S_JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          S_INTERNAL_API_TOKEN: ${{ secrets.INTERNAL_API_TOKEN }}
+        run: |
+          for name in POSTGRES_SUPERUSER_PASSWORD DB_OWNER_PASSWORD DB_APP_PASSWORD JWT_ACCESS_SECRET INTERNAL_API_TOKEN; do
+            provided="S_${name}"
+            value="${!provided}"
+            if [ -z "$value" ]; then echo "::error::Falta el secreto ${name}"; exit 1; fi
+            echo "::add-mask::${value}"
+            echo "TF_VAR_${name,,}=${value}" >> "$GITHUB_ENV"
+          done
+
+      - name: Desplegar y verificar
+        env:
+          STAGING_DOCKER_HOST: ${{ vars.STAGING_DOCKER_HOST }}
+          STAGING_URL: ${{ vars.STAGING_URL }}
+          APP_VERSION: ${{ vars.APP_VERSION || '0.2.0' }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: scripts/deploy-staging.sh "$IMAGE_TAG"

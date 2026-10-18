@@ -16,3 +16,6 @@ Formato basado en [MADR](https://adr.github.io/madr/): contexto, decisión, alte
 | [0010](0010-terraform-proveedor-docker-staging.md) | Terraform con proveedor Docker para un staging reproducible y portable | Aceptado | 2026-09-17 |
 | [0011](0011-estrategia-de-ramas-github-flow.md) | GitHub Flow con ramas por área, commits convencionales y PR obligatorios | Aceptado | 2026-09-17 |
 | [0012](0012-sin-cola-de-mensajes-en-ep1.md) | No incorporar cola de mensajes en EP1 (procesamiento síncrono acotado) | Aceptado | 2026-09-17 |
+| [0013](0013-ingesta-programada-sin-cola.md) | Ingesta programada en NestJS con advisory lock, sin cola de mensajes | Aceptado | 2026-10-15 |
+| [0014](0014-indice-busqueda-postgresql.md) | Índice de búsqueda en PostgreSQL con tokens normalizados por Python | Aceptado | 2026-10-15 |
+| [0015](0015-despliegue-staging-rollback.md) | Despliegue automático en staging con verificación y rollback por etiqueta inmutable | Aceptado | 2026-10-15 |

@@ -1,6 +1,6 @@
 # 5. Capacidad adaptativa: motor SmartMatch
 
-> Especificación v0.1 (EP1). En EP1 se implementan el ranking multicriterio, los filtros, la explicación y la versión base no adaptativa; el aprendizaje de preferencias queda con una función inicial probada y se integra completamente en la EF.
+> Especificación v0.2 (EP1 + especificación preliminar del Módulo 3 en §5.10). En EP1 se implementan el ranking multicriterio, los filtros, la explicación y la versión base no adaptativa; el aprendizaje de preferencias queda con una función inicial probada y se integra completamente en la EF.
 
 ## 5.1 Resumen
 
@@ -174,3 +174,20 @@ La interfaz muestra "definido por ti" vs. "aprendido" y permite **restablecer** 
 | **Opacidad** | Desglose y razones en cada recomendación; versión del motor registrada |
 | **Errores de la fuente** (Nutri-Score mal cargado) | Procedencia visible con enlace al registro original; validaciones de rango |
 | **Uso como consejo médico** | Aviso explícito: información referencial |
+
+## 5.10 Especificación preliminar para el Módulo 3 (EP2)
+
+Resume, con los datos que la EP2 ya recupera y mide, qué se completará en la entrega final. Lo implementado hoy (filtros, puntuación, explicación, versión base y aprendizaje acotado) se mantiene; la EF agrega el modelo de usuario completo, la integración del aprendizaje en todas las vistas y la evaluación comparativa.
+
+| Elemento | Especificación |
+|---|---|
+| Parte que se adapta | Lista **"Para ti"** (selección y orden), **resultado de comparaciones** (ganador y explicación) y **orden de *Explorar*** para usuarios con sesión: relevancia textual combinada con la afinidad del perfil |
+| Usuario beneficiado | Consumidor registrado que compra productos envasados en Chile y quiere decidir rápido con varios criterios a la vez |
+| Información web utilizada | De Open Food Facts, ya normalizada y medida (ver [10 · §10.6.1](10-recuperacion-y-evaluacion.md#1061-métricas-de-calidad-de-los-datos)): Nutri-Score (74 % de cobertura), NOVA (58 %), Eco-Score (97 %), nutrientes → sellos Ley 20.606 (74 %), alérgenos, dietas, tiendas (13 %), categoría, puntaje de calidad del dato y procedencia; precio de Open Prices cuando exista (hoy 0 %) |
+| Variables de usuario y contexto | Pesos declarados de 5 criterios, dietas, alérgenos excluidos, evitar sellos, tiendas preferidas, interruptor de personalización; historial con decaimiento (vistas, favoritos, comparaciones, aceptaciones y descartes); contexto: categoría consultada, texto buscado y conectividad (sin conexión → caché de la última lista) |
+| Decisión del sistema | Excluir lo que viola restricciones, ordenar el resto por puntaje personalizado, elegir el ganador de una comparación y decidir cuándo **no** recomendar (confianza baja por datos faltantes) |
+| Resultado visible | Puntaje 0–100 con desglose por criterio, razones en lenguaje natural, advertencias de datos faltantes, sellos y procedencia; aviso cuando se usa la versión base o el modo degradado |
+| Mecanismo | Reglas (filtros duros) + MCDA ponderado con renormalización + ajuste acotado de pesos y afinidades aprendidos (±15 puntos, decaimiento 30 días) + diversificación por marca; en *Explorar*: `ts_rank_cd` × afinidad |
+| Control del usuario | Editar pesos y restricciones, "No me interesa", restablecer aprendizaje, desactivar la personalización, eliminar cuenta e historial |
+| Evaluación prevista | Offline: Precision@5 y nDCG@10 personalizados vs. versión base sobre 3 personas sintéticas y el catálogo real (meta +20 %); misma infraestructura de evaluación reproducible creada en la EP2 para el buscador (`evaluation/`, prueba e2e que bloquea el pipeline). Online en staging: tasa de aceptación y descarte desde `recommendation_logs`. Usuarios: 5–8 personas, tiempo y comprensión |
+| Riesgos | Sesgo por cobertura desigual (precio y tiendas casi vacíos → se renormaliza y se informa), sesgo hacia marcas con más datos, burbuja de filtro, privacidad del historial y opacidad (mitigaciones en §5.9) |

@@ -116,8 +116,18 @@ describe('Validación de DTO', () => {
       page: 2,
       limit: 10,
       nutriscore: ['a', 'b'],
-      sort: 'quality',
     });
+    // Sin `sort` explícito el servicio elige relevancia (con texto) o calidad.
+    expect(result.ok && result.value.sort).toBeUndefined();
+    for (const q of ['az\uFFFDcar', 'avena\u0000']) {
+      expect((await validate(ProductQueryDto, { q }, 'query')).ok).toBe(false);
+    }
+    const invalidSort = await validate(
+      ProductQueryDto,
+      { sort: 'random' },
+      'query',
+    );
+    expect(invalidSort.ok).toBe(false);
 
     const tooMany = await validate(ProductQueryDto, { limit: '500' }, 'query');
     expect(tooMany.ok).toBe(false);

@@ -118,6 +118,32 @@ variable "off_user_agent" {
   type        = string
 }
 
+variable "ingestion" {
+  description = "Ingesta programada desde Open Food Facts: activación, intervalo, objetivos pais/categoria y páginas por objetivo."
+  type = object({
+    enabled          = bool
+    interval_minutes = number
+    targets          = list(string)
+    max_pages        = number
+  })
+  default = {
+    enabled          = false
+    interval_minutes = 360
+    targets          = ["chile/breakfast-cereals", "chile/dairies", "chile/beverages", "chile/snacks"]
+    max_pages        = 2
+  }
+
+  validation {
+    condition     = var.ingestion.interval_minutes >= 5 && var.ingestion.max_pages >= 1 && var.ingestion.max_pages <= 20
+    error_message = "interval_minutes debe ser >= 5 y max_pages estar entre 1 y 20."
+  }
+
+  validation {
+    condition     = alltrue([for t in var.ingestion.targets : can(regex("^[a-z][a-z-]{1,39}/[a-z0-9][a-z0-9:-]{1,79}$", t))])
+    error_message = "Cada objetivo debe tener la forma pais/categoria (p. ej. chile/breakfast-cereals)."
+  }
+}
+
 # ─── Recursos ─────────────────────────────────────────────────────────────────
 
 variable "resources" {

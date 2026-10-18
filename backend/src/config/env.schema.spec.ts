@@ -46,4 +46,31 @@ describe('validateEnv', () => {
       validateEnv({ ...base, PYTHON_SERVICE_URL: 'no-es-url' }),
     ).toThrow(/PYTHON_SERVICE_URL/);
   });
+
+  it('la ingesta programada está desactivada por defecto y parsea los objetivos', () => {
+    const env = validateEnv(base);
+    expect(env.INGESTION_SCHEDULE_ENABLED).toBe(false);
+    expect(env.INGESTION_TARGETS[0]).toEqual({
+      country: 'chile',
+      category: 'breakfast-cereals',
+    });
+
+    const custom = validateEnv({
+      ...base,
+      INGESTION_SCHEDULE_ENABLED: 'true',
+      INGESTION_TARGETS: ' chile/en:yogurts , argentina/snacks ',
+    });
+    expect(custom.INGESTION_TARGETS).toEqual([
+      { country: 'chile', category: 'en:yogurts' },
+      { country: 'argentina', category: 'snacks' },
+    ]);
+  });
+
+  it('rechaza objetivos de ingesta mal formados', () => {
+    for (const value of ['chile', 'chile/', 'Chile/x1', 'chile/a/b', '']) {
+      expect(() => validateEnv({ ...base, INGESTION_TARGETS: value })).toThrow(
+        /INGESTION_TARGETS/,
+      );
+    }
+  });
 });
