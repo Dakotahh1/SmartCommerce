@@ -14,7 +14,12 @@ import {
 } from 'class-validator';
 
 export class RecommendationQueryDto {
-  @ApiPropertyOptional({ minimum: 1, maximum: 30, default: 10 })
+  @ApiPropertyOptional({
+    type: 'integer',
+    minimum: 1,
+    maximum: 30,
+    default: 10,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()

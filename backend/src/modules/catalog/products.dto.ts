@@ -58,6 +58,7 @@ export class ProductQueryDto extends PaginationQueryDto {
   category?: string;
 
   @ApiPropertyOptional({
+    type: String,
     description: 'Nutri-Score permitidos (csv)',
     example: 'a,b',
   })
@@ -80,6 +81,7 @@ export class ProductQueryDto extends PaginationQueryDto {
   maxNova?: number;
 
   @ApiPropertyOptional({
+    type: String,
     description: 'Alérgenos a excluir (csv)',
     example: 'gluten,milk',
   })
