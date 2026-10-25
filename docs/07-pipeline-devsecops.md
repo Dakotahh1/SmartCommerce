@@ -30,7 +30,7 @@ flowchart LR
         an["Android<br/>Capacitor · APK debug"]
     end
     subgraph s3["3 · Contenedores"]
-        im["Build de 3 imágenes<br/>no root · Trivy · SBOM"]
+        im["Build de 3 imágenes<br/>amd64 + arm64 nativos<br/>no root · Trivy · SBOM"]
     end
     subgraph s4["4 · Integración e infraestructura"]
         st["Staging efímero<br/>Compose + fuente simulada<br/>humo · integración EP2<br/>aislamiento · resiliencia"]
@@ -55,11 +55,11 @@ flowchart LR
 | 2 | **Backend** | `npm ci` · oxlint · Prettier · `tsc` · Vitest con cobertura · build · contrato OpenAPI versionado al día ([`docs/api`](api/README.md)) · pruebas e2e con PostgreSQL 17 real (migraciones up → down → up; integración NestJS ↔ servicio Python simulado por HTTP: contratos, timeouts, respuestas inválidas, indisponibilidad; ingesta programada; reporte de calidad) · **evaluación del buscador** (P@5, MRR, nDCG@5 con umbrales) · `npm audit` | Idem, el ranking cae bajo los umbrales o la especificación OpenAPI quedó desactualizada |
 | 2 | **Servicio Python** | `uv sync --frozen` · Ruff (incl. reglas de seguridad) · formato · mypy estricto · pytest con cobertura mínima 85 % (incluye pruebas del proceso de recuperación: cliente de la fuente con errores, reintentos y métricas; normalización; tokenización) · contrato OpenAPI versionado al día · Bandit (SAST) · pip-audit (dependencias Python) | Idem, cobertura < 85 % o especificación OpenAPI desactualizada |
 | 2 | **Android** | Build `android` + `cap sync` + `./gradlew assembleDebug`; publica el APK como artefacto | La app no compila para Android |
-| 3 | **Imágenes** (matriz ×3) | Build con Buildx y caché · verificación de usuario **no root** · Trivy (vulnerabilidades con parche) · SBOM CycloneDX · reporte JSON | Imagen como root o vulnerabilidad CRITICAL/HIGH con parche |
+| 3 | **Imágenes** (matriz 3 servicios × amd64/arm64) | Build con Buildx y caché en runners **nativos** de cada arquitectura (`ubuntu-24.04` y `ubuntu-24.04-arm`, sin emulación) · verificación de usuario **no root** · Trivy (vulnerabilidades con parche) · SBOM CycloneDX · reporte JSON | Imagen como root o vulnerabilidad CRITICAL/HIGH con parche |
 | 4 | **Staging efímero** | `docker compose up` con **las mismas imágenes escaneadas** y la fuente simulada ([`docker-compose.source-mock.yml`](../docker-compose.source-mock.yml)) · [`smoke-test.sh`](../scripts/smoke-test.sh) · [`integration-test.sh`](../scripts/integration-test.sh) · [`network-isolation-test.sh`](../scripts/network-isolation-test.sh) · [`resilience-test.sh`](../scripts/resilience-test.sh) · logs como artefacto si falla · `down -v` siempre | Cualquier prueba falla |
 | 4 | **Terraform** | `terraform fmt -check` · `init -lockfile=readonly` + `validate` de `dev` y `staging` · `plan` de staging contra el daemon Docker del runner con secretos del ambiente `staging` (o efímeros); plan legible como artefacto | Formato, validación o plan inválidos (ver [09](09-staging-terraform.md)) |
 | 5 | **Quality gate** | Evalúa el resultado de todas las etapas y publica una tabla en el resumen | Alguna etapa no terminó en `success` (incluye `skipped` por un fallo previo) |
-| 6 | **Publicación** | `docker push` a `ghcr.io/<owner>/smartcommerce-<servicio>` con `packages: write` solo en este job | — |
+| 6 | **Publicación** | Sube **las mismas imágenes escaneadas** (sin reconstruir) a `ghcr.io/<owner>/smartcommerce-<servicio>` como `sha-<commit>-amd64` y `-arm64`, y une ambas en un **manifiesto multiarquitectura** (`sha-<commit>` y `main` o la versión del tag) con `docker buildx imagetools`; cada host descarga su variante. `packages: write` solo en este job ([ADR-0016](adr/0016-staging-oracle-cloud-arm.md)) | — |
 | 7 | **Despliegue en staging** (solo `main`, si existe `vars.STAGING_DOCKER_HOST`) | [`deploy-staging.sh`](../scripts/deploy-staging.sh): `terraform apply` de la imagen `sha-<commit>` con versión `APP_VERSION+sha-<commit>` → `/api/health` con esa versión, BD y SmartMatch arriba → humo contra la URL pública → lectura del catálogo. Ambiente `staging` de GitHub (secretos y aprobación opcional), `concurrency` sin cancelación | Cualquier verificación falla → **rollback automático** a la etiqueta anterior y job en rojo ([ADR-0015](adr/0015-despliegue-staging-rollback.md)) |
 
 ### Pruebas del staging efímero
