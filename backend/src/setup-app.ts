@@ -5,11 +5,42 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { NestExpressApplication } from '@nestjs/platform-express';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  type OpenAPIObject,
+  SwaggerModule,
+} from '@nestjs/swagger';
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 import { createValidationPipe } from './common/validation.js';
 import type { Env } from './config/env.schema.js';
+
+/** Prefijo `/api` y versión en la URI (`/api/v1/...`): definen las rutas del documento OpenAPI. */
+export function configureRouting(app: INestApplication): void {
+  app.setGlobalPrefix('api', {
+    exclude: [{ path: '', method: RequestMethod.GET }],
+  });
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+}
+
+/** Documento OpenAPI publicado en `/api/docs` y exportado a `docs/api/` por `src/openapi.ts`. */
+export function createOpenApiDocument(
+  app: INestApplication,
+  version: string,
+): OpenAPIObject {
+  return SwaggerModule.createDocument(
+    app,
+    new DocumentBuilder()
+      .setTitle('SmartCommerce API')
+      .setDescription(
+        'API REST principal. Autenticación con JWT (Bearer) y refresh token rotativo. ' +
+          'Todas las respuestas de error siguen el formato {statusCode, code, message, details, path, timestamp, requestId}.',
+      )
+      .setVersion(version)
+      .addBearerAuth()
+      .build(),
+  );
+}
 
 /** Configuración HTTP compartida entre `main.ts` y las pruebas e2e. */
 export function setupApp(app: INestApplication): void {
@@ -17,10 +48,7 @@ export function setupApp(app: INestApplication): void {
   const express = app as NestExpressApplication;
 
   app.useLogger(app.get(Logger));
-  app.setGlobalPrefix('api', {
-    exclude: [{ path: '', method: RequestMethod.GET }],
-  });
-  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+  configureRouting(app);
   app.useGlobalPipes(createValidationPipe());
 
   express.disable('x-powered-by');
@@ -54,17 +82,9 @@ export function setupApp(app: INestApplication): void {
   app.enableShutdownHooks();
 
   if (config.get('SWAGGER_ENABLED', { infer: true })) {
-    const document = SwaggerModule.createDocument(
+    const document = createOpenApiDocument(
       app,
-      new DocumentBuilder()
-        .setTitle('SmartCommerce API')
-        .setDescription(
-          'API REST principal. Autenticación con JWT (Bearer) y refresh token rotativo. ' +
-            'Todas las respuestas de error siguen el formato {statusCode, code, message, details, path, timestamp, requestId}.',
-        )
-        .setVersion(config.get('APP_VERSION', { infer: true }))
-        .addBearerAuth()
-        .build(),
+      config.get('APP_VERSION', { infer: true }),
     );
     SwaggerModule.setup('api/docs', app, document, {
       jsonDocumentUrl: 'api/docs-json',

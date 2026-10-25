@@ -19,3 +19,4 @@ Formato basado en [MADR](https://adr.github.io/madr/): contexto, decisión, alte
 | [0013](0013-ingesta-programada-sin-cola.md) | Ingesta programada en NestJS con advisory lock, sin cola de mensajes | Aceptado | 2026-10-15 |
 | [0014](0014-indice-busqueda-postgresql.md) | Índice de búsqueda en PostgreSQL con tokens normalizados por Python | Aceptado | 2026-10-15 |
 | [0015](0015-despliegue-staging-rollback.md) | Despliegue automático en staging con verificación y rollback por etiqueta inmutable | Aceptado | 2026-10-15 |
+| [0016](0016-staging-oracle-cloud-arm.md) | Staging en Oracle Cloud Always Free con imágenes multiarquitectura | Aceptado | 2026-10-25 |

@@ -18,6 +18,7 @@ export class DataQualityQueryDto {
     default: 30,
     minimum: 1,
     maximum: 365,
+    type: 'integer',
     description: 'Ventana (días) de ingestas consideradas',
   })
   @IsOptional()

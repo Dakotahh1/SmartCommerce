@@ -11,7 +11,8 @@ ARG NODE_IMAGE=node:24.21.0-alpine3.24
 FROM ${NODE_IMAGE} AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
+# deps y prod-deps corren en paralelo: la caché se bloquea para que no la escriban a la vez.
+RUN --mount=type=cache,target=/root/.npm,sharing=locked npm ci --no-audit --no-fund
 
 FROM deps AS build
 COPY tsconfig.json tsconfig.build.json nest-cli.json ./
@@ -21,8 +22,7 @@ RUN npm run build
 FROM ${NODE_IMAGE} AS prod-deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci --omit=dev --no-audit --no-fund \
- && npm cache clean --force
+RUN --mount=type=cache,target=/root/.npm,sharing=locked npm ci --omit=dev --no-audit --no-fund
 
 FROM ${NODE_IMAGE} AS runtime
 LABEL org.opencontainers.image.title="smartcommerce-backend" \

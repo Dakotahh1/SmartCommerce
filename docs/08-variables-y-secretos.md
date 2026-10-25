@@ -66,7 +66,6 @@ Variables fijadas por la topología (no configurables desde `.env`): `DB_HOST=da
 | `JWT_ACCESS_SECRET` | ambiente `staging` | Staging efímero y Terraform | Aleatorio enmascarado |
 | `INTERNAL_API_TOKEN` | ambiente `staging` | Staging efímero y Terraform | Aleatorio enmascarado |
 | `STAGING_SSH_PRIVATE_KEY` | ambiente `staging` | Llave privada (ed25519) del usuario `deploy` del host de staging | El job `deploy-staging` falla con un error explícito |
-| `STAGING_SSH_KNOWN_HOSTS` | ambiente `staging` | Huella del host (`ssh-keyscan -t ed25519 <host>`), evita ataques de intermediario | Idem |
 | `GITHUB_TOKEN` | automático | Publicar imágenes en GHCR (`packages: write` solo en ese job, solo en `main`) | — |
 
 Las pruebas de integración usan una base PostgreSQL de servicio del propio job con credenciales **efímeras** generadas en la ejecución (no reutilizables fuera del runner). En el despliegue real (`deploy-staging`) los cinco secretos de la aplicación son **obligatorios**: nunca se usan valores efímeros.
@@ -80,7 +79,8 @@ Las pruebas de integración usan una base PostgreSQL de servicio del propio job 
 | `SMOKE_INGEST` | `true` | Ejecuta una ingesta en las pruebas de humo del staging efímero (desde la fuente simulada) |
 | `TRIVY_SEVERITY` | `CRITICAL,HIGH` | Severidades que bloquean el escaneo de imágenes |
 | `STAGING_DOCKER_HOST` | `ssh://deploy@<ip-o-dns>` | Host Docker del staging real. **Si existe, activa el job `deploy-staging`** en cada push a `main` (el `plan` del CI siempre usa el daemon del runner) |
-| `STAGING_URL` | `https://staging.<dominio>` | URL pública del staging: verificación posterior al despliegue y enlace del ambiente en GitHub |
+| `STAGING_URL` | `https://<ip-con-guiones>.sslip.io` | URL pública del staging: verificación posterior al despliegue, origen permitido en CORS y enlace del ambiente en GitHub |
+| `STAGING_SSH_KNOWN_HOSTS` | salida de `ssh-keyscan -t ed25519 <ip>` | Huella pública del host: evita ataques de intermediario. Puede ser variable porque no es sensible (también se acepta como secreto) |
 
 ### Configuración paso a paso
 

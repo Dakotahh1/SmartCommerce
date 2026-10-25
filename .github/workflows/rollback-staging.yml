@@ -50,7 +50,7 @@ jobs:
       - name: Acceso SSH al host de staging
         env:
           SSH_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
-          KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
+          KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS || vars.STAGING_SSH_KNOWN_HOSTS }}
         run: |
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519

@@ -1,6 +1,6 @@
 [project]
 name = "smartcommerce-python-service"
-version = "0.1.0"
+version = "0.2.0"
 description = "Servicio SmartMatch: obtención y normalización de datos de Open Food Facts y motor de recomendación explicable."
 readme = "README.md"
 requires-python = ">=3.13,<3.14"

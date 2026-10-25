@@ -1,0 +1,1326 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/auth/register": {
+      "post": {
+        "operationId": "AuthController_register_v1",
+        "parameters": [
+          {
+            "name": "user-agent",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "EMAIL_TAKEN"
+          },
+          "429": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "AuthController_login_v1",
+        "parameters": [
+          {
+            "name": "user-agent",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "INVALID_CREDENTIALS"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh_v1",
+        "parameters": [
+          {
+            "name": "user-agent",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "INVALID_REFRESH_TOKEN | REFRESH_TOKEN_REUSED"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Revoca la sesión (familia de refresh tokens)"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "operationId": "AuthController_me_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "auth"
+        ]
+      },
+      "delete": {
+        "operationId": "AuthController_deleteAccount_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteAccountDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Elimina la cuenta y todos sus datos personales"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/admin/users": {
+      "get": {
+        "operationId": "UsersController_list_v1",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": "Requiere rol admin"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin · usuarios"
+        ]
+      }
+    },
+    "/api/v1/admin/users/{id}/role": {
+      "patch": {
+        "operationId": "UsersController_updateRole_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Requiere rol admin"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin · usuarios"
+        ]
+      }
+    },
+    "/api/v1/me/preferences": {
+      "get": {
+        "operationId": "PreferencesController_get_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatePreferencesDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "preferencias"
+        ]
+      },
+      "put": {
+        "operationId": "PreferencesController_update_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePreferencesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatePreferencesDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "preferencias"
+        ]
+      }
+    },
+    "/api/v1/products": {
+      "get": {
+        "operationId": "ProductsController_search_v1",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Texto a buscar en nombre y marca",
+            "schema": {
+              "maxLength": 100,
+              "pattern": "^[^\\p{Cc}\\uFFFD]*$",
+              "example": "avena",
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "description": "Slug de categoría",
+            "schema": {
+              "pattern": "^[a-z0-9:-]{2,120}$",
+              "example": "breakfast-cereals",
+              "type": "string"
+            }
+          },
+          {
+            "name": "nutriscore",
+            "required": false,
+            "in": "query",
+            "description": "Nutri-Score permitidos (csv)",
+            "schema": {
+              "maxItems": 5,
+              "example": "a,b",
+              "type": "string",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "a",
+                  "b",
+                  "c",
+                  "d",
+                  "e"
+                ]
+              }
+            }
+          },
+          {
+            "name": "maxNova",
+            "required": false,
+            "in": "query",
+            "description": "Grupo NOVA máximo",
+            "schema": {
+              "minimum": 1,
+              "maximum": 4,
+              "type": "number"
+            }
+          },
+          {
+            "name": "excludeAllergens",
+            "required": false,
+            "in": "query",
+            "description": "Alérgenos a excluir (csv)",
+            "schema": {
+              "example": "gluten,milk",
+              "type": "string",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "gluten",
+                  "milk",
+                  "eggs",
+                  "tree_nuts",
+                  "peanuts",
+                  "soy",
+                  "fish",
+                  "crustaceans",
+                  "celery",
+                  "mustard",
+                  "sesame",
+                  "sulphites",
+                  "lupin",
+                  "molluscs"
+                ]
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Orden de resultados. Por defecto `relevance` si hay texto (`q`) y `quality` si no.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "relevance",
+                "quality",
+                "name",
+                "recent"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de productos normalizados con filtros y búsqueda"
+          }
+        },
+        "tags": [
+          "catálogo"
+        ]
+      }
+    },
+    "/api/v1/products/{id}": {
+      "get": {
+        "operationId": "ProductsController_findOne_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalle con nutrientes, dietas, procedencia e historial de precios"
+          },
+          "404": {
+            "description": "PRODUCT_NOT_FOUND"
+          }
+        },
+        "tags": [
+          "catálogo"
+        ]
+      }
+    },
+    "/api/v1/categories": {
+      "get": {
+        "operationId": "ProductsController_categories_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Categorías con cantidad de productos"
+          }
+        },
+        "tags": [
+          "catálogo"
+        ]
+      }
+    },
+    "/api/v1/admin/ingestions": {
+      "post": {
+        "operationId": "IngestionController_start_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartIngestionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ejecución completada con métricas de calidad"
+          },
+          "403": {
+            "description": "Requiere rol admin u operator"
+          },
+          "502": {
+            "description": "SOURCE_UNAVAILABLE"
+          },
+          "503": {
+            "description": "SMARTMATCH_UNAVAILABLE"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin · ingesta"
+        ]
+      },
+      "get": {
+        "operationId": "IngestionController_list_v1",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": "Requiere rol admin u operator"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin · ingesta"
+        ]
+      }
+    },
+    "/api/v1/admin/ingestions/schedule": {
+      "get": {
+        "operationId": "IngestionController_schedule_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Estado del programador"
+          },
+          "403": {
+            "description": "Requiere rol admin u operator"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Configuración y último lote de la ingesta programada",
+        "tags": [
+          "admin · ingesta"
+        ]
+      }
+    },
+    "/api/v1/admin/ingestions/schedule/run": {
+      "post": {
+        "operationId": "IngestionController_runSchedule_v1",
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "`accepted: false` si ya hay un lote en ejecución"
+          },
+          "403": {
+            "description": "Requiere rol admin u operator"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Ejecuta ahora un lote de ingesta de todos los objetivos (asíncrono)",
+        "tags": [
+          "admin · ingesta"
+        ]
+      }
+    },
+    "/api/v1/admin/data-quality": {
+      "get": {
+        "operationId": "DataQualityController_report_v1",
+        "parameters": [
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "description": "Ventana (días) de ingestas consideradas",
+            "schema": {
+              "minimum": 1,
+              "maximum": 365,
+              "default": 30,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reporte de calidad con alertas"
+          },
+          "403": {
+            "description": "Requiere rol admin u operator"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Métricas de calidad de la información recuperada: validez, duplicados, cobertura, actualidad, errores y tiempos",
+        "tags": [
+          "admin · calidad de datos"
+        ]
+      }
+    },
+    "/api/v1/interactions": {
+      "post": {
+        "operationId": "InteractionsController_record_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInteractionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Evento registrado (señal para la adaptación)"
+          },
+          "404": {
+            "description": "PRODUCT_NOT_FOUND"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "interacciones"
+        ]
+      }
+    },
+    "/api/v1/me/interactions": {
+      "get": {
+        "operationId": "InteractionsController_history_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "interacciones"
+        ]
+      },
+      "delete": {
+        "operationId": "InteractionsController_clear_v1",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Restablece el aprendizaje borrando el historial"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "interacciones"
+        ]
+      }
+    },
+    "/api/v1/me/favorites": {
+      "get": {
+        "operationId": "InteractionsController_favorites_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "interacciones"
+        ]
+      }
+    },
+    "/api/v1/recommendations": {
+      "get": {
+        "operationId": "RecommendationsController_recommend_v1",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 30,
+              "default": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^[a-z0-9:-]{2,120}$",
+              "example": "breakfast-cereals",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recomendaciones con desglose por criterio, razones y advertencias. `degraded: true` si se usó el respaldo."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "smartmatch"
+        ]
+      }
+    },
+    "/api/v1/comparisons": {
+      "post": {
+        "operationId": "RecommendationsController_compare_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompareProductsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ganador, ganadores por criterio y resumen explicativo"
+          }
+        },
+        "summary": "Pública: visitantes reciben la comparación base; usuarios con sesión, la personalizada.",
+        "tags": [
+          "smartmatch"
+        ]
+      }
+    },
+    "/api/health/live": {
+      "get": {
+        "operationId": "HealthController_live",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Liveness: el proceso responde (usado por el healthcheck del contenedor).",
+        "tags": [
+          "salud"
+        ]
+      }
+    },
+    "/api/health": {
+      "get": {
+        "operationId": "HealthController_check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "ok | degraded"
+          },
+          "503": {
+            "description": "down (base de datos no disponible)"
+          }
+        },
+        "summary": "Estado general: `ok` (todo arriba), `degraded` (API y BD arriba, pero SmartMatch o la fuente\nweb caídos: la app funciona en modo degradado) o `down` (sin base de datos → HTTP 503).",
+        "tags": [
+          "salud"
+        ]
+      }
+    },
+    "/api/health/metrics": {
+      "get": {
+        "operationId": "HealthController_metricsSnapshot",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Métricas de solicitudes por ruta (solo administradores).",
+        "tags": [
+          "salud"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "SmartCommerce API",
+    "description": "API REST principal. Autenticación con JWT (Bearer) y refresh token rotativo. Todas las respuestas de error siguen el formato {statusCode, code, message, details, path, timestamp, requestId}.",
+    "version": "0.2.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "example": "camila@correo.cl"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128,
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d).+$",
+            "example": "Clave-segura-2026"
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 80,
+            "pattern": "^[^<>]*$",
+            "example": "Camila Vergara"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "displayName"
+        ]
+      },
+      "UserProfileDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "admin",
+              "operator",
+              "user"
+            ],
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "displayName",
+          "role",
+          "createdAt"
+        ]
+      },
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserProfileDto"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "JWT de corta duración"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Token opaco rotativo"
+          },
+          "tokenType": {
+            "enum": [
+              "Bearer"
+            ],
+            "type": "string",
+            "example": "Bearer"
+          },
+          "expiresIn": {
+            "type": "number",
+            "description": "Segundos hasta que expira el access token",
+            "example": 900
+          }
+        },
+        "required": [
+          "user",
+          "accessToken",
+          "refreshToken",
+          "tokenType",
+          "expiresIn"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "example": "camila@correo.cl"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "example": "Clave-segura-2026"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "RefreshTokenDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "Refresh token opaco recibido al iniciar sesión"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "DeleteAccountDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "Contraseña actual para confirmar la eliminación"
+          }
+        },
+        "required": [
+          "password"
+        ]
+      },
+      "UpdateRoleDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "operator",
+              "user"
+            ]
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "WeightsDto": {
+        "type": "object",
+        "properties": {
+          "nutrition": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 30
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 25
+          },
+          "processing": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 20
+          },
+          "environment": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 15
+          },
+          "availability": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 10
+          }
+        },
+        "required": [
+          "nutrition",
+          "price",
+          "processing",
+          "environment",
+          "availability"
+        ]
+      },
+      "UpdatePreferencesDto": {
+        "type": "object",
+        "properties": {
+          "weights": {
+            "$ref": "#/components/schemas/WeightsDto"
+          },
+          "diets": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "vegan",
+                "vegetarian",
+                "gluten_free",
+                "lactose_free"
+              ]
+            },
+            "example": [
+              "gluten_free"
+            ]
+          },
+          "excludedAllergens": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "gluten",
+                "milk",
+                "eggs",
+                "tree_nuts",
+                "peanuts",
+                "soy",
+                "fish",
+                "crustaceans",
+                "celery",
+                "mustard",
+                "sesame",
+                "sulphites",
+                "lupin",
+                "molluscs"
+              ]
+            },
+            "example": [
+              "peanuts"
+            ]
+          },
+          "avoidHighIn": {
+            "type": "boolean",
+            "description": "Excluir productos con sellos ALTO EN (Ley 20.606)"
+          },
+          "preferredStores": {
+            "uniqueItems": true,
+            "maxItems": 20,
+            "example": [
+              "lider",
+              "jumbo"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]{2,60}$"
+            }
+          },
+          "personalizationEnabled": {
+            "type": "boolean",
+            "description": "Si es false se usa la versión base no adaptativa"
+          }
+        },
+        "required": [
+          "weights",
+          "diets",
+          "excludedAllergens",
+          "avoidHighIn",
+          "preferredStores",
+          "personalizationEnabled"
+        ]
+      },
+      "StartIngestionDto": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "object",
+            "default": "chile",
+            "pattern": "^[a-z][a-z-]{1,39}$",
+            "description": "Etiqueta de país en Open Food Facts"
+          },
+          "category": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9:-]{1,79}$",
+            "example": "breakfast-cereals"
+          },
+          "brand": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9:-]{1,79}$",
+            "example": "quaker"
+          },
+          "page": {
+            "type": "object",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "pageSize": {
+            "type": "object",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      },
+      "InteractionContextDto": {
+        "type": "object",
+        "properties": {
+          "screen": {
+            "type": "string",
+            "enum": [
+              "home",
+              "explore",
+              "detail",
+              "compare",
+              "favorites"
+            ]
+          },
+          "position": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000,
+            "description": "Posición en la lista (para evaluar ranking)"
+          }
+        }
+      },
+      "CreateInteractionDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "enum": [
+              "view",
+              "favorite",
+              "unfavorite",
+              "compare",
+              "dismiss",
+              "recommendation_click",
+              "recommendation_accept",
+              "recommendation_reject"
+            ],
+            "type": "string"
+          },
+          "context": {
+            "$ref": "#/components/schemas/InteractionContextDto"
+          }
+        },
+        "required": [
+          "productId",
+          "type"
+        ]
+      },
+      "CompareProductsDto": {
+        "type": "object",
+        "properties": {
+          "productIds": {
+            "uniqueItems": true,
+            "minItems": 2,
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "productIds"
+        ]
+      }
+    }
+  }
+}

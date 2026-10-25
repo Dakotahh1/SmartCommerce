@@ -6,12 +6,12 @@
 #   runtime → Nginx unprivileged: SPA + proxy /api → NestJS + cabeceras de seguridad
 # ──────────────────────────────────────────────────────────────────────────────
 ARG NODE_IMAGE=node:24.21.0-alpine3.24
-ARG NGINX_IMAGE=nginxinc/nginx-unprivileged:1.30.5-alpine3.24
+ARG NGINX_IMAGE=nginxinc/nginx-unprivileged:1.30.6-alpine3.24
 
 FROM ${NODE_IMAGE} AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
+RUN --mount=type=cache,target=/root/.npm,sharing=locked npm ci --no-audit --no-fund
 
 FROM deps AS build
 COPY angular.json tsconfig.json tsconfig.app.json ngsw-config.json ./

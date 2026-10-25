@@ -13,7 +13,7 @@ export const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'test', 'staging', 'production'])
     .default('development'),
-  APP_VERSION: z.string().default('0.1.0'),
+  APP_VERSION: z.string().default('0.2.0'),
   PORT: z.coerce.number().int().min(1).max(65535).default(3000),
   LOG_LEVEL: z
     .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])

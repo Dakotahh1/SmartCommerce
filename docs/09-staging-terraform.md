@@ -7,9 +7,9 @@
 | Aspecto | Definición (EP1, completada en EP2) |
 |---|---|
 | Propósito | Validar cada versión integrada en `main` en condiciones similares a producción antes de una release (demo al docente, pruebas de aceptación, evaluación del motor) |
-| Host | VM Linux con Docker Engine (≥ 2 vCPU, 4 GB RAM, 30 GB disco), por ejemplo una VM universitaria, Oracle Cloud Free Tier o Azure for Students |
+| Host | **Oracle Cloud Always Free**, región Chile Central (Santiago): VM `VM.Standard.A1.Flex` (Ampere, **ARM64**) con 2 OCPU y 12 GB, Ubuntu 24.04 y Docker Engine. Sin costo; las imágenes se publican para amd64 y arm64 ([ADR-0016](adr/0016-staging-oracle-cloud-arm.md)) |
 | Acceso a Docker | Terraform se conecta por **SSH** (`docker_host = "ssh://deploy@<ip>"`) con un usuario `deploy` sin contraseña y llave dedicada; el daemon no se expone por TCP |
-| Exposición | Solo el gateway web, ligado a `127.0.0.1:8080`; un proxy TLS del host (Caddy o Nginx con Let's Encrypt) publica `https://staging.<dominio>` en 443. Firewall: solo 22 (restringido) y 443 |
+| Exposición | Solo el gateway web, ligado a `127.0.0.1:8080`; **Caddy** en el host publica `https://<ip-con-guiones>.sslip.io` en 443 con certificado automático de Let's Encrypt. Firewall: 22 (solo llaves), 80 (validación del certificado) y 443, abiertos en la lista de seguridad de Oracle y en iptables |
 | Imágenes | Publicadas por el pipeline en GHCR con etiqueta inmutable `sha-<commit>` (y `main`); el staging nunca construye código |
 | Datos | Volumen persistente `smartcommerce-staging-db-data`; catálogo poblado y refrescado cada 6 h por la **ingesta programada** (variable `ingestion` de Terraform); **sin datos personales reales** |
 | Secretos | Distintos de dev y CI; en el ambiente `staging` de GitHub (`TF_VAR_*`), con aprobación requerida para aplicar |
@@ -132,23 +132,41 @@ El job solo corre si existe la variable `STAGING_DOCKER_HOST`; sin host configur
 
 ## 9.7 Puesta en marcha del host y rollback
 
-**Una sola vez, en la VM (Ubuntu 24.04, ≥ 2 vCPU, 4 GB):**
+**Una sola vez.** La guía paso a paso para crear la VM en Oracle Cloud (cuenta, instancia y apertura de puertos), pensada para cualquier integrante del equipo, está en la sección 9.7.1. Con la VM creada y su IP pública:
 
 ```bash
-# Docker y usuario de despliegue sin contraseña, solo con llave
-curl -fsSL https://get.docker.com | sh
-sudo adduser --disabled-password --gecos "" deploy && sudo usermod -aG docker deploy
-sudo -u deploy mkdir -p ~deploy/.ssh && sudo -u deploy chmod 700 ~deploy/.ssh
-# pegar la llave pública en ~deploy/.ssh/authorized_keys (ssh-keygen -t ed25519 -f staging_deploy)
-# Proxy TLS hacia el gateway ligado a 127.0.0.1:8080 (Caddy obtiene el certificado automáticamente)
-sudo apt install -y caddy && echo 'staging.<dominio> { reverse_proxy 127.0.0.1:8080 }' | sudo tee /etc/caddy/Caddyfile && sudo systemctl reload caddy
-# Firewall: solo 22 (restringido) y 443
-sudo ufw allow 22/tcp && sudo ufw allow 443/tcp && sudo ufw enable
+# 1. Preparar el host (Docker, usuario deploy, SSH solo con llaves, firewall y Caddy con HTTPS).
+#    Es idempotente: se puede repetir sin romper nada.
+IP=<ip-publica>
+DOMINIO="${IP//./-}.sslip.io"
+ssh -i ~/.ssh/smartcommerce_staging_admin ubuntu@"$IP" \
+  "sudo bash -s -- $DOMINIO '$(cat ~/.ssh/smartcommerce_staging_deploy.pub)'" \
+  < infra/staging/bootstrap-oracle.sh
+
+# 2. Huella del host para el pipeline (evita ataques de intermediario)
+ssh-keyscan -t ed25519 "$IP"
 ```
 
-Las imágenes de GHCR deben ser **públicas** (*Package settings › Change visibility*) o el usuario `deploy` debe ejecutar una vez `docker login ghcr.io` con un token de solo lectura (`read:packages`).
+Las llaves se generan en el equipo del administrador con `ssh-keygen -t ed25519 -f ~/.ssh/smartcommerce_staging_<admin|deploy>`: la de administración se pega al crear la VM y la de despliegue la instala el script para el usuario `deploy`.
 
-**En GitHub (ambiente `staging`):** variables `STAGING_DOCKER_HOST=ssh://deploy@<host>` y `STAGING_URL=https://staging.<dominio>`; secretos `STAGING_SSH_PRIVATE_KEY` (contenido de `staging_deploy`), `STAGING_SSH_KNOWN_HOSTS` (`ssh-keyscan -t ed25519 <host>`) y los cinco secretos de la aplicación ([08 · §8.3](08-variables-y-secretos.md#83-github-actions)).
+**En GitHub (ambiente `staging`):**
+
+| Dónde | Nombre | Valor |
+|---|---|---|
+| Variable | `STAGING_DOCKER_HOST` | `ssh://deploy@<ip-publica>` (activa el job `deploy-staging`) |
+| Variable | `STAGING_URL` | `https://<ip-con-guiones>.sslip.io` |
+| Variable | `STAGING_SSH_KNOWN_HOSTS` | Salida de `ssh-keyscan -t ed25519 <ip>` (es pública: no necesita ser secreto) |
+| Secreto | `STAGING_SSH_PRIVATE_KEY` | Contenido de `~/.ssh/smartcommerce_staging_deploy` (llave **privada**) |
+| Secretos | Los cinco de la aplicación | Ya configurados ([08 · §8.3](08-variables-y-secretos.md#83-github-actions)) |
+
+Las imágenes de GHCR deben ser **públicas** (*perfil › Packages › paquete › Package settings › Change visibility › Public*) para que el host las descargue sin credenciales. El repositorio es público y las imágenes no contienen secretos.
+
+### 9.7.1 Crear la VM en Oracle Cloud
+
+1. Crear la cuenta en [signup.cloud.oracle.com](https://signup.cloud.oracle.com/) con la región de inicio **Chile Central (Santiago)** (no se puede cambiar después). La verificación con tarjeta no cobra: los recursos *Always Free* no tienen costo.
+2. *Compute › Instances › Create instance*: imagen **Canonical Ubuntu 24.04**, forma **VM.Standard.A1.Flex** (pestaña *Ampere*) con 2 OCPU y 12 GB, red y subred pública nuevas con IPv4 pública, y en *Add SSH keys* pegar `~/.ssh/smartcommerce_staging_admin.pub`. Si aparece *Out of capacity*, probar otro *availability domain*, bajar a 1 OCPU y 6 GB, o reintentar más tarde.
+3. En la subred (*Primary VNIC › Subnet › Security Lists › Default Security List › Add Ingress Rules*) agregar dos reglas TCP desde `0.0.0.0/0`, a los puertos 80 y 443.
+4. Copiar la **IP pública** de la instancia y continuar con el script de preparación.
 
 **Rollback:**
 

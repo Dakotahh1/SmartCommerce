@@ -40,7 +40,6 @@ env:
   GITLEAKS_VERSION: "8.30.1"
   GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
   TRIVY_VERSION: "0.74.0"
-  TRIVY_SHA256: "2ae6fe3ee734b7fdf11335663e18c75ea12dccc76062f09f164a3b0f8be4371a"
   HADOLINT_VERSION: "2.15.1"
   HADOLINT_SHA256: "c7187db94eeeeca956519a6af171adc31453941a1e777961f6e680f697c8c507"
   ACTIONLINT_VERSION: "1.7.12"
@@ -155,7 +154,7 @@ jobs:
         run: hadolint --config .hadolint.yaml frontend/Dockerfile backend/Dockerfile python-service/Dockerfile
 
       - name: Scripts de shell (ShellCheck)
-        run: shellcheck --severity=style scripts/*.sh infra/docker/postgres/init/*.sh
+        run: shellcheck --severity=style scripts/*.sh infra/docker/postgres/init/*.sh infra/staging/*.sh
 
       - name: Workflows de GitHub Actions (actionlint)
         run: actionlint -color
@@ -256,6 +255,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Contrato OpenAPI versionado al día (docs/api/backend.openapi.json)
+        run: npm run openapi -- --check
+
       - name: Credenciales efímeras para pruebas de integración
         run: |
           for name in DB_PASSWORD JWT_ACCESS_SECRET INTERNAL_API_TOKEN; do
@@ -332,6 +334,9 @@ jobs:
       - name: Pruebas unitarias con cobertura ≥ 85 % (pytest)
         run: uv run pytest --junitxml=junit.xml
 
+      - name: Contrato OpenAPI versionado al día (docs/api/python-service.openapi.json)
+        run: uv run python scripts/export_openapi.py --check
+
       - name: Análisis estático de seguridad (Bandit)
         run: uv run bandit -c pyproject.toml -r app --severity-level medium
 
@@ -396,15 +401,30 @@ jobs:
   # ════════════════════════════════════════════════════════════════════════════
   # 3 · Contenedores
   # ════════════════════════════════════════════════════════════════════════════
+  # Cada imagen se construye de forma nativa para amd64 y arm64 (el staging corre en Oracle Cloud
+  # Ampere, ARM). Ambas variantes pasan por la misma verificación y el mismo escaneo, y se publican
+  # juntas como una imagen multiarquitectura: Docker descarga la que corresponde a cada máquina.
   images:
-    name: Imagen ${{ matrix.service }} (build + Trivy)
+    name: Imagen ${{ matrix.service }} ${{ matrix.arch }} (build + Trivy)
     needs: [frontend, backend, python-service]
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         service: [frontend, backend, python-service]
+        arch: [amd64, arm64]
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+            artifact: image
+            trivy_asset: Linux-64bit
+            trivy_sha256: 2ae6fe3ee734b7fdf11335663e18c75ea12dccc76062f09f164a3b0f8be4371a
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+            artifact: arm64-image
+            trivy_asset: Linux-ARM64
+            trivy_sha256: b94ce1976bbf3c15b514b605ee88be7c6d94a29be2302847ff01cb794d47aad5
     env:
       IMAGE: smartcommerce-${{ matrix.service }}:ci
       TRIVY_DB_REPOSITORY: mirror.gcr.io/aquasec/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2,ghcr.io/aquasecurity/trivy-db:2
@@ -426,9 +446,9 @@ jobs:
           labels: |
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.version=${{ vars.APP_VERSION || '0.1.0' }}
-          cache-from: type=gha,scope=${{ matrix.service }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+            org.opencontainers.image.version=${{ vars.APP_VERSION || '0.2.0' }}
+          cache-from: type=gha,scope=${{ matrix.service }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}-${{ matrix.arch }}
 
       - name: Verificar que la imagen no se ejecuta como root
         run: |
@@ -437,9 +457,12 @@ jobs:
           case "$user" in ""|root|0|0:*) echo "::error::La imagen ${IMAGE} se ejecuta como root"; exit 1 ;; esac
 
       - name: Instalar Trivy (checksum verificado)
+        env:
+          TRIVY_ASSET: ${{ matrix.trivy_asset }}
+          TRIVY_SHA256: ${{ matrix.trivy_sha256 }}
         run: |
           curl -sSfL -o trivy.tar.gz \
-            "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+            "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_${TRIVY_ASSET}.tar.gz"
           echo "${TRIVY_SHA256}  trivy.tar.gz" | sha256sum --check --strict
           tar -xzf trivy.tar.gz trivy && sudo install trivy /usr/local/bin/ && rm trivy trivy.tar.gz
 
@@ -451,34 +474,38 @@ jobs:
 
       - name: Reporte completo y SBOM (CycloneDX)
         if: always()
+        env:
+          REPORTE: trivy-${{ matrix.service }}-${{ matrix.arch }}
         run: |
-          trivy image --scanners vuln --format json --output "trivy-${{ matrix.service }}.json" --no-progress "$IMAGE" || true
-          trivy image --format cyclonedx --output "sbom-${{ matrix.service }}.cdx.json" --no-progress "$IMAGE" || true
-          if [ -f "trivy-${{ matrix.service }}.json" ]; then
-            jq -r --arg svc "${{ matrix.service }}" '
+          trivy image --scanners vuln --format json --output "$REPORTE.json" --no-progress "$IMAGE" || true
+          trivy image --format cyclonedx --output "sbom-${{ matrix.service }}-${{ matrix.arch }}.cdx.json" --no-progress "$IMAGE" || true
+          if [ -f "$REPORTE.json" ]; then
+            jq -r --arg svc "${{ matrix.service }} (${{ matrix.arch }})" '
               [.Results[]?.Vulnerabilities[]?] as $v
               | "### 📦 Imagen \($svc) (todas las severidades, con y sin parche)\n| Severidad | Cantidad |\n|---|---|\n"
                 + ([ "CRITICAL", "HIGH", "MEDIUM", "LOW" ] | map(. as $s | "| \($s) | \([$v[] | select(.Severity == $s)] | length) |") | join("\n"))' \
-              "trivy-${{ matrix.service }}.json" >> "$GITHUB_STEP_SUMMARY" || true
+              "$REPORTE.json" >> "$GITHUB_STEP_SUMMARY" || true
           fi
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
-          name: report-image-${{ matrix.service }}
+          name: report-image-${{ matrix.service }}-${{ matrix.arch }}
           path: |
-            trivy-${{ matrix.service }}.json
-            sbom-${{ matrix.service }}.cdx.json
+            trivy-${{ matrix.service }}-${{ matrix.arch }}.json
+            sbom-${{ matrix.service }}-${{ matrix.arch }}.cdx.json
           retention-days: 14
           if-no-files-found: ignore
 
-      - name: Exportar imagen para el staging efímero
-        run: docker save "$IMAGE" | gzip -1 > "image-${{ matrix.service }}.tar.gz"
+      # amd64 se exporta como image-<servicio> (lo usa el staging efímero); arm64 como
+      # arm64-image-<servicio>, un nombre que el patrón image-* del staging efímero no toma.
+      - name: Exportar imagen (staging efímero y publicación)
+        run: docker save "$IMAGE" | gzip -1 > "${{ matrix.artifact }}-${{ matrix.service }}.tar.gz"
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: image-${{ matrix.service }}
-          path: image-${{ matrix.service }}.tar.gz
+          name: ${{ matrix.artifact }}-${{ matrix.service }}
+          path: ${{ matrix.artifact }}-${{ matrix.service }}.tar.gz
           retention-days: 1
           compression-level: 0
 
@@ -520,8 +547,8 @@ jobs:
           S_DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
           S_JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
           S_INTERNAL_API_TOKEN: ${{ secrets.INTERNAL_API_TOKEN }}
-          V_APP_VERSION: ${{ vars.APP_VERSION || '0.1.0' }}
-          V_OFF_USER_AGENT: ${{ vars.OFF_USER_AGENT || 'SmartCommerce-CI/0.1.0 (github.com/Dakotahh1/SmartCommerce)' }}
+          V_APP_VERSION: ${{ vars.APP_VERSION || '0.2.0' }}
+          V_OFF_USER_AGENT: ${{ vars.OFF_USER_AGENT || 'SmartCommerce-CI/0.2.0 (+https://github.com/Dakotahh1/SmartCommerce)' }}
         run: |
           # init-env.sh genera un valor aleatorio por secreto; si existe el GitHub Secret, se usa ese.
           scripts/init-env.sh .env.generated
@@ -705,7 +732,7 @@ jobs:
   # 6 · Publicación de imágenes (solo main y tags de versión)
   # ════════════════════════════════════════════════════════════════════════════
   publish:
-    name: Publicar ${{ matrix.service }} en GHCR
+    name: Publicar ${{ matrix.service }} en GHCR (amd64 + arm64)
     needs: [quality-gate]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-24.04
@@ -719,7 +746,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          name: image-${{ matrix.service }}
+          pattern: "*image-${{ matrix.service }}"
+          merge-multiple: true
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
@@ -727,22 +757,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Etiquetar y publicar (sha + main o versión)
+      # Se publican las mismas imágenes que pasaron el escaneo (no se reconstruyen): primero cada
+      # arquitectura con sufijo y luego un manifiesto multiarquitectura por cada etiqueta final.
+      - name: Etiquetar y publicar (sha + main o versión, amd64 y arm64)
         env:
           SERVICE: ${{ matrix.service }}
           REF_NAME: ${{ github.ref_name }}
           REF_TYPE: ${{ github.ref_type }}
         run: |
-          gunzip -c "image-${SERVICE}.tar.gz" | docker load
           owner="${GITHUB_REPOSITORY_OWNER,,}"
           target="ghcr.io/${owner}/smartcommerce-${SERVICE}"
-          tags=("sha-${GITHUB_SHA::12}")
+          base="sha-${GITHUB_SHA::12}"
+          for arch in amd64 arm64; do
+            archivo="image-${SERVICE}.tar.gz"
+            if [ "$arch" = arm64 ]; then archivo="arm64-image-${SERVICE}.tar.gz"; fi
+            gunzip -c "$archivo" | docker load
+            docker tag "smartcommerce-${SERVICE}:ci" "${target}:${base}-${arch}"
+            docker push "${target}:${base}-${arch}"
+          done
+          tags=("$base")
           if [ "$REF_TYPE" = "tag" ]; then tags+=("${REF_NAME#v}"); else tags+=("main"); fi
           for tag in "${tags[@]}"; do
-            docker tag "smartcommerce-${SERVICE}:ci" "${target}:${tag}"
-            docker push "${target}:${tag}"
-            echo "- \`${target}:${tag}\`" >> "$GITHUB_STEP_SUMMARY"
+            docker buildx imagetools create --tag "${target}:${tag}" \
+              "${target}:${base}-amd64" "${target}:${base}-arm64"
+            echo "- \`${target}:${tag}\` (linux/amd64, linux/arm64)" >> "$GITHUB_STEP_SUMMARY"
           done
+          docker buildx imagetools inspect "${target}:${base}"
 
   # ════════════════════════════════════════════════════════════════════════════
   # 7 · Despliegue automático en staging (solo main, tras el quality gate y la publicación)
@@ -779,10 +819,10 @@ jobs:
       - name: Acceso SSH al host de staging (llave dedicada y host verificado)
         env:
           SSH_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
-          KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
+          KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS || vars.STAGING_SSH_KNOWN_HOSTS }}
         run: |
           if [ -z "$SSH_KEY" ] || [ -z "$KNOWN_HOSTS" ]; then
-            echo "::error::Faltan los secretos STAGING_SSH_PRIVATE_KEY o STAGING_SSH_KNOWN_HOSTS"; exit 1
+            echo "::error::Falta el secreto STAGING_SSH_PRIVATE_KEY o la variable STAGING_SSH_KNOWN_HOSTS"; exit 1
           fi
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519

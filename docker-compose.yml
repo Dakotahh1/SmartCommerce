@@ -111,7 +111,7 @@ services:
       LOG_LEVEL: ${PYTHON_LOG_LEVEL:-INFO}
       INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:?Define INTERNAL_API_TOKEN en .env}
       OFF_BASE_URL: ${OFF_BASE_URL:-https://world.openfoodfacts.org}
-      OFF_USER_AGENT: "${OFF_USER_AGENT:-SmartCommerce/0.1.0 (contacto: equipo@smartcommerce.example)}"
+      OFF_USER_AGENT: "${OFF_USER_AGENT:-SmartCommerce/0.2.0 (+https://github.com/Dakotahh1/SmartCommerce)}"
       OFF_TIMEOUT_SECONDS: ${OFF_TIMEOUT_SECONDS:-10}
       OFF_SEARCH_RATE_PER_MINUTE: ${OFF_SEARCH_RATE_PER_MINUTE:-8}
       OFF_CACHE_TTL_SECONDS: ${OFF_CACHE_TTL_SECONDS:-300}
@@ -134,7 +134,7 @@ services:
     environment:
       <<: *db-connection
       NODE_ENV: ${APP_ENV:-staging}
-      APP_VERSION: ${APP_VERSION:-0.1.0}
+      APP_VERSION: ${APP_VERSION:-0.2.0}
       PORT: "3000"
       LOG_LEVEL: ${LOG_LEVEL:-info}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,https://localhost}

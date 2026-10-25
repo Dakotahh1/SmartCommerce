@@ -30,7 +30,7 @@ flowchart LR
         an["Android<br/>Capacitor · APK debug"]
     end
     subgraph s3["3 · Contenedores"]
-        im["Build de 3 imágenes<br/>no root · Trivy · SBOM"]
+        im["Build de 3 imágenes<br/>amd64 + arm64 nativos<br/>no root · Trivy · SBOM"]
     end
     subgraph s4["4 · Integración e infraestructura"]
         st["Staging efímero<br/>Compose + fuente simulada<br/>humo · integración EP2<br/>aislamiento · resiliencia"]
@@ -52,14 +52,14 @@ flowchart LR
 | 1 | **SAST (Semgrep)** | Reglas OWASP Top 10, TypeScript, Node.js, Python, Dockerfile, GitHub Actions y secretos; reporte SARIF | Hay hallazgos de severidad `ERROR` |
 | 1 | **Lint de configuración** | hadolint (Dockerfiles, umbral `info`), ShellCheck (scripts), actionlint (workflows), `docker compose config` | Cualquier hallazgo o compose inválido |
 | 2 | **Frontend** | `npm ci` · ESLint (incl. accesibilidad) · Prettier · `tsc` · Vitest con cobertura · build PWA · `npm audit` | Error de lint/tipos/pruebas/build o vulnerabilidad alta/crítica |
-| 2 | **Backend** | `npm ci` · oxlint · Prettier · `tsc` · Vitest con cobertura · build · pruebas e2e con PostgreSQL 17 real (migraciones up → down → up; integración NestJS ↔ servicio Python simulado por HTTP: contratos, timeouts, respuestas inválidas, indisponibilidad; ingesta programada; reporte de calidad) · **evaluación del buscador** (P@5, MRR, nDCG@5 con umbrales) · `npm audit` | Idem, o el ranking cae bajo los umbrales |
-| 2 | **Servicio Python** | `uv sync --frozen` · Ruff (incl. reglas de seguridad) · formato · mypy estricto · pytest con cobertura mínima 85 % (incluye pruebas del proceso de recuperación: cliente de la fuente con errores, reintentos y métricas; normalización; tokenización) · Bandit (SAST) · pip-audit (dependencias Python) | Idem o cobertura < 85 % |
+| 2 | **Backend** | `npm ci` · oxlint · Prettier · `tsc` · Vitest con cobertura · build · contrato OpenAPI versionado al día ([`docs/api`](api/README.md)) · pruebas e2e con PostgreSQL 17 real (migraciones up → down → up; integración NestJS ↔ servicio Python simulado por HTTP: contratos, timeouts, respuestas inválidas, indisponibilidad; ingesta programada; reporte de calidad) · **evaluación del buscador** (P@5, MRR, nDCG@5 con umbrales) · `npm audit` | Idem, el ranking cae bajo los umbrales o la especificación OpenAPI quedó desactualizada |
+| 2 | **Servicio Python** | `uv sync --frozen` · Ruff (incl. reglas de seguridad) · formato · mypy estricto · pytest con cobertura mínima 85 % (incluye pruebas del proceso de recuperación: cliente de la fuente con errores, reintentos y métricas; normalización; tokenización) · contrato OpenAPI versionado al día · Bandit (SAST) · pip-audit (dependencias Python) | Idem, cobertura < 85 % o especificación OpenAPI desactualizada |
 | 2 | **Android** | Build `android` + `cap sync` + `./gradlew assembleDebug`; publica el APK como artefacto | La app no compila para Android |
-| 3 | **Imágenes** (matriz ×3) | Build con Buildx y caché · verificación de usuario **no root** · Trivy (vulnerabilidades con parche) · SBOM CycloneDX · reporte JSON | Imagen como root o vulnerabilidad CRITICAL/HIGH con parche |
+| 3 | **Imágenes** (matriz 3 servicios × amd64/arm64) | Build con Buildx y caché en runners **nativos** de cada arquitectura (`ubuntu-24.04` y `ubuntu-24.04-arm`, sin emulación) · verificación de usuario **no root** · Trivy (vulnerabilidades con parche) · SBOM CycloneDX · reporte JSON | Imagen como root o vulnerabilidad CRITICAL/HIGH con parche |
 | 4 | **Staging efímero** | `docker compose up` con **las mismas imágenes escaneadas** y la fuente simulada ([`docker-compose.source-mock.yml`](../docker-compose.source-mock.yml)) · [`smoke-test.sh`](../scripts/smoke-test.sh) · [`integration-test.sh`](../scripts/integration-test.sh) · [`network-isolation-test.sh`](../scripts/network-isolation-test.sh) · [`resilience-test.sh`](../scripts/resilience-test.sh) · logs como artefacto si falla · `down -v` siempre | Cualquier prueba falla |
 | 4 | **Terraform** | `terraform fmt -check` · `init -lockfile=readonly` + `validate` de `dev` y `staging` · `plan` de staging contra el daemon Docker del runner con secretos del ambiente `staging` (o efímeros); plan legible como artefacto | Formato, validación o plan inválidos (ver [09](09-staging-terraform.md)) |
 | 5 | **Quality gate** | Evalúa el resultado de todas las etapas y publica una tabla en el resumen | Alguna etapa no terminó en `success` (incluye `skipped` por un fallo previo) |
-| 6 | **Publicación** | `docker push` a `ghcr.io/<owner>/smartcommerce-<servicio>` con `packages: write` solo en este job | — |
+| 6 | **Publicación** | Sube **las mismas imágenes escaneadas** (sin reconstruir) a `ghcr.io/<owner>/smartcommerce-<servicio>` como `sha-<commit>-amd64` y `-arm64`, y une ambas en un **manifiesto multiarquitectura** (`sha-<commit>` y `main` o la versión del tag) con `docker buildx imagetools`; cada host descarga su variante. `packages: write` solo en este job ([ADR-0016](adr/0016-staging-oracle-cloud-arm.md)) | — |
 | 7 | **Despliegue en staging** (solo `main`, si existe `vars.STAGING_DOCKER_HOST`) | [`deploy-staging.sh`](../scripts/deploy-staging.sh): `terraform apply` de la imagen `sha-<commit>` con versión `APP_VERSION+sha-<commit>` → `/api/health` con esa versión, BD y SmartMatch arriba → humo contra la URL pública → lectura del catálogo. Ambiente `staging` de GitHub (secretos y aprobación opcional), `concurrency` sin cancelación | Cualquier verificación falla → **rollback automático** a la etiqueta anterior y job en rojo ([ADR-0015](adr/0015-despliegue-staging-rollback.md)) |
 
 ### Pruebas del staging efímero
@@ -94,6 +94,16 @@ Con esto ningún cambio llega a `main` si falla una prueba, aparece un secreto, 
 
 **Evidencia real (PR #6):** la primera ejecución del pipeline ([run 35197922556](https://github.com/Dakotahh1/SmartCommerce/actions/runs/35197922556)) fue **bloqueada por Trivy** al detectar vulnerabilidades CRITICAL/HIGH con parche disponible en las imágenes base (OpenSSL en Alpine; `perl-base`, `gzip`, `pcre2` y `sqlite` en Debian; `msgpack` y `setuptools` vendorizados por pip). El staging efímero y la publicación quedaron omitidos y el quality gate falló. Tras aplicar los parches en los Dockerfiles, la [siguiente ejecución](https://github.com/Dakotahh1/SmartCommerce/actions/runs/35198504106) pasó todas las etapas (humo 29/29, aislamiento 12/12, resiliencia 9/9).
 
+**Evidencia de la EP2 (PR #70, 25-10-2026):** sin que el cambio tuviera relación, el pipeline bloqueó tres veces por hallazgos publicados esa semana, y cada uno se corrigió en su propio commit:
+
+| Ejecución | Etapa que bloqueó | Hallazgo | Corrección |
+|---|---|---|---|
+| [40235501516](https://github.com/Dakotahh1/SmartCommerce/actions/runs/40235501516) | `npm audit` (frontend y backend) y `pip-audit` | vite, zod, multer y body-parser (altas); certifi (PYSEC-2026-4320) | `b1bd26f`, `2f12660`, `2cfb2e2` |
+| [40236278350](https://github.com/Dakotahh1/SmartCommerce/actions/runs/40236278350) | Trivy, imagen del frontend (amd64 y arm64) | Tres altas en Nginx 1.30.5, entre ellas CVE-2026-15176 | `a9462a8` |
+| [40237144603](https://github.com/Dakotahh1/SmartCommerce/actions/runs/40237144603) | Build de la imagen arm64 del backend | Carrera en la caché de npm entre dos etapas paralelas | `6ac8922` |
+
+En los tres casos el staging efímero, la publicación y el despliegue quedaron omitidos y el quality gate en rojo, de modo que nada vulnerable llegó a GHCR ni a staging.
+
 Para la demostración se abre un PR que introduce un error deliberado; el pipeline lo detiene en la etapa correspondiente y el `Quality gate` queda en rojo, impidiendo el merge. Ejemplos reproducibles:
 
 | Cambio de prueba | Etapa que bloquea | Etapas siguientes |
@@ -109,9 +119,9 @@ Para la demostración se abre un PR que introduce un error deliberado; el pipeli
 # Frontend
 cd frontend && npm ci && npm run lint && npm run format:check && npm run typecheck && npm run test:ci && npm run build && npm audit --audit-level=high
 # Backend (e2e requiere PostgreSQL y variables DB_*)
-cd backend && npm ci && npm run lint && npm run format:check && npm run typecheck && npm run test:cov && npm run build && npm run test:e2e
+cd backend && npm ci && npm run lint && npm run format:check && npm run typecheck && npm run test:cov && npm run build && npm run openapi -- --check && npm run test:e2e
 # Python
-cd python-service && uv sync --frozen && uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pytest && uv run bandit -c pyproject.toml -r app
+cd python-service && uv sync --frozen && uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pytest && uv run python scripts/export_openapi.py --check && uv run bandit -c pyproject.toml -r app
 # Stack completo + pruebas del staging
 scripts/init-env.sh && docker compose up -d --build
 scripts/smoke-test.sh && scripts/network-isolation-test.sh && scripts/resilience-test.sh
