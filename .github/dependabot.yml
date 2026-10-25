@@ -12,10 +12,13 @@ updates:
       # (p. ej. @angular/compiler-cli exige la misma versión de @angular/compiler).
       angular-ionic-capacitor:
         patterns: ["@angular/*", "@angular-devkit/*", "@ionic/*", "@capacitor/*", "ionicons"]
+      # vitest y sus paquetes @vitest/* exigen la misma versión: siempre juntos, también en mayores.
+      vitest:
+        patterns: ["vitest", "@vitest/*"]
       # Las versiones mayores llegan en PRs separados para revisarlas una por una.
       dev-tooling:
         dependency-type: development
-        exclude-patterns: ["@angular/*", "@angular-devkit/*", "@capacitor/*"]
+        exclude-patterns: ["@angular/*", "@angular-devkit/*", "@capacitor/*", "vitest", "@vitest/*"]
         update-types: [minor, patch]
     ignore:
       # Angular 22 exige TypeScript >=6.0 <6.1: TypeScript sube junto con Angular, no por separado.
@@ -32,8 +35,11 @@ updates:
     groups:
       nestjs:
         patterns: ["@nestjs/*"]
+      vitest:
+        patterns: ["vitest", "@vitest/*"]
       dev-tooling:
         dependency-type: development
+        exclude-patterns: ["vitest", "@vitest/*"]
         update-types: [minor, patch]
     ignore:
       # El plugin de Swagger de `nest build` es un transformador del compilador: TypeScript 7
