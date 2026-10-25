@@ -94,6 +94,16 @@ Con esto ningún cambio llega a `main` si falla una prueba, aparece un secreto, 
 
 **Evidencia real (PR #6):** la primera ejecución del pipeline ([run 35197922556](https://github.com/Dakotahh1/SmartCommerce/actions/runs/35197922556)) fue **bloqueada por Trivy** al detectar vulnerabilidades CRITICAL/HIGH con parche disponible en las imágenes base (OpenSSL en Alpine; `perl-base`, `gzip`, `pcre2` y `sqlite` en Debian; `msgpack` y `setuptools` vendorizados por pip). El staging efímero y la publicación quedaron omitidos y el quality gate falló. Tras aplicar los parches en los Dockerfiles, la [siguiente ejecución](https://github.com/Dakotahh1/SmartCommerce/actions/runs/35198504106) pasó todas las etapas (humo 29/29, aislamiento 12/12, resiliencia 9/9).
 
+**Evidencia de la EP2 (PR #70, 25-10-2026):** sin que el cambio tuviera relación, el pipeline bloqueó tres veces por hallazgos publicados esa semana, y cada uno se corrigió en su propio commit:
+
+| Ejecución | Etapa que bloqueó | Hallazgo | Corrección |
+|---|---|---|---|
+| [40235501516](https://github.com/Dakotahh1/SmartCommerce/actions/runs/40235501516) | `npm audit` (frontend y backend) y `pip-audit` | vite, zod, multer y body-parser (altas); certifi (PYSEC-2026-4320) | `b1bd26f`, `2f12660`, `2cfb2e2` |
+| [40236278350](https://github.com/Dakotahh1/SmartCommerce/actions/runs/40236278350) | Trivy, imagen del frontend (amd64 y arm64) | Tres altas en Nginx 1.30.5, entre ellas CVE-2026-15176 | `a9462a8` |
+| [40237144603](https://github.com/Dakotahh1/SmartCommerce/actions/runs/40237144603) | Build de la imagen arm64 del backend | Carrera en la caché de npm entre dos etapas paralelas | `6ac8922` |
+
+En los tres casos el staging efímero, la publicación y el despliegue quedaron omitidos y el quality gate en rojo, de modo que nada vulnerable llegó a GHCR ni a staging.
+
 Para la demostración se abre un PR que introduce un error deliberado; el pipeline lo detiene en la etapa correspondiente y el `Quality gate` queda en rojo, impidiendo el merge. Ejemplos reproducibles:
 
 | Cambio de prueba | Etapa que bloquea | Etapas siguientes |
