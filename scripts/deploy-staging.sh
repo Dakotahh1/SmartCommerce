@@ -56,9 +56,12 @@ PREVIOUS_TAG="$(terraform -chdir="$TF_DIR" output -raw image_tag 2>/dev/null || 
 PREVIOUS_VERSION="$(terraform -chdir="$TF_DIR" output -raw app_version 2>/dev/null || true)"
 echo "Desplegado actualmente: ${PREVIOUS_TAG:-ninguno}"
 
+# El origen real del staging se conoce recién al desplegar: la API lo acepta en CORS junto con la
+# WebView de Capacitor (https://localhost), en vez del dominio de ejemplo de terraform.tfvars.
 apply() {
   terraform -chdir="$TF_DIR" apply -input=false -auto-approve -lock-timeout=120s \
-    -var "docker_host=$STAGING_DOCKER_HOST" -var "image_tag=$1" -var "app_version=$2"
+    -var "docker_host=$STAGING_DOCKER_HOST" -var "image_tag=$1" -var "app_version=$2" \
+    -var "cors_origins=[\"${STAGING_URL%/}\",\"https://localhost\"]"
 }
 
 # verify <versión esperada>: salud con la versión correcta, humo y catálogo

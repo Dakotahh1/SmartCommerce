@@ -813,10 +813,10 @@ jobs:
       - name: Acceso SSH al host de staging (llave dedicada y host verificado)
         env:
           SSH_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
-          KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
+          KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS || vars.STAGING_SSH_KNOWN_HOSTS }}
         run: |
           if [ -z "$SSH_KEY" ] || [ -z "$KNOWN_HOSTS" ]; then
-            echo "::error::Faltan los secretos STAGING_SSH_PRIVATE_KEY o STAGING_SSH_KNOWN_HOSTS"; exit 1
+            echo "::error::Falta el secreto STAGING_SSH_PRIVATE_KEY o la variable STAGING_SSH_KNOWN_HOSTS"; exit 1
           fi
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
