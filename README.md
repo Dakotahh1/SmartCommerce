@@ -220,7 +220,7 @@ Tabla completa, mínimo privilegio y configuración paso a paso en GitHub: [docs
 
 ## 9. API
 
-Documentación interactiva **OpenAPI/Swagger**: `http://localhost:8080/api/docs` (JSON en `/api/docs-json`).
+Documentación interactiva **OpenAPI/Swagger**: `http://localhost:8080/api/docs` (JSON en `/api/docs-json`). Sin levantar nada, las especificaciones de ambas APIs están versionadas en [docs/api](docs/api/README.md) y el pipeline falla si dejan de coincidir con el código.
 
 | Método | Ruta | Acceso | Descripción |
 |---|---|---|---|
@@ -237,7 +237,7 @@ Documentación interactiva **OpenAPI/Swagger**: `http://localhost:8080/api/docs`
 | GET · PATCH | `/api/v1/admin/users` | `admin` | Gestión de roles |
 | GET | `/api/health` · `/api/health/live` · `/api/health/metrics` | Público / `admin`,`operator` | Salud agregada y métricas por ruta |
 
-Servicio Python (interno; documentación interactiva en `/docs` de FastAPI fuera de producción): `POST /v1/ingestion/openfoodfacts/search`, `POST /v1/products/normalize`, `POST /v1/recommendations/rank`, `POST /v1/comparisons`, `GET /v1/metrics` (incluye métricas de la fuente), `GET /health`, `GET /health/ready`.
+Servicio Python (interno; documentación interactiva en `/docs` de FastAPI fuera de producción): `POST /v1/ingestion/openfoodfacts/search`, `POST /v1/products/normalize`, `POST /v1/recommendations/rank`, `POST /v1/comparisons`, `POST /v1/profiles/learn`, `GET /v1/metrics` (incluye métricas de la fuente), `GET /health`, `GET /health/ready`.
 
 Errores con formato uniforme `{ statusCode, code, message, details, path, timestamp, requestId }` y correlación extremo a extremo con `X-Request-Id`. Contratos internos del servicio Python: [python-service/README.md](python-service/README.md).
 

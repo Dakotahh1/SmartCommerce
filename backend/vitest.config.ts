@@ -13,6 +13,7 @@ export default defineConfig({
       exclude: [
         'src/**/*.spec.ts',
         'src/main.ts',
+        'src/openapi.ts',
         'src/database/migrate.ts',
         'src/database/migrations/**',
         'src/**/*.module.ts',

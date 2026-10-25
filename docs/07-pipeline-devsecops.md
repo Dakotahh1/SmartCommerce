@@ -52,8 +52,8 @@ flowchart LR
 | 1 | **SAST (Semgrep)** | Reglas OWASP Top 10, TypeScript, Node.js, Python, Dockerfile, GitHub Actions y secretos; reporte SARIF | Hay hallazgos de severidad `ERROR` |
 | 1 | **Lint de configuración** | hadolint (Dockerfiles, umbral `info`), ShellCheck (scripts), actionlint (workflows), `docker compose config` | Cualquier hallazgo o compose inválido |
 | 2 | **Frontend** | `npm ci` · ESLint (incl. accesibilidad) · Prettier · `tsc` · Vitest con cobertura · build PWA · `npm audit` | Error de lint/tipos/pruebas/build o vulnerabilidad alta/crítica |
-| 2 | **Backend** | `npm ci` · oxlint · Prettier · `tsc` · Vitest con cobertura · build · pruebas e2e con PostgreSQL 17 real (migraciones up → down → up; integración NestJS ↔ servicio Python simulado por HTTP: contratos, timeouts, respuestas inválidas, indisponibilidad; ingesta programada; reporte de calidad) · **evaluación del buscador** (P@5, MRR, nDCG@5 con umbrales) · `npm audit` | Idem, o el ranking cae bajo los umbrales |
-| 2 | **Servicio Python** | `uv sync --frozen` · Ruff (incl. reglas de seguridad) · formato · mypy estricto · pytest con cobertura mínima 85 % (incluye pruebas del proceso de recuperación: cliente de la fuente con errores, reintentos y métricas; normalización; tokenización) · Bandit (SAST) · pip-audit (dependencias Python) | Idem o cobertura < 85 % |
+| 2 | **Backend** | `npm ci` · oxlint · Prettier · `tsc` · Vitest con cobertura · build · contrato OpenAPI versionado al día ([`docs/api`](api/README.md)) · pruebas e2e con PostgreSQL 17 real (migraciones up → down → up; integración NestJS ↔ servicio Python simulado por HTTP: contratos, timeouts, respuestas inválidas, indisponibilidad; ingesta programada; reporte de calidad) · **evaluación del buscador** (P@5, MRR, nDCG@5 con umbrales) · `npm audit` | Idem, el ranking cae bajo los umbrales o la especificación OpenAPI quedó desactualizada |
+| 2 | **Servicio Python** | `uv sync --frozen` · Ruff (incl. reglas de seguridad) · formato · mypy estricto · pytest con cobertura mínima 85 % (incluye pruebas del proceso de recuperación: cliente de la fuente con errores, reintentos y métricas; normalización; tokenización) · contrato OpenAPI versionado al día · Bandit (SAST) · pip-audit (dependencias Python) | Idem, cobertura < 85 % o especificación OpenAPI desactualizada |
 | 2 | **Android** | Build `android` + `cap sync` + `./gradlew assembleDebug`; publica el APK como artefacto | La app no compila para Android |
 | 3 | **Imágenes** (matriz ×3) | Build con Buildx y caché · verificación de usuario **no root** · Trivy (vulnerabilidades con parche) · SBOM CycloneDX · reporte JSON | Imagen como root o vulnerabilidad CRITICAL/HIGH con parche |
 | 4 | **Staging efímero** | `docker compose up` con **las mismas imágenes escaneadas** y la fuente simulada ([`docker-compose.source-mock.yml`](../docker-compose.source-mock.yml)) · [`smoke-test.sh`](../scripts/smoke-test.sh) · [`integration-test.sh`](../scripts/integration-test.sh) · [`network-isolation-test.sh`](../scripts/network-isolation-test.sh) · [`resilience-test.sh`](../scripts/resilience-test.sh) · logs como artefacto si falla · `down -v` siempre | Cualquier prueba falla |
@@ -109,9 +109,9 @@ Para la demostración se abre un PR que introduce un error deliberado; el pipeli
 # Frontend
 cd frontend && npm ci && npm run lint && npm run format:check && npm run typecheck && npm run test:ci && npm run build && npm audit --audit-level=high
 # Backend (e2e requiere PostgreSQL y variables DB_*)
-cd backend && npm ci && npm run lint && npm run format:check && npm run typecheck && npm run test:cov && npm run build && npm run test:e2e
+cd backend && npm ci && npm run lint && npm run format:check && npm run typecheck && npm run test:cov && npm run build && npm run openapi -- --check && npm run test:e2e
 # Python
-cd python-service && uv sync --frozen && uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pytest && uv run bandit -c pyproject.toml -r app
+cd python-service && uv sync --frozen && uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pytest && uv run python scripts/export_openapi.py --check && uv run bandit -c pyproject.toml -r app
 # Stack completo + pruebas del staging
 scripts/init-env.sh && docker compose up -d --build
 scripts/smoke-test.sh && scripts/network-isolation-test.sh && scripts/resilience-test.sh

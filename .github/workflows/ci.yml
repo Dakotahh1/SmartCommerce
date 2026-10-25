@@ -255,6 +255,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Contrato OpenAPI versionado al día (docs/api/backend.openapi.json)
+        run: npm run openapi -- --check
+
       - name: Credenciales efímeras para pruebas de integración
         run: |
           for name in DB_PASSWORD JWT_ACCESS_SECRET INTERNAL_API_TOKEN; do
@@ -330,6 +333,9 @@ jobs:
 
       - name: Pruebas unitarias con cobertura ≥ 85 % (pytest)
         run: uv run pytest --junitxml=junit.xml
+
+      - name: Contrato OpenAPI versionado al día (docs/api/python-service.openapi.json)
+        run: uv run python scripts/export_openapi.py --check
 
       - name: Análisis estático de seguridad (Bandit)
         run: uv run bandit -c pyproject.toml -r app --severity-level medium

@@ -23,6 +23,7 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
+    "openapi": "node dist/openapi.js",
     "migration:run": "node dist/database/migrate.js run",
     "migration:revert": "node dist/database/migrate.js revert",
     "migration:show": "node dist/database/migrate.js show"

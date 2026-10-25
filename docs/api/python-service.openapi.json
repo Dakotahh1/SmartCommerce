@@ -1,0 +1,2195 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SmartCommerce · Servicio SmartMatch",
+    "description": "\nServicio especializado de **SmartCommerce**. Solo es invocado por el backend NestJS\n(red interna) usando la cabecera `X-Internal-Token`.\n\n* **Ingesta**: obtiene productos desde Open Food Facts y los normaliza con métricas de calidad.\n* **SmartMatch**: ranking multicriterio explicable, comparación y aprendizaje de preferencias.\n",
+    "version": "0.2.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "salud"
+        ],
+        "summary": "Health",
+        "description": "Liveness: el proceso está vivo y el motor cargado.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "salud"
+        ],
+        "summary": "Readiness",
+        "description": "Readiness: dependencias necesarias. La fuente web se consulta como máximo cada 60 s.",
+        "operationId": "readiness_health_ready_get",
+        "parameters": [
+          {
+            "name": "deep",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Verifica también la fuente Open Food Facts",
+              "default": false,
+              "title": "Deep"
+            },
+            "description": "Verifica también la fuente Open Food Facts"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadinessResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/metrics": {
+      "get": {
+        "tags": [
+          "salud"
+        ],
+        "summary": "Read Metrics",
+        "description": "Conteo, errores 5xx y latencia promedio/p95 por ruta (ventana deslizante).",
+        "operationId": "read_metrics_v1_metrics_get",
+        "parameters": [
+          {
+            "name": "X-Internal-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Internal-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Read Metrics V1 Metrics Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ingestion/openfoodfacts/search": {
+      "post": {
+        "tags": [
+          "ingesta"
+        ],
+        "summary": "Busca productos en Open Food Facts y los devuelve normalizados",
+        "operationId": "ingest_open_food_facts_v1_ingestion_openfoodfacts_search_post",
+        "parameters": [
+          {
+            "name": "X-Internal-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Internal-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngestionSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngestionSearchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/products/normalize": {
+      "post": {
+        "tags": [
+          "ingesta"
+        ],
+        "summary": "Valida, limpia, normaliza y deduplica registros crudos de Open Food Facts",
+        "operationId": "normalize_products_v1_products_normalize_post",
+        "parameters": [
+          {
+            "name": "X-Internal-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Internal-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NormalizeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormalizeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/recommendations/rank": {
+      "post": {
+        "tags": [
+          "smartmatch"
+        ],
+        "summary": "Ordena candidatos según el perfil (personalizado) o de forma general (base)",
+        "operationId": "rank_candidates_v1_recommendations_rank_post",
+        "parameters": [
+          {
+            "name": "X-Internal-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Internal-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RankRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/comparisons": {
+      "post": {
+        "tags": [
+          "smartmatch"
+        ],
+        "summary": "Compara 2 a 4 productos y explica cuál conviene al perfil",
+        "operationId": "compare_products_v1_comparisons_post",
+        "parameters": [
+          {
+            "name": "X-Internal-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Internal-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompareRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompareResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/profiles/learn": {
+      "post": {
+        "tags": [
+          "smartmatch"
+        ],
+        "summary": "Calcula pesos efectivos y afinidades aprendidas del historial",
+        "operationId": "learn_v1_profiles_learn_post",
+        "parameters": [
+          {
+            "name": "X-Internal-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Internal-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearnRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LearnResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CompareRequest": {
+        "properties": {
+          "strategy": {
+            "type": "string",
+            "enum": [
+              "personalized",
+              "baseline"
+            ],
+            "title": "Strategy",
+            "default": "personalized"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Profile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/HistoryEvent"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "History"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/ProductCandidate"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 2,
+            "title": "Products"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "products"
+        ],
+        "title": "CompareRequest"
+      },
+      "CompareResponse": {
+        "properties": {
+          "engineVersion": {
+            "type": "string",
+            "title": "Engineversion"
+          },
+          "strategy": {
+            "type": "string",
+            "enum": [
+              "personalized",
+              "baseline"
+            ],
+            "title": "Strategy"
+          },
+          "weightsUsed": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Weightsused"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ComparedItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "winnerGtin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Winnergtin"
+          },
+          "criteriaWinners": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Criteriawinners"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "engineVersion",
+          "strategy",
+          "weightsUsed",
+          "items",
+          "winnerGtin",
+          "criteriaWinners",
+          "summary"
+        ],
+        "title": "CompareResponse"
+      },
+      "ComparedItem": {
+        "properties": {
+          "productId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Productid"
+          },
+          "gtin": {
+            "type": "string",
+            "title": "Gtin"
+          },
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "coverage": {
+            "type": "number",
+            "title": "Coverage"
+          },
+          "breakdown": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionScore"
+            },
+            "type": "array",
+            "title": "Breakdown"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "eligible": {
+            "type": "boolean",
+            "title": "Eligible"
+          },
+          "exclusionReasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Exclusionreasons"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "productId",
+          "gtin",
+          "rank",
+          "score",
+          "coverage",
+          "breakdown",
+          "reasons",
+          "warnings",
+          "name",
+          "eligible",
+          "exclusionReasons"
+        ],
+        "title": "ComparedItem"
+      },
+      "CriterionScore": {
+        "properties": {
+          "criterion": {
+            "type": "string",
+            "enum": [
+              "nutrition",
+              "price",
+              "processing",
+              "environment",
+              "availability"
+            ],
+            "title": "Criterion"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "weight": {
+            "type": "number",
+            "title": "Weight"
+          },
+          "contribution": {
+            "type": "number",
+            "title": "Contribution"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "criterion",
+          "label",
+          "value",
+          "weight",
+          "contribution"
+        ],
+        "title": "CriterionScore"
+      },
+      "DietFlags": {
+        "properties": {
+          "vegan": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vegan"
+          },
+          "vegetarian": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vegetarian"
+          },
+          "glutenFree": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Glutenfree"
+          },
+          "lactoseFree": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lactosefree"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "DietFlags",
+        "description": "Aptitud para dietas: `True` verificado, `False` no apto, `None` desconocido."
+      },
+      "ExcludedItem": {
+        "properties": {
+          "productId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Productid"
+          },
+          "gtin": {
+            "type": "string",
+            "title": "Gtin"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "productId",
+          "gtin",
+          "reasons"
+        ],
+        "title": "ExcludedItem"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "engineVersion": {
+            "type": "string",
+            "title": "Engineversion"
+          },
+          "uptimeSeconds": {
+            "type": "number",
+            "title": "Uptimeseconds"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "service",
+          "version",
+          "engineVersion",
+          "uptimeSeconds",
+          "timestamp"
+        ],
+        "title": "HealthResponse"
+      },
+      "HistoryEvent": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "view",
+              "favorite",
+              "unfavorite",
+              "compare",
+              "dismiss",
+              "recommendation_click",
+              "recommendation_accept",
+              "recommendation_reject"
+            ],
+            "title": "Type"
+          },
+          "ageDays": {
+            "type": "number",
+            "maximum": 3650.0,
+            "minimum": 0.0,
+            "title": "Agedays"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductCandidate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type",
+          "ageDays",
+          "product"
+        ],
+        "title": "HistoryEvent"
+      },
+      "IngestionSearchRequest": {
+        "properties": {
+          "country": {
+            "type": "string",
+            "pattern": "^[a-z][a-z-]{1,39}$",
+            "title": "Country",
+            "default": "chile"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9:-]{1,79}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9:-]{1,79}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "page": {
+            "type": "integer",
+            "maximum": 1000.0,
+            "minimum": 1.0,
+            "title": "Page",
+            "default": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Pagesize",
+            "default": 50
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "IngestionSearchRequest"
+      },
+      "IngestionSearchResponse": {
+        "properties": {
+          "source": {
+            "$ref": "#/components/schemas/SourceDescriptor"
+          },
+          "request": {
+            "$ref": "#/components/schemas/IngestionSearchRequest"
+          },
+          "fetchedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fetchedat"
+          },
+          "totalAvailable": {
+            "type": "integer",
+            "title": "Totalavailable"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/NormalizedProduct"
+            },
+            "type": "array",
+            "title": "Products"
+          },
+          "report": {
+            "$ref": "#/components/schemas/NormalizationReport"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "source",
+          "request",
+          "fetchedAt",
+          "totalAvailable",
+          "products",
+          "report"
+        ],
+        "title": "IngestionSearchResponse"
+      },
+      "LearnRequest": {
+        "properties": {
+          "weights": {
+            "$ref": "#/components/schemas/Weights"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/HistoryEvent"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "History"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "LearnRequest"
+      },
+      "LearnResponse": {
+        "properties": {
+          "engineVersion": {
+            "type": "string",
+            "title": "Engineversion"
+          },
+          "explicitWeights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Explicitweights"
+          },
+          "effectiveWeights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Effectiveweights"
+          },
+          "adjustments": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Adjustments"
+          },
+          "categoryAffinity": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Categoryaffinity"
+          },
+          "brandAffinity": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Brandaffinity"
+          },
+          "eventsUsed": {
+            "type": "integer",
+            "title": "Eventsused"
+          },
+          "explanations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Explanations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "engineVersion",
+          "explicitWeights",
+          "effectiveWeights",
+          "adjustments",
+          "categoryAffinity",
+          "brandAffinity",
+          "eventsUsed",
+          "explanations"
+        ],
+        "title": "LearnResponse"
+      },
+      "NormalizationReport": {
+        "properties": {
+          "received": {
+            "type": "integer",
+            "title": "Received"
+          },
+          "valid": {
+            "type": "integer",
+            "title": "Valid"
+          },
+          "rejected": {
+            "type": "integer",
+            "title": "Rejected"
+          },
+          "duplicates": {
+            "type": "integer",
+            "title": "Duplicates"
+          },
+          "warnings": {
+            "type": "integer",
+            "title": "Warnings"
+          },
+          "validRatio": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Validratio"
+          },
+          "duplicateRatio": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Duplicateratio"
+          },
+          "fieldCoverage": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Fieldcoverage"
+          },
+          "rejections": {
+            "items": {
+              "$ref": "#/components/schemas/Rejection"
+            },
+            "type": "array",
+            "title": "Rejections"
+          },
+          "tookMs": {
+            "type": "number",
+            "title": "Tookms"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "received",
+          "valid",
+          "rejected",
+          "duplicates",
+          "warnings",
+          "validRatio",
+          "duplicateRatio",
+          "fieldCoverage",
+          "rejections",
+          "tookMs"
+        ],
+        "title": "NormalizationReport"
+      },
+      "NormalizeRequest": {
+        "properties": {
+          "products": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "minItems": 1,
+            "title": "Products"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "products"
+        ],
+        "title": "NormalizeRequest"
+      },
+      "NormalizeResponse": {
+        "properties": {
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/NormalizedProduct"
+            },
+            "type": "array",
+            "title": "Products"
+          },
+          "report": {
+            "$ref": "#/components/schemas/NormalizationReport"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "products",
+          "report"
+        ],
+        "title": "NormalizeResponse"
+      },
+      "NormalizedProduct": {
+        "properties": {
+          "gtin": {
+            "type": "string",
+            "pattern": "^\\d{8}$|^\\d{13}$|^\\d{14}$",
+            "title": "Gtin",
+            "examples": [
+              "7802000014130"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 60,
+            "title": "Categories"
+          },
+          "mainCategory": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maincategory"
+          },
+          "quantityText": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quantitytext"
+          },
+          "netQuantity": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Netquantity"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "g",
+                  "ml"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "isBeverage": {
+            "type": "boolean",
+            "title": "Isbeverage",
+            "default": false
+          },
+          "imageUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Imageurl"
+          },
+          "nutriscoreGrade": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "a",
+                  "b",
+                  "c",
+                  "d",
+                  "e"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nutriscoregrade"
+          },
+          "novaGroup": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 4.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Novagroup"
+          },
+          "ecoscoreGrade": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "a",
+                  "b",
+                  "c",
+                  "d",
+                  "e"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ecoscoregrade"
+          },
+          "nutriments": {
+            "$ref": "#/components/schemas/Nutriments"
+          },
+          "highInSeals": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "calories",
+                "sugars",
+                "sodium",
+                "saturated_fat"
+              ]
+            },
+            "type": "array",
+            "title": "Highinseals"
+          },
+          "allergens": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Allergens"
+          },
+          "traces": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Traces"
+          },
+          "labels": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 80,
+            "title": "Labels"
+          },
+          "diets": {
+            "$ref": "#/components/schemas/DietFlags"
+          },
+          "stores": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 60,
+            "title": "Stores"
+          },
+          "countries": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 60,
+            "title": "Countries"
+          },
+          "completeness": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Completeness"
+          },
+          "dataQualityScore": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Dataqualityscore"
+          },
+          "searchPrimary": {
+            "type": "string",
+            "maxLength": 500,
+            "title": "Searchprimary",
+            "default": ""
+          },
+          "searchSecondary": {
+            "type": "string",
+            "maxLength": 1000,
+            "title": "Searchsecondary",
+            "default": ""
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "source": {
+            "$ref": "#/components/schemas/SourceInfo"
+          },
+          "rawHash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Rawhash"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "gtin",
+          "name",
+          "completeness",
+          "dataQualityScore",
+          "source",
+          "rawHash"
+        ],
+        "title": "NormalizedProduct"
+      },
+      "Nutriments": {
+        "properties": {
+          "energyKcal": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 900.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Energykcal"
+          },
+          "sugars": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sugars"
+          },
+          "saturatedFat": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saturatedfat"
+          },
+          "sodiumMg": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 40000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sodiummg"
+          },
+          "salt": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Salt"
+          },
+          "proteins": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proteins"
+          },
+          "fiber": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fiber"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Nutriments",
+        "description": "Nutrientes por 100 g (sólidos) o 100 ml (líquidos)."
+      },
+      "ProductCandidate": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "gtin": {
+            "type": "string",
+            "pattern": "^\\d{8}$|^\\d{13}$|^\\d{14}$",
+            "title": "Gtin",
+            "examples": [
+              "7802000014130"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "mainCategory": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maincategory"
+          },
+          "nutriscoreGrade": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "a",
+                  "b",
+                  "c",
+                  "d",
+                  "e"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nutriscoregrade"
+          },
+          "novaGroup": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 4.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Novagroup"
+          },
+          "ecoscoreGrade": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "a",
+                  "b",
+                  "c",
+                  "d",
+                  "e"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ecoscoregrade"
+          },
+          "nutriments": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Nutriments"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "highInSeals": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "calories",
+                "sugars",
+                "sodium",
+                "saturated_fat"
+              ]
+            },
+            "type": "array",
+            "title": "Highinseals"
+          },
+          "allergens": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Allergens"
+          },
+          "labels": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 80,
+            "title": "Labels"
+          },
+          "diets": {
+            "$ref": "#/components/schemas/DietFlags"
+          },
+          "stores": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 60,
+            "title": "Stores"
+          },
+          "unitPrice": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unitprice",
+            "description": "Precio por kg o litro"
+          },
+          "priceUnit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "kg",
+                  "l"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priceunit"
+          },
+          "dataQualityScore": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Dataqualityscore",
+            "default": 0.5
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "gtin",
+          "name"
+        ],
+        "title": "ProductCandidate",
+        "description": "Datos mínimos de un producto para evaluarlo (proporcionados por NestJS desde PostgreSQL)."
+      },
+      "Profile": {
+        "properties": {
+          "weights": {
+            "$ref": "#/components/schemas/Weights"
+          },
+          "diets": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "vegan",
+                "vegetarian",
+                "gluten_free",
+                "lactose_free"
+              ]
+            },
+            "type": "array",
+            "maxItems": 4,
+            "title": "Diets"
+          },
+          "excludedAllergens": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "gluten",
+                "milk",
+                "eggs",
+                "tree_nuts",
+                "peanuts",
+                "soy",
+                "fish",
+                "crustaceans",
+                "celery",
+                "mustard",
+                "sesame",
+                "sulphites",
+                "lupin",
+                "molluscs"
+              ]
+            },
+            "type": "array",
+            "maxItems": 14,
+            "title": "Excludedallergens"
+          },
+          "avoidHighIn": {
+            "type": "boolean",
+            "title": "Avoidhighin",
+            "default": false
+          },
+          "preferredStores": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Preferredstores"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Profile"
+      },
+      "RankRequest": {
+        "properties": {
+          "strategy": {
+            "type": "string",
+            "enum": [
+              "personalized",
+              "baseline"
+            ],
+            "title": "Strategy",
+            "default": "personalized"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Profile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/HistoryEvent"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "History"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/ProductCandidate"
+            },
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "title": "Candidates"
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 10
+          },
+          "diversify": {
+            "type": "boolean",
+            "title": "Diversify",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "candidates"
+        ],
+        "title": "RankRequest"
+      },
+      "RankResponse": {
+        "properties": {
+          "engineVersion": {
+            "type": "string",
+            "title": "Engineversion"
+          },
+          "strategy": {
+            "type": "string",
+            "enum": [
+              "personalized",
+              "baseline"
+            ],
+            "title": "Strategy"
+          },
+          "weightsUsed": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Weightsused"
+          },
+          "learnedAdjustments": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Learnedadjustments"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RankedItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "excluded": {
+            "items": {
+              "$ref": "#/components/schemas/ExcludedItem"
+            },
+            "type": "array",
+            "title": "Excluded"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/RankStats"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "engineVersion",
+          "strategy",
+          "weightsUsed",
+          "learnedAdjustments",
+          "items",
+          "excluded",
+          "stats"
+        ],
+        "title": "RankResponse"
+      },
+      "RankStats": {
+        "properties": {
+          "candidates": {
+            "type": "integer",
+            "title": "Candidates"
+          },
+          "excluded": {
+            "type": "integer",
+            "title": "Excluded"
+          },
+          "ranked": {
+            "type": "integer",
+            "title": "Ranked"
+          },
+          "tookMs": {
+            "type": "number",
+            "title": "Tookms"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "candidates",
+          "excluded",
+          "ranked",
+          "tookMs"
+        ],
+        "title": "RankStats"
+      },
+      "RankedItem": {
+        "properties": {
+          "productId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Productid"
+          },
+          "gtin": {
+            "type": "string",
+            "title": "Gtin"
+          },
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "coverage": {
+            "type": "number",
+            "title": "Coverage"
+          },
+          "breakdown": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionScore"
+            },
+            "type": "array",
+            "title": "Breakdown"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "productId",
+          "gtin",
+          "rank",
+          "score",
+          "coverage",
+          "breakdown",
+          "reasons",
+          "warnings"
+        ],
+        "title": "RankedItem"
+      },
+      "ReadinessResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "degraded"
+            ],
+            "title": "Status"
+          },
+          "checks": {
+            "additionalProperties": {
+              "type": "string",
+              "enum": [
+                "up",
+                "down",
+                "skipped"
+              ]
+            },
+            "type": "object",
+            "title": "Checks"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "checks",
+          "timestamp"
+        ],
+        "title": "ReadinessResponse"
+      },
+      "Rejection": {
+        "properties": {
+          "index": {
+            "type": "integer",
+            "title": "Index"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "index",
+          "reason"
+        ],
+        "title": "Rejection"
+      },
+      "SourceDescriptor": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "default": "openfoodfacts"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "default": "Open Food Facts"
+          },
+          "apiUrl": {
+            "type": "string",
+            "title": "Apiurl"
+          },
+          "license": {
+            "type": "string",
+            "title": "License",
+            "default": "ODbL-1.0"
+          },
+          "termsUrl": {
+            "type": "string",
+            "title": "Termsurl",
+            "default": "https://world.openfoodfacts.org/terms-of-use"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "apiUrl"
+        ],
+        "title": "SourceDescriptor"
+      },
+      "SourceInfo": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "const": "openfoodfacts",
+            "title": "Code",
+            "default": "openfoodfacts"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "default": "Open Food Facts"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "license": {
+            "type": "string",
+            "title": "License",
+            "default": "ODbL-1.0"
+          },
+          "lastModifiedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastmodifiedat"
+          },
+          "fetchedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fetchedat"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "url",
+          "fetchedAt"
+        ],
+        "title": "SourceInfo",
+        "description": "Procedencia del registro."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "Weights": {
+        "properties": {
+          "nutrition": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Nutrition",
+            "default": 30
+          },
+          "price": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Price",
+            "default": 25
+          },
+          "processing": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Processing",
+            "default": 20
+          },
+          "environment": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Environment",
+            "default": 15
+          },
+          "availability": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Availability",
+            "default": 10
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Weights",
+        "description": "Importancia de cada criterio (0 a 100). No necesitan sumar 100: se normalizan."
+      }
+    }
+  }
+}
