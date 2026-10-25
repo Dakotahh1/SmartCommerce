@@ -12,9 +12,15 @@ updates:
       # (p. ej. @angular/compiler-cli exige la misma versión de @angular/compiler).
       angular-ionic-capacitor:
         patterns: ["@angular/*", "@angular-devkit/*", "@ionic/*", "@capacitor/*", "ionicons"]
+      # Las versiones mayores llegan en PRs separados para revisarlas una por una.
       dev-tooling:
         dependency-type: development
         exclude-patterns: ["@angular/*", "@angular-devkit/*", "@capacitor/*"]
+        update-types: [minor, patch]
+    ignore:
+      # Angular 22 exige TypeScript >=6.0 <6.1: TypeScript sube junto con Angular, no por separado.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
     labels: [dependencies, frontend]
 
   - package-ecosystem: npm
@@ -28,6 +34,15 @@ updates:
         patterns: ["@nestjs/*"]
       dev-tooling:
         dependency-type: development
+        update-types: [minor, patch]
+    ignore:
+      # El plugin de Swagger de `nest build` es un transformador del compilador: TypeScript 7
+      # (compilador nativo) cambia esa API, así que el salto se evalúa aparte.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      # Los tipos de Node deben coincidir con el runtime de las imágenes (Node 24).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
     labels: [dependencies, backend]
 
   - package-ecosystem: uv
