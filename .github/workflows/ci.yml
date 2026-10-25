@@ -154,7 +154,7 @@ jobs:
         run: hadolint --config .hadolint.yaml frontend/Dockerfile backend/Dockerfile python-service/Dockerfile
 
       - name: Scripts de shell (ShellCheck)
-        run: shellcheck --severity=style scripts/*.sh infra/docker/postgres/init/*.sh
+        run: shellcheck --severity=style scripts/*.sh infra/docker/postgres/init/*.sh infra/staging/*.sh
 
       - name: Workflows de GitHub Actions (actionlint)
         run: actionlint -color
