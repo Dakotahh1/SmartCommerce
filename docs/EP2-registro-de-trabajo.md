@@ -1,6 +1,6 @@
 # Registro de trabajo · Entrega Parcial 2
 
-> **Información web, procesamiento e integración del servicio Python.** Este documento resume, punto por punto, qué se verificó y qué se hizo para la EP2, cómo se hizo y dónde está la evidencia. Rama: `feat/ep2-informacion-web` · Fecha: 15-10-2026.
+> **Información web, procesamiento e integración del servicio Python.** Este documento resume, punto por punto, qué se verificó y qué se hizo para la EP2, cómo se hizo y dónde está la evidencia. Ramas: `feat/ep2-informacion-web` ([PR #59](https://github.com/Dakotahh1/SmartCommerce/pull/59), 15-10-2026) y `feat/ep2-staging-oracle` ([PR #70](https://github.com/Dakotahh1/SmartCommerce/pull/70), 25-10-2026). Los commits citados están en `main`.
 >
 > Leyenda: ✅ cumplido y verificado · 🟡 implementado, falta una acción del equipo · ⏳ planificado para la entrega final (no exigido en EP2)
 
@@ -57,45 +57,45 @@ Hallazgo adicional corregido: las páginas de administración se desbordaban hor
 
 ## 3. Qué se hizo y cómo
 
-### 3.1 Corrección del pipeline (EP1 → EP2) · `c73cf48`
+### 3.1 Corrección del pipeline (EP1 → EP2) · `ff5ba5a`
 
 - **Qué:** el quality gate fallaba en todas las ejecuciones por vulnerabilidades publicadas después de la EP1.
 - **Cómo:** Angular 22.1 → 22.2.x (runtime y tooling juntos, lockfile regenerado) y `npm audit fix` en el backend. Quedan 3 avisos *moderate* (no bloqueantes) en el CLI de Capacitor. Además, Dependabot tenía el runtime y el tooling de Angular en **grupos separados**, que nunca podían resolverse porque sus `peerDependencies` son exactas: ahora van juntos.
 
-### 3.2 Ingesta automatizada y programada · `d7d3643`
+### 3.2 Ingesta automatizada y programada · `2bb5aa8`
 
 - **Qué:** extracción sin intervención manual, como estrategia de actualización.
 - **Cómo:** `IngestionScheduler` en NestJS recorre objetivos `pais/categoria` cada `INGESTION_INTERVAL_MINUTES` (6 h en staging), página a página, reutilizando el flujo de la ingesta manual. Un `pg_try_advisory_lock` impide lotes simultáneos entre réplicas; si la fuente falla en un objetivo se registra y el lote sigue (`partial`). Nuevos endpoints `GET /admin/ingestions/schedule` y `POST /admin/ingestions/schedule/run` (202, asíncrono). Configuración validada con zod, en Compose, `.env.example` y Terraform. Decisión en [ADR-0013](adr/0013-ingesta-programada-sin-cola.md).
 
-### 3.3 Normalización de texto para la búsqueda · `b224823`
+### 3.3 Normalización de texto para la búsqueda · `7a0877d`
 
 - **Qué:** tokenización y normalización como parte de la preparación de los datos.
 - **Cómo:** `app/normalization/text.py` (minúsculas, sin tildes, palabras vacías, plurales, prefijo `multi-`, vocabulario controlado de categorías y sellos inglés → español). Cada producto incluye `searchPrimary` y `searchSecondary`. Los casos de prueba están en un JSON compartido que también ejecuta el backend, así ambos lados aplican exactamente las mismas reglas.
 
-### 3.4 Índice y ranking por relevancia · `75b7f53`
+### 3.4 Índice y ranking por relevancia · `0cf578e`
 
 - **Qué:** índice de búsqueda, criterio de ranking y resultados con metadatos.
 - **Cómo:** migración `SearchIndex` con `search_vector` generado (pesos A/B) e índice GIN; la consulta se convierte en un `tsquery` seguro de prefijos y se ordena por `ts_rank_cd` (normalización 1). La API devuelve `relevance` y el detalle muestra la procedencia. Decisión en [ADR-0014](adr/0014-indice-busqueda-postgresql.md).
 - **Evaluación:** corpus real de 23 productos (`evaluation/retrieval/corpus.json`) y 10 consultas juzgadas. Resultado: **P@5 0,70 · MRR 1,00 · nDCG@5 0,927**, contra 0,62 / 0,933 / 0,840 del orden base de la EP1. La variante del ranking se eligió midiendo. Corre en cada pipeline y lo bloquea si empeora.
 
-### 3.5 Calidad de los datos y observabilidad · `e90474a`, `855dd68`
+### 3.5 Calidad de los datos y observabilidad · `17c21d6`, `48a00ba`
 
 - **Qué:** métricas de la información recuperada y registro de errores de la fuente externa.
 - **Cómo:** Python mide cada llamada a Open Food Facts (resultado, latencia, último error) y la expone en `/v1/metrics`. NestJS calcula en `GET /api/v1/admin/data-quality` la validez, duplicados, cobertura de campos y de la fuente, actualidad, tasa de error y tiempos, con **alertas por umbral**.
 - **Resultado real** (ingesta programada contra Open Food Facts, 15-10-2026): 40 obtenidos, **95 % válidos**, **0 % duplicados**, 31,1 % de la categoría cubierta; la fuente respondió 503 en *dairies* y el sistema lo registró, alertó y siguió funcionando.
 
-### 3.6 Frontend · `a8c1dc6`, `664f4c5`
+### 3.6 Frontend · `7807d99`, `c16b6f6`
 
 - Nueva pantalla **Calidad de datos** (alertas, indicadores, cobertura, fuente, rechazos y fallas, ventana de 7/30/90 días).
 - **Ingesta programada** en la pantalla de ingesta: estado, próxima ejecución, resultado por objetivo y botón "Ejecutar lote ahora" con actualización automática.
 - **Explorar** informa el orden por relevancia y sugiere buscar por sellos.
 - Corrección del desborde en móviles de las páginas de administración (verificado en el navegador a 375 px).
 
-### 3.7 Robustez de la API · `df17a75`
+### 3.7 Robustez de la API · `b3ed26f`
 
 Una búsqueda con texto mal codificado (U+FFFD) o caracteres de control podía terminar en 500 según la codificación de la base. Ahora el DTO la rechaza con 400. Se detectó en la prueba manual de extremo a extremo.
 
-### 3.8 Pipeline: integración, despliegue y rollback · `bd96a2c`
+### 3.8 Pipeline: integración, despliegue y rollback · `2a7087e`, `c30993a`
 
 - **Fuente simulada** (`docker-compose.source-mock.yml`): sirve una instantánea real de Open Food Facts con el mismo contrato, para que las pruebas sean deterministas y no carguen la fuente real. Detenerla simula la caída.
 - **`scripts/integration-test.sh`**: 30 verificaciones del flujo fuente → FastAPI → NestJS → PostgreSQL → consulta, entre ellas idempotencia, búsqueda, procedencia, calidad, lote programado, caída de la fuente y correlación de logs. Se ejecutó localmente con resultado 30/30.
