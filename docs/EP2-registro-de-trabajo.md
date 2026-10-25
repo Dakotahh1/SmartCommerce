@@ -32,7 +32,7 @@ Al 25-10-2026 el equipo **no recibió retroalimentación formal** de la EP1 (ni 
 | El pipeline estaba en rojo desde el 12-10 por avisos nuevos de dependencias, y Dependabot no podía actualizar Angular | Pipeline | Angular 22.2 con runtime y tooling juntos; Dependabot los agrupa | `ff5ba5a` |
 | Las páginas de administración se desbordaban en móviles (375 px) | Frontend · diseño adaptable | Tablas con desplazamiento propio | `c16b6f6` |
 | Una búsqueda con texto mal codificado podía responder 500 | Backend · validación | El DTO la rechaza con 400 | `b3ed26f` |
-| El job de despliegue estaba activo sin un host real y fallaba en cada push a `main` | Pipeline · arquitectura | Staging real en Oracle Cloud (ARM), imágenes amd64 + arm64, preparación del host en código | [PR #70](https://github.com/Dakotahh1/SmartCommerce/pull/70): `8e1a3f8`, `d5881aa`, `d95b046`, `422821e`, [ADR-0016](adr/0016-staging-oracle-cloud-arm.md) |
+| El job de despliegue estaba activo sin un host real y fallaba en cada push a `main` | Pipeline · arquitectura | Staging real en una VM de Azure, imágenes amd64 + arm64, preparación del host en código | [PR #70](https://github.com/Dakotahh1/SmartCommerce/pull/70): `8e1a3f8`, `d5881aa`, `d95b046`, `422821e`, [ADR-0016](adr/0016-staging-oracle-cloud-arm.md), [ADR-0017](adr/0017-staging-azure.md) |
 | La arquitectura de despliegue seguía como "preliminar" | Arquitectura | Diagrama y descripción del staging real | `7e6c464` |
 | La documentación de las APIs solo se podía ver con los servicios corriendo, y Swagger mostraba `page`, `limit` y `days` como objetos | Documentación · contratos | Especificaciones OpenAPI versionadas en [docs/api](api/README.md), verificadas por el pipeline; tipos explícitos | `b2d1c51`, `530daf4` |
 | Los valores por defecto de versión seguían en 0.1.0 | Trazabilidad de versiones | 0.2.0 en paquetes, configuración e infraestructura | `0e81954` |
@@ -57,7 +57,7 @@ El backlog quedó actualizado en §5 y el estado de cada entregable en §2. Si l
 | 8 | Diseño preliminar de la capacidad adaptativa | ✅ | [docs/05 §5.10](05-motor-smartmatch.md#510-especificación-preliminar-para-el-módulo-3-ep2) |
 | 9 | Pipeline: pruebas Python, integración NestJS↔FastAPI, recuperación, lint, SAST, dependencias Python, secretos, Trivy, Terraform, **despliegue automático en staging**, salud posterior | ✅ / 🟡 | §3.6. El job de despliegue está listo; **se activa al configurar el host de staging** (§5) |
 | 10 | Observabilidad inicial: logs estructurados, correlación, errores, salud NestJS/FastAPI/PostgreSQL, errores de la fuente, tiempos | ✅ | §3.5 (métricas de la fuente), `/api/health`, `/api/health/metrics`, `X-Request-Id` |
-| 11 | Documentación actualizada | ✅ | README, docs/02–10, [docs/api](api/README.md) (NestJS y FastAPI), ADR 0013–0016, este registro |
+| 11 | Documentación actualizada | ✅ | README, docs/02–10, [docs/api](api/README.md) (NestJS y FastAPI), ADR 0013–0017, este registro |
 
 **Demostración mínima de la EP2:**
 
@@ -121,10 +121,10 @@ Una búsqueda con texto mal codificado (U+FFFD) o caracteres de control podía t
 - **`deploy-staging`**: en cada push a `main` que pasa el quality gate se hace `terraform apply` de la imagen `sha-<commit>`, se verifica la salud con la versión exacta, se corren pruebas de humo contra la URL pública y, si algo falla, se aplica **rollback automático** a la etiqueta anterior. También hay un workflow manual *Rollback staging*. Decisión en [ADR-0015](adr/0015-despliegue-staging-rollback.md).
 - Validado localmente: actionlint, ShellCheck, `terraform fmt` y `validate`.
 
-### 3.9 Staging real en Oracle Cloud · [PR #70](https://github.com/Dakotahh1/SmartCommerce/pull/70)
+### 3.9 Staging real en Azure · [PR #70](https://github.com/Dakotahh1/SmartCommerce/pull/70) y `feat/ep2-staging-azure`
 
 - **Qué:** el despliegue automático necesitaba un host real y accesible para la demostración, sin costo.
-- **Cómo:** VM *Always Free* de Oracle Cloud en Santiago (Ampere ARM64, 2 OCPU y 12 GB). El pipeline construye cada imagen de forma nativa para amd64 y arm64, escanea ambas con Trivy y publica un manifiesto multiarquitectura (`8e1a3f8`). `infra/staging/bootstrap-oracle.sh` deja el host listo en un solo paso: Docker, usuario `deploy` solo con llave, SSH sin contraseñas, firewall y Caddy con HTTPS automático (`d5881aa`). La huella del host es una variable pública y el origen real del staging se agrega a CORS al desplegar (`d95b046`). Decisión en [ADR-0016](adr/0016-staging-oracle-cloud-arm.md); pasos en [docs/09 §9.7](09-staging-terraform.md#97-puesta-en-marcha-del-host-y-rollback).
+- **Cómo:** se planificó una VM gratuita de Oracle Cloud (ARM), que no se pudo crear; el staging quedó en una VM de **Azure** en Chile Central (`Standard_B2als_v2`, 2 vCPU y 4 GB) con la URL **https://57-156-69-73.sslip.io** ([ADR-0017](adr/0017-staging-azure.md)). El pipeline construye cada imagen de forma nativa para amd64 y arm64, escanea ambas con Trivy y publica un manifiesto multiarquitectura (`8e1a3f8`). `infra/staging/bootstrap-host.sh` deja el host listo en un solo paso, en cualquier nube con Ubuntu 24.04: Docker, usuario `deploy` solo con llave, SSH sin contraseñas, swap, firewall y Caddy con HTTPS automático (`d5881aa`, `4043031`). La huella del host es una variable pública y el origen real del staging se agrega a CORS al desplegar (`d95b046`). Decisiones en [ADR-0016](adr/0016-staging-oracle-cloud-arm.md) y [ADR-0017](adr/0017-staging-azure.md); pasos en [docs/09 §9.7](09-staging-terraform.md#97-puesta-en-marcha-del-host-y-rollback).
 
 ### 3.10 Contratos OpenAPI versionados · `b2d1c51`, `530daf4`
 
@@ -154,7 +154,7 @@ No verificado localmente (no hay Docker en el equipo de desarrollo): la construc
 
 | Pendiente | Responsable sugerido | Para |
 |---|---|---|
-| 🟡 Crear la VM de Oracle Cloud ([docs/09 §9.7.1](09-staging-terraform.md#971-crear-la-vm-en-oracle-cloud)), prepararla con `bootstrap-oracle.sh` y configurar `STAGING_DOCKER_HOST`, `STAGING_URL`, `STAGING_SSH_KNOWN_HOSTS` y el secreto `STAGING_SSH_PRIVATE_KEY` ([docs/09 §9.7](09-staging-terraform.md#97-puesta-en-marcha-del-host-y-rollback)) | Backend y DevSecOps | EP2 (demostración 8) |
+| 🟡 VM de Azure creada y preparada con `bootstrap-host.sh` ([docs/09 §9.7.1](09-staging-terraform.md#971-crear-la-vm)); configurar `STAGING_DOCKER_HOST`, `STAGING_URL`, `STAGING_SSH_KNOWN_HOSTS` y el secreto `STAGING_SSH_PRIVATE_KEY` ([docs/09 §9.7](09-staging-terraform.md#97-puesta-en-marcha-del-host-y-rollback)) | Backend y DevSecOps | EP2 (demostración 8) |
 | 🟡 Hacer públicos los paquetes de GHCR (o `docker login` en la VM) | Backend y DevSecOps | EP2 |
 | 🟡 Abrir el PR, revisar y aprobar; crear el tag `v0.2.0-ep2` y la release | Todo el equipo | EP2 |
 | 🟡 Actualizar el tablero Trello con estas tarjetas y registrar la participación de cada integrante | Todo el equipo | EP2 |
