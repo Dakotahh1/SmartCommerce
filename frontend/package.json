@@ -1,6 +1,6 @@
 {
   "name": "smartcommerce-frontend",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SmartCommerce: app web (PWA) y móvil (Android) con Angular + Ionic + Capacitor",
   "license": "MIT",
   "private": true,

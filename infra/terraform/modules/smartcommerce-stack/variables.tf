@@ -24,7 +24,7 @@ variable "runtime_env" {
 variable "app_version" {
   description = "Versión de la aplicación reportada por /api/health."
   type        = string
-  default     = "0.1.0"
+  default     = "0.2.0"
 }
 
 # ─── Imágenes ─────────────────────────────────────────────────────────────────

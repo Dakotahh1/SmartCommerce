@@ -1,6 +1,6 @@
 # Configuración NO sensible del ambiente staging (versionada). Los secretos llegan por TF_VAR_*.
 runtime_env         = "staging"
-app_version         = "0.1.0"
+app_version         = "0.2.0"
 image_registry      = "ghcr.io/dakotahh1/smartcommerce"
 image_tag           = "main"
 keep_images_locally = false
@@ -10,7 +10,7 @@ frontend_bind_ip = "127.0.0.1"
 frontend_port    = 8080
 cors_origins     = ["https://staging.smartcommerce.example", "https://localhost"]
 swagger_enabled  = true
-off_user_agent   = "SmartCommerce-staging/0.1.0 (contacto: equipo@smartcommerce.example)"
+off_user_agent   = "SmartCommerce-staging/0.2.0 (+https://github.com/Dakotahh1/SmartCommerce)"
 
 # Estrategia de actualización: refresco cada 6 h de las categorías del catálogo (EP2).
 ingestion = {

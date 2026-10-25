@@ -1,6 +1,6 @@
 {
   "name": "smartcommerce-backend",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "API REST principal de SmartCommerce (NestJS): autenticación, autorización, catálogo, preferencias, recomendaciones e ingesta.",
   "author": "Equipo SmartCommerce",
   "private": true,

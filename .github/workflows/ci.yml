@@ -440,7 +440,7 @@ jobs:
           labels: |
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.version=${{ vars.APP_VERSION || '0.1.0' }}
+            org.opencontainers.image.version=${{ vars.APP_VERSION || '0.2.0' }}
           cache-from: type=gha,scope=${{ matrix.service }}-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=${{ matrix.service }}-${{ matrix.arch }}
 
@@ -541,8 +541,8 @@ jobs:
           S_DB_APP_PASSWORD: ${{ secrets.DB_APP_PASSWORD }}
           S_JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
           S_INTERNAL_API_TOKEN: ${{ secrets.INTERNAL_API_TOKEN }}
-          V_APP_VERSION: ${{ vars.APP_VERSION || '0.1.0' }}
-          V_OFF_USER_AGENT: ${{ vars.OFF_USER_AGENT || 'SmartCommerce-CI/0.1.0 (github.com/Dakotahh1/SmartCommerce)' }}
+          V_APP_VERSION: ${{ vars.APP_VERSION || '0.2.0' }}
+          V_OFF_USER_AGENT: ${{ vars.OFF_USER_AGENT || 'SmartCommerce-CI/0.2.0 (+https://github.com/Dakotahh1/SmartCommerce)' }}
         run: |
           # init-env.sh genera un valor aleatorio por secreto; si existe el GitHub Secret, se usa ese.
           scripts/init-env.sh .env.generated

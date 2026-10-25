@@ -14,7 +14,7 @@ class Settings(BaseSettings):
 
     app_env: Literal["development", "test", "staging", "production"] = "development"
     service_name: str = "smartmatch-python-service"
-    service_version: str = "0.1.0"
+    service_version: str = "0.2.0"
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
 
     # Autenticación entre servicios (NestJS -> FastAPI).
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
 
     # Fuente web: Open Food Facts (API oficial v2).
     off_base_url: str = "https://world.openfoodfacts.org"
-    off_user_agent: str = "SmartCommerce/0.1.0 (contacto: equipo@smartcommerce.example)"
+    off_user_agent: str = "SmartCommerce/0.2.0 (+https://github.com/Dakotahh1/SmartCommerce)"
     off_timeout_seconds: float = Field(default=10.0, gt=0, le=60)
     off_max_retries: int = Field(default=2, ge=0, le=5)
     # Open Food Facts permite 10 búsquedas/minuto; usamos un límite conservador.
