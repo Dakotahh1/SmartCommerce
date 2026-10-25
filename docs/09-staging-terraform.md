@@ -7,9 +7,9 @@
 | Aspecto | Definición (EP1, completada en EP2) |
 |---|---|
 | Propósito | Validar cada versión integrada en `main` en condiciones similares a producción antes de una release (demo al docente, pruebas de aceptación, evaluación del motor) |
-| Host | **Oracle Cloud Always Free**, región Chile Central (Santiago): VM `VM.Standard.A1.Flex` (Ampere, **ARM64**) con 2 OCPU y 12 GB, Ubuntu 24.04 y Docker Engine. Sin costo; las imágenes se publican para amd64 y arm64 ([ADR-0016](adr/0016-staging-oracle-cloud-arm.md)) |
+| Host | VM de **Azure** en la región Chile Central (Santiago): `Standard_B2als_v2` (2 vCPU AMD, 4 GB de RAM y 2 GB de swap, 30 GB de disco), Ubuntu 24.04 y Docker Engine ([ADR-0017](adr/0017-staging-azure.md)). Las imágenes se publican para amd64 y arm64, así que también sirve un host ARM ([ADR-0016](adr/0016-staging-oracle-cloud-arm.md)) |
 | Acceso a Docker | Terraform se conecta por **SSH** (`docker_host = "ssh://deploy@<ip>"`) con un usuario `deploy` sin contraseña y llave dedicada; el daemon no se expone por TCP |
-| Exposición | Solo el gateway web, ligado a `127.0.0.1:8080`; **Caddy** en el host publica `https://<ip-con-guiones>.sslip.io` en 443 con certificado automático de Let's Encrypt. Firewall: 22 (solo llaves), 80 (validación del certificado) y 443, abiertos en la lista de seguridad de Oracle y en iptables |
+| Exposición | Solo el gateway web, ligado a `127.0.0.1:8080`; **Caddy** en el host publica `https://<ip-con-guiones>.sslip.io` en 443 con certificado automático de Let's Encrypt. Firewall: 22 (solo llaves), 80 (validación del certificado) y 443, abiertos en el Network Security Group de Azure (en Oracle, además, en iptables) |
 | Imágenes | Publicadas por el pipeline en GHCR con etiqueta inmutable `sha-<commit>` (y `main`); el staging nunca construye código |
 | Datos | Volumen persistente `smartcommerce-staging-db-data`; catálogo poblado y refrescado cada 6 h por la **ingesta programada** (variable `ingestion` de Terraform); **sin datos personales reales** |
 | Secretos | Distintos de dev y CI; en el ambiente `staging` de GitHub (`TF_VAR_*`), con aprobación requerida para aplicar |
@@ -132,16 +132,16 @@ El job solo corre si existe la variable `STAGING_DOCKER_HOST`; sin host configur
 
 ## 9.7 Puesta en marcha del host y rollback
 
-**Una sola vez.** La guía paso a paso para crear la VM en Oracle Cloud (cuenta, instancia y apertura de puertos), pensada para cualquier integrante del equipo, está en la sección 9.7.1. Con la VM creada y su IP pública:
+**Una sola vez.** La guía para crear la VM en Azure (o en Oracle Cloud como alternativa) está en la sección 9.7.1. Con la VM creada y su IP pública:
 
 ```bash
 # 1. Preparar el host (Docker, usuario deploy, SSH solo con llaves, firewall y Caddy con HTTPS).
 #    Es idempotente: se puede repetir sin romper nada.
 IP=<ip-publica>
 DOMINIO="${IP//./-}.sslip.io"
-ssh -i ~/.ssh/smartcommerce_staging_admin ubuntu@"$IP" \
+ssh -i ~/.ssh/smartcommerce_staging_admin azureuser@"$IP" \
   "sudo bash -s -- $DOMINIO '$(cat ~/.ssh/smartcommerce_staging_deploy.pub)'" \
-  < infra/staging/bootstrap-oracle.sh
+  < infra/staging/bootstrap-host.sh      # en Oracle el usuario es ubuntu
 
 # 2. Huella del host para el pipeline (evita ataques de intermediario)
 ssh-keyscan -t ed25519 "$IP"
@@ -149,24 +149,29 @@ ssh-keyscan -t ed25519 "$IP"
 
 Las llaves se generan en el equipo del administrador con `ssh-keygen -t ed25519 -f ~/.ssh/smartcommerce_staging_<admin|deploy>`: la de administración se pega al crear la VM y la de despliegue la instala el script para el usuario `deploy`.
 
-**En GitHub (ambiente `staging`):**
+**En GitHub** (*Settings › Secrets and variables › Actions*). Las variables van a nivel de **repositorio**, porque la condición del job `deploy-staging` se evalúa antes de entrar al ambiente; los secretos van en el ambiente `staging`:
 
-| Dónde | Nombre | Valor |
+| Dónde | Nombre | Valor actual |
 |---|---|---|
-| Variable | `STAGING_DOCKER_HOST` | `ssh://deploy@<ip-publica>` (activa el job `deploy-staging`) |
-| Variable | `STAGING_URL` | `https://<ip-con-guiones>.sslip.io` |
-| Variable | `STAGING_SSH_KNOWN_HOSTS` | Salida de `ssh-keyscan -t ed25519 <ip>` (es pública: no necesita ser secreto) |
-| Secreto | `STAGING_SSH_PRIVATE_KEY` | Contenido de `~/.ssh/smartcommerce_staging_deploy` (llave **privada**) |
+| Variable | `STAGING_DOCKER_HOST` | `ssh://deploy@57.156.69.73` (activa el job `deploy-staging`) |
+| Variable | `STAGING_URL` | `https://57-156-69-73.sslip.io` |
+| Variable | `STAGING_SSH_KNOWN_HOSTS` | Salida de `ssh-keyscan -t ed25519 57.156.69.73`, huella `SHA256:p/aQekU9fgulMoiQD0W16JzWBhopVb/EmWiGJvs0e+A` (es pública: no necesita ser secreto) |
+| Secreto (ambiente `staging`) | `STAGING_SSH_PRIVATE_KEY` | Contenido de `~/.ssh/smartcommerce_staging_deploy` (llave **privada**) |
 | Secretos | Los cinco de la aplicación | Ya configurados ([08 · §8.3](08-variables-y-secretos.md#83-github-actions)) |
 
 Las imágenes de GHCR deben ser **públicas** (*perfil › Packages › paquete › Package settings › Change visibility › Public*) para que el host las descargue sin credenciales. El repositorio es público y las imágenes no contienen secretos.
 
-### 9.7.1 Crear la VM en Oracle Cloud
+### 9.7.1 Crear la VM
 
-1. Crear la cuenta en [signup.cloud.oracle.com](https://signup.cloud.oracle.com/) con la región de inicio **Chile Central (Santiago)** (no se puede cambiar después). La verificación con tarjeta no cobra: los recursos *Always Free* no tienen costo.
-2. *Compute › Instances › Create instance*: imagen **Canonical Ubuntu 24.04**, forma **VM.Standard.A1.Flex** (pestaña *Ampere*) con 2 OCPU y 12 GB, red y subred pública nuevas con IPv4 pública, y en *Add SSH keys* pegar `~/.ssh/smartcommerce_staging_admin.pub`. Si aparece *Out of capacity*, probar otro *availability domain*, bajar a 1 OCPU y 6 GB, o reintentar más tarde.
-3. En la subred (*Primary VNIC › Subnet › Security Lists › Default Security List › Add Ingress Rules*) agregar dos reglas TCP desde `0.0.0.0/0`, a los puertos 80 y 443.
-4. Copiar la **IP pública** de la instancia y continuar con el script de preparación.
+**Azure (staging actual):**
+
+1. *Virtual machines › Create*: región **Chile Central**, imagen **Ubuntu Server 24.04 LTS (x64)**, tamaño **Standard_B2als_v2** (2 vCPU, 4 GB; uno menor no alcanza para el stack).
+2. Autenticación por **llave SSH**: usuario `azureuser` y la llave pública `~/.ssh/smartcommerce_staging_admin.pub` (*Use existing public key*).
+3. Puertos de entrada: **SSH (22), HTTP (80) y HTTPS (443)**. Quedan como reglas del Network Security Group (*Networking › Network settings*).
+4. Copiar la **IP pública** (SKU Standard, estática) y continuar con el script de preparación.
+5. Para ahorrar crédito, la VM se puede **detener (desasignar)** entre revisiones: conserva la IP, el disco y los datos, y al encenderla Docker vuelve a levantar los contenedores.
+
+**Oracle Cloud (alternativa sin costo, ARM):** instancia `VM.Standard.A1.Flex` con Ubuntu 24.04 y la misma llave, y reglas de entrada TCP 80 y 443 en la *Security List* de la subred; el script abre también esos puertos en el iptables propio de las imágenes de Oracle. Al equipo no le fue posible crearla ([ADR-0017](adr/0017-staging-azure.md)).
 
 **Rollback:**
 
