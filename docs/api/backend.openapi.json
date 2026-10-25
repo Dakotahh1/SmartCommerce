@@ -453,6 +453,7 @@
             "in": "query",
             "description": "Alérgenos a excluir (csv)",
             "schema": {
+              "maxItems": 14,
               "example": "gluten,milk",
               "type": "string",
               "items": {
@@ -1150,6 +1151,7 @@
           "diets": {
             "type": "array",
             "uniqueItems": true,
+            "maxItems": 4,
             "items": {
               "type": "string",
               "enum": [
@@ -1166,6 +1168,7 @@
           "excludedAllergens": {
             "type": "array",
             "uniqueItems": true,
+            "maxItems": 14,
             "items": {
               "type": "string",
               "enum": [
