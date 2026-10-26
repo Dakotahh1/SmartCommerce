@@ -156,7 +156,7 @@ Las llaves se generan en el equipo del administrador con `ssh-keygen -t ed25519 
 | Variable | `STAGING_DOCKER_HOST` | `ssh://deploy@57.156.69.73` (activa el job `deploy-staging`) |
 | Variable | `STAGING_URL` | `https://57-156-69-73.sslip.io` |
 | Variable | `STAGING_SSH_KNOWN_HOSTS` | Salida de `ssh-keyscan -t ed25519 57.156.69.73`, huella `SHA256:p/aQekU9fgulMoiQD0W16JzWBhopVb/EmWiGJvs0e+A` (es pública: no necesita ser secreto) |
-| Secreto (ambiente `staging`) | `STAGING_SSH_PRIVATE_KEY` | Contenido de `~/.ssh/smartcommerce_staging_deploy` (llave **privada**) |
+| Secreto (ambiente `staging`) | `STAGING_SSH_PRIVATE_KEY` | Llave **privada** `~/.ssh/smartcommerce_staging_deploy` codificada en una sola línea con `base64 -w0 ~/.ssh/smartcommerce_staging_deploy`. También se acepta el texto desde BEGIN hasta END, pero al pegarlo en el formulario de GitHub se pueden perder saltos de línea; [`setup-staging-ssh.sh`](../scripts/setup-staging-ssh.sh) valida la llave y, si no sirve, informa cuántas líneas llegaron sin mostrarla |
 | Secretos | Los cinco de la aplicación | Ya configurados ([08 · §8.3](08-variables-y-secretos.md#83-github-actions)) |
 
 Las imágenes de GHCR deben ser **públicas** (*perfil › Packages › paquete › Package settings › Change visibility › Public*) para que el host las descargue sin credenciales. El repositorio es público y las imágenes no contienen secretos.
