@@ -820,18 +820,7 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
           KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS || vars.STAGING_SSH_KNOWN_HOSTS }}
-        run: |
-          if [ -z "$SSH_KEY" ] || [ -z "$KNOWN_HOSTS" ]; then
-            echo "::error::Falta el secreto STAGING_SSH_PRIVATE_KEY o la variable STAGING_SSH_KNOWN_HOSTS"; exit 1
-          fi
-          install -m 700 -d ~/.ssh
-          # Un valor pegado desde Windows llega con \r\n, que OpenSSH no acepta ("error in libcrypto").
-          printf '%s\n' "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
-          printf '%s\n' "$KNOWN_HOSTS" | tr -d '\r' > ~/.ssh/known_hosts
-          if ! ssh-keygen -y -f ~/.ssh/id_ed25519 >/dev/null 2>&1; then
-            echo "::error::STAGING_SSH_PRIVATE_KEY no es una llave privada OpenSSH válida ($(wc -l < ~/.ssh/id_ed25519) líneas; debe ir completa, desde BEGIN hasta END)"
-            exit 1
-          fi
+        run: scripts/setup-staging-ssh.sh
 
       - name: Secretos del ambiente staging (obligatorios, nunca efímeros)
         env:
