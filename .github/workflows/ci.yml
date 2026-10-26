@@ -825,8 +825,13 @@ jobs:
             echo "::error::Falta el secreto STAGING_SSH_PRIVATE_KEY o la variable STAGING_SSH_KNOWN_HOSTS"; exit 1
           fi
           install -m 700 -d ~/.ssh
-          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
-          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          # Un valor pegado desde Windows llega con \r\n, que OpenSSH no acepta ("error in libcrypto").
+          printf '%s\n' "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOSTS" | tr -d '\r' > ~/.ssh/known_hosts
+          if ! ssh-keygen -y -f ~/.ssh/id_ed25519 >/dev/null 2>&1; then
+            echo "::error::STAGING_SSH_PRIVATE_KEY no es una llave privada OpenSSH válida ($(wc -l < ~/.ssh/id_ed25519) líneas; debe ir completa, desde BEGIN hasta END)"
+            exit 1
+          fi
 
       - name: Secretos del ambiente staging (obligatorios, nunca efímeros)
         env:
@@ -844,7 +849,7 @@ jobs:
             echo "TF_VAR_${name,,}=${value}" >> "$GITHUB_ENV"
           done
 
-      - name: Desplegar sha-${{ github.sha }}, verificar y revertir si falla
+      - name: Desplegar la imagen sha-<commit>, verificar y revertir si falla
         env:
           STAGING_DOCKER_HOST: ${{ vars.STAGING_DOCKER_HOST }}
           STAGING_URL: ${{ vars.STAGING_URL }}
