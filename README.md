@@ -246,7 +246,7 @@ Errores con formato uniforme `{ statusCode, code, message, details, path, timest
 - **Terraform** con proveedor `kreuzwerker/docker` ([ADR-0010](docs/adr/0010-terraform-proveedor-docker-staging.md)): módulo `smartcommerce-stack` (redes segmentadas, volumen, imágenes y contenedores endurecidos) y ambientes `dev` y `staging` con variables, salidas y estado fuera del repositorio.
 - `terraform fmt`, `validate` y `plan` se ejecutan en el pipeline.
 - **Despliegue automático (EP2):** en cada push a `main` que pasa el quality gate, el job `deploy-staging` aplica la imagen `sha-<commit>`, verifica `/api/health` (versión `APP_VERSION+sha-<commit>`), ejecuta las pruebas de humo contra la URL pública y **revierte automáticamente** a la versión anterior si algo falla. Rollback manual: *Actions › Rollback staging*. Estado de Terraform fuera del repositorio ([ADR-0015](docs/adr/0015-despliegue-staging-rollback.md)).
-- **Staging:** VM *Always Free* de **Oracle Cloud** en Santiago (Ampere ARM64, 2 OCPU, 12 GB, Ubuntu 24.04) preparada con [`infra/staging/bootstrap-oracle.sh`](infra/staging/bootstrap-oracle.sh): Docker, usuario `deploy` solo con llave, firewall y **Caddy** con HTTPS automático en `https://<ip-con-guiones>.sslip.io`. Las imágenes de GHCR se publican para amd64 y arm64 ([ADR-0016](docs/adr/0016-staging-oracle-cloud-arm.md)).
+- **Staging:** VM de **Azure** en Chile Central (`Standard_B2als_v2`: 2 vCPU, 4 GB, Ubuntu 24.04) preparada con [`infra/staging/bootstrap-host.sh`](infra/staging/bootstrap-host.sh): Docker, usuario `deploy` solo con llave, swap, firewall y **Caddy** con HTTPS automático en **https://57-156-69-73.sslip.io** ([ADR-0017](docs/adr/0017-staging-azure.md)). Las imágenes de GHCR se publican para amd64 y arm64 ([ADR-0016](docs/adr/0016-staging-oracle-cloud-arm.md)).
 
 ```bash
 cd infra/terraform/environments/staging
@@ -296,7 +296,7 @@ Detalle: [docs/09 · Infraestructura y staging](docs/09-staging-terraform.md).
 - Precios de Open Prices aún no integrados (cobertura en Chile casi nula): el criterio de precio se omite y se renormaliza. Cobertura medida de tiendas 13 % y NOVA 58 %.
 - El buscador no corrige errores ortográficos ni traduce sinónimos (`protein`/`proteína`, `Quajer`/`Quaker`); su evaluación usa un corpus pequeño de una categoría y juicios de un solo equipo.
 - La ingesta programada vive en el proceso de NestJS: un reinicio a mitad de lote lo repite en el siguiente intervalo (es idempotente).
-- El staging es una sola VM gratuita: sin alta disponibilidad, y el estado de Terraform y la base de datos viven en ella (sin respaldo programado todavía).
+- El staging es una sola VM de 4 GB: sin alta disponibilidad, y el estado de Terraform y la base de datos viven en ella (sin respaldo programado todavía). Consume crédito de Azure, así que puede estar detenida fuera de los periodos de revisión.
 - La adaptación usa reglas acotadas y transparentes; aún no hay evaluación experimental con usuarios. Sin iOS ni notificaciones push; la PWA cachea solo lecturas.
 
 **Trabajo futuro**

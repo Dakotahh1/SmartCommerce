@@ -1,29 +1,33 @@
 #!/usr/bin/env bash
 # ──────────────────────────────────────────────────────────────────────────────
-# Prepara una VM de Oracle Cloud (Ubuntu 24.04, Ampere/ARM o x86) como host de staging.
+# Prepara una VM Linux (Ubuntu 24.04, x86 o ARM) como host de staging. Se usa en Azure
+# (Standard_B2als_v2) y sirve también para Oracle Cloud u otra nube con Ubuntu.
 # Es idempotente: se puede volver a ejecutar sin romper una instalación existente.
 #
 #   1. Actualizaciones de seguridad automáticas.
-#   2. Docker Engine desde el repositorio oficial de Docker.
-#   3. Usuario `deploy` sin contraseña, solo con la llave del pipeline, en el grupo docker.
-#   4. SSH solo con llaves y sin acceso directo de root.
-#   5. Firewall: las imágenes de Oracle traen iptables que rechazan todo salvo SSH; se abren
-#      80 (validación del certificado) y 443 (HTTPS) antes de la regla REJECT y se persisten.
-#   6. Caddy como proxy TLS: obtiene y renueva el certificado de Let's Encrypt y reenvía al
+#   2. Memoria swap de 2 GB si la VM no tiene: con 4 GB de RAM evita que un pico de memoria
+#      (por ejemplo, de PostgreSQL) haga que el sistema detenga contenedores.
+#   3. Docker Engine desde el repositorio oficial de Docker.
+#   4. Usuario `deploy` sin contraseña, solo con la llave del pipeline, en el grupo docker.
+#   5. SSH solo con llaves y sin acceso directo de root.
+#   6. Firewall del sistema: algunas imágenes (Oracle Cloud) traen iptables que rechazan todo
+#      salvo SSH; si existe esa regla REJECT, se abren 80 y 443 antes de ella y se persisten.
+#      El firewall de la nube (NSG en Azure, Security List en Oracle) se configura aparte.
+#   7. Caddy como proxy TLS: obtiene y renueva el certificado de Let's Encrypt y reenvía al
 #      gateway de la aplicación, que solo escucha en 127.0.0.1:8080.
-#   7. Carpeta privada para el estado de Terraform (scripts/deploy-staging.sh).
+#   8. Carpeta privada para el estado de Terraform (scripts/deploy-staging.sh).
 #
-# Uso (desde el equipo del administrador):
-#   ssh -i ~/.ssh/smartcommerce_staging_admin ubuntu@<ip> \
+# Uso (desde el equipo del administrador; el usuario es azureuser en Azure y ubuntu en Oracle):
+#   ssh -i ~/.ssh/smartcommerce_staging_admin <usuario>@<ip> \
 #     "sudo bash -s -- <dominio> '$(cat ~/.ssh/smartcommerce_staging_deploy.pub)'" \
-#     < infra/staging/bootstrap-oracle.sh
+#     < infra/staging/bootstrap-host.sh
 #
 # <dominio>: nombre que apunta a la IP pública. Sin dominio propio sirve <ip-con-guiones>.sslip.io
 # (por ejemplo 144-22-10-20.sslip.io), que resuelve a esa IP sin configurar DNS.
 # ──────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
-DOMINIO="${1:?Uso: bootstrap-oracle.sh <dominio> <llave-publica-del-pipeline>}"
+DOMINIO="${1:?Uso: bootstrap-host.sh <dominio> <llave-publica-del-pipeline>}"
 LLAVE_DEPLOY="${2:?Falta la llave pública del usuario deploy}"
 USUARIO=deploy
 export DEBIAN_FRONTEND=noninteractive
@@ -43,8 +47,21 @@ paso "Actualizaciones del sistema y parches de seguridad automáticos"
 apt-get update -q
 apt-get upgrade -yq
 apt-get install -yq ca-certificates curl gnupg debian-keyring debian-archive-keyring \
-  apt-transport-https unattended-upgrades iptables-persistent
+  apt-transport-https unattended-upgrades
 dpkg-reconfigure -f noninteractive unattended-upgrades
+
+paso "Memoria swap"
+if [[ -z "$(swapon --show --noheadings)" ]]; then
+  fallocate -l 2G /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile >/dev/null
+  swapon /swapfile
+  grep -q '^/swapfile ' /etc/fstab || echo '/swapfile none swap sw 0 0' >>/etc/fstab
+  # La swap es un respaldo ante picos, no memoria de trabajo.
+  echo 'vm.swappiness=10' >/etc/sysctl.d/60-smartcommerce-swap.conf
+  sysctl -q -p /etc/sysctl.d/60-smartcommerce-swap.conf
+fi
+swapon --show
 
 paso "Docker Engine (repositorio oficial)"
 if ! command -v docker >/dev/null; then
@@ -81,14 +98,20 @@ printf 'PasswordAuthentication no\nKbdInteractiveAuthentication no\nPermitRootLo
 sshd -t
 systemctl reload ssh
 
-paso "Firewall: abrir 80 y 443 antes de la regla REJECT de Oracle"
-for puerto in 80 443; do
-  if ! iptables -C INPUT -p tcp -m state --state NEW --dport "$puerto" -j ACCEPT 2>/dev/null; then
-    posicion="$(iptables -L INPUT --line-numbers -n | awk '$2 == "REJECT" { print $1; exit }')"
-    iptables -I INPUT "${posicion:-1}" -p tcp -m state --state NEW --dport "$puerto" -j ACCEPT
-  fi
-done
-netfilter-persistent save
+paso "Firewall del sistema"
+posicion="$(iptables -L INPUT --line-numbers -n | awk '$2 == "REJECT" { print $1; exit }')"
+if [[ -n "$posicion" ]]; then
+  apt-get install -yq iptables-persistent
+  for puerto in 80 443; do
+    if ! iptables -C INPUT -p tcp -m state --state NEW --dport "$puerto" -j ACCEPT 2>/dev/null; then
+      iptables -I INPUT "$posicion" -p tcp -m state --state NEW --dport "$puerto" -j ACCEPT
+    fi
+  done
+  netfilter-persistent save
+  echo "Abiertos 80 y 443 antes de la regla REJECT (posición $posicion)."
+else
+  echo "Sin regla REJECT en iptables: el filtrado lo hace el firewall de la nube."
+fi
 
 paso "Caddy (HTTPS automático) para $DOMINIO"
 if ! command -v caddy >/dev/null; then
@@ -100,7 +123,7 @@ if ! command -v caddy >/dev/null; then
   apt-get install -yq caddy
 fi
 cat >/etc/caddy/Caddyfile <<EOF
-# Generado por infra/staging/bootstrap-oracle.sh
+# Generado por infra/staging/bootstrap-host.sh
 $DOMINIO {
 	encode zstd gzip
 	header Strict-Transport-Security "max-age=31536000"

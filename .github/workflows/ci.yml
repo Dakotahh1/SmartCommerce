@@ -401,8 +401,8 @@ jobs:
   # ════════════════════════════════════════════════════════════════════════════
   # 3 · Contenedores
   # ════════════════════════════════════════════════════════════════════════════
-  # Cada imagen se construye de forma nativa para amd64 y arm64 (el staging corre en Oracle Cloud
-  # Ampere, ARM). Ambas variantes pasan por la misma verificación y el mismo escaneo, y se publican
+  # Cada imagen se construye de forma nativa para amd64 y arm64 (el staging actual es x86 y un host
+  # ARM sirve sin cambios). Ambas variantes pasan por la misma verificación y el mismo escaneo, y se publican
   # juntas como una imagen multiarquitectura: Docker descarga la que corresponde a cada máquina.
   images:
     name: Imagen ${{ matrix.service }} ${{ matrix.arch }} (build + Trivy)

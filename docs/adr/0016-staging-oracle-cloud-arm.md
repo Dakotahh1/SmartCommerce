@@ -1,6 +1,6 @@
 # ADR-0016: Staging en Oracle Cloud Always Free con imágenes multiarquitectura
 
-- **Estado:** Aceptado (concreta el host de [ADR-0010](0010-terraform-proveedor-docker-staging.md) y [ADR-0015](0015-despliegue-staging-rollback.md))
+- **Estado:** Reemplazado en el host por [ADR-0017](0017-staging-azure.md) (no se pudo crear la VM en Oracle). Las imágenes multiarquitectura siguen vigentes.
 - **Fecha:** 2026-10-25
 
 ## Contexto
@@ -11,7 +11,7 @@ El despliegue automático a staging (ADR-0015) estaba implementado, pero sin un 
 
 - Usar una VM **Oracle Cloud Always Free** en la región Chile Central (Santiago): forma `VM.Standard.A1.Flex` con 2 OCPU y 12 GB, y Ubuntu 24.04. No tiene costo y está cerca de los usuarios.
 - Esa forma usa procesadores **Ampere (ARM64)**. El pipeline construye cada imagen de forma **nativa** en runners amd64 y arm64, escanea ambas variantes con Trivy y publica en GHCR un **manifiesto multiarquitectura**: Docker descarga en cada máquina la variante que corresponde. Se publican exactamente las imágenes escaneadas, sin reconstruirlas.
-- La preparación del host está en código (`infra/staging/bootstrap-oracle.sh`): Docker, usuario `deploy` con llave dedicada, SSH sin contraseñas, apertura de 80 y 443 en el iptables propio de las imágenes de Oracle y **Caddy** como proxy TLS con certificado automático.
+- La preparación del host está en código (`infra/staging/bootstrap-oracle.sh`, hoy [`bootstrap-host.sh`](../../infra/staging/bootstrap-host.sh)): Docker, usuario `deploy` con llave dedicada, SSH sin contraseñas, apertura de 80 y 443 en el iptables propio de las imágenes de Oracle y **Caddy** como proxy TLS con certificado automático.
 - Sin dominio propio, la URL es `https://<ip-con-guiones>.sslip.io`: un DNS público que resuelve a la IP indicada en el nombre, válido para Let's Encrypt.
 
 ## Alternativas

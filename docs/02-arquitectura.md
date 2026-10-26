@@ -2,7 +2,7 @@
 
 > Modelo C4 (contexto → contenedores → componentes) + despliegue + flujos. Las decisiones se justifican en los [ADR](adr/README.md).
 >
-> **Cambios de la EP2:** ingesta programada en NestJS ([ADR-0013](adr/0013-ingesta-programada-sin-cola.md)), índice de búsqueda en PostgreSQL con tokens normalizados por Python ([ADR-0014](adr/0014-indice-busqueda-postgresql.md)), reporte de calidad de datos y métricas de la fuente, y despliegue automático en staging con rollback ([ADR-0015](adr/0015-despliegue-staging-rollback.md)) sobre una VM ARM de Oracle Cloud con imágenes multiarquitectura ([ADR-0016](adr/0016-staging-oracle-cloud-arm.md)). Flujo de la información web: §2.5.4 y [docs/10](10-recuperacion-y-evaluacion.md).
+> **Cambios de la EP2:** ingesta programada en NestJS ([ADR-0013](adr/0013-ingesta-programada-sin-cola.md)), índice de búsqueda en PostgreSQL con tokens normalizados por Python ([ADR-0014](adr/0014-indice-busqueda-postgresql.md)), reporte de calidad de datos y métricas de la fuente, y despliegue automático en staging con rollback ([ADR-0015](adr/0015-despliegue-staging-rollback.md)) sobre una VM de Azure en Chile Central ([ADR-0017](adr/0017-staging-azure.md)), con imágenes multiarquitectura ([ADR-0016](adr/0016-staging-oracle-cloud-arm.md)). Flujo de la información web: §2.5.4 y [docs/10](10-recuperacion-y-evaluacion.md).
 
 ## 2.1 Vista general
 
@@ -300,25 +300,25 @@ flowchart LR
 
 Orden de arranque controlado con `depends_on` + `healthcheck`: `database (healthy)` → `migrate (completed)` + `python-service (healthy)` → `backend (healthy)` → `frontend`.
 
-### 2.6.2 Staging (Oracle Cloud)
+### 2.6.2 Staging (Azure)
 
 ```mermaid
 flowchart LR
     gh["GitHub Actions<br/>quality gate verde en main"] -->|"push sha-commit<br/>manifiesto amd64 + arm64"| ghcr[("GHCR<br/>ghcr.io/dakotahh1/smartcommerce-*")]
     gh -->|"SSH (usuario deploy, solo llave)<br/>terraform apply · verificación · rollback"| docker
-    subgraph vm["VM Oracle Cloud Always Free · Santiago · Ampere ARM64 · Ubuntu 24.04"]
+    subgraph vm["VM Azure Standard_B2als_v2 · Chile Central · 2 vCPU · 4 GB · Ubuntu 24.04"]
         caddy["Caddy :443<br/>TLS Let's Encrypt"]
         docker["Docker Engine"]
         tfres["Recursos Terraform (provider docker):<br/>redes edge/api/services/data/egress · volumen db ·<br/>frontend 127.0.0.1:8080 · backend · python · postgres"]
         caddy -->|"127.0.0.1:8080"| tfres
         docker --- tfres
     end
-    ghcr -->|"pull variante arm64"| docker
+    ghcr -->|"pull variante amd64"| docker
     gh -->|"GET /api/health (versión exacta) + humo"| caddy
-    users(["Docentes / testers"]) -->|"HTTPS<br/>ip-con-guiones.sslip.io"| caddy
+    users(["Docentes / testers"]) -->|"HTTPS<br/>57-156-69-73.sslip.io"| caddy
 ```
 
-Solo Caddy queda expuesto (80 para validar el certificado y 443); el gateway de la aplicación escucha en `127.0.0.1` y el resto de los contenedores no publica puertos. El host se prepara con [`infra/staging/bootstrap-oracle.sh`](../infra/staging/bootstrap-oracle.sh) y el estado de Terraform se guarda en la propia VM. Detalle en [09-staging-terraform.md](09-staging-terraform.md). Antes de publicar, el pipeline también levanta un **staging efímero** en el runner con las mismas imágenes escaneadas y ejecuta pruebas de salud, humo, integración, aislamiento y resiliencia.
+Solo Caddy queda expuesto (80 para validar el certificado y 443, permitidos en el Network Security Group de Azure junto con SSH); el gateway de la aplicación escucha en `127.0.0.1` y el resto de los contenedores no publica puertos. El host se prepara con [`infra/staging/bootstrap-host.sh`](../infra/staging/bootstrap-host.sh) y el estado de Terraform se guarda en la propia VM. Detalle en [09-staging-terraform.md](09-staging-terraform.md). Antes de publicar, el pipeline también levanta un **staging efímero** en el runner con las mismas imágenes escaneadas y ejecuta pruebas de salud, humo, integración, aislamiento y resiliencia.
 
 ## 2.7 Aspectos transversales
 
