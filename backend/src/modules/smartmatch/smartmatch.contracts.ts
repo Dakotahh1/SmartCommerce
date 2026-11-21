@@ -25,6 +25,8 @@ export interface ProductCandidate {
   nutriments: Record<string, number | null> | null;
   highInSeals: HighInSeal[];
   allergens: string[];
+  /** "Puede contener trazas de": el motor las excluye igual que el alérgeno. */
+  traces: string[];
   labels: string[];
   diets: {
     vegan?: boolean | null;
