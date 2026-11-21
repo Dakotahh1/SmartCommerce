@@ -12,19 +12,34 @@ _DIET_LABELS_ES = {
 }
 
 
+def _allergen_reason(product: ProductCandidate, allergen: str) -> str | None:
+    """Motivo si el producto contiene el alérgeno o declara trazas de él.
+
+    Las trazas también excluyen: para una persona alérgica o celíaca "puede contener" es un
+    riesgo real, y el motor no puede saber cuánto riesgo acepta cada una.
+    """
+    label = ALLERGEN_LABELS_ES.get(allergen, allergen)
+    if allergen in product.allergens:
+        return f"Contiene {label}"
+    if allergen in product.traces:
+        return f"Puede contener trazas de {label}"
+    return None
+
+
 def exclusion_reasons(product: ProductCandidate, profile: Profile) -> list[str]:
     """Motivos por los que el producto no debe recomendarse a este perfil (vacío = elegible)."""
     reasons: list[str] = []
-    allergens = set(product.allergens)
 
     for allergen in profile.excluded_allergens:
-        if allergen in allergens:
-            reasons.append(f"Contiene {ALLERGEN_LABELS_ES.get(allergen, allergen)}")
+        reason = _allergen_reason(product, allergen)
+        if reason:
+            reasons.append(reason)
 
     for diet in profile.diets:
-        if diet == "gluten_free" and "gluten" in allergens:
-            if "Contiene gluten" not in reasons:
-                reasons.append("Contiene gluten")
+        if diet == "gluten_free":
+            reason = _allergen_reason(product, "gluten")
+            if reason and reason not in reasons:
+                reasons.append(reason)
         elif diet == "lactose_free" and product.diets.lactose_free is False:
             reasons.append("Contiene lactosa")
         elif diet in ("vegan", "vegetarian") and getattr(product.diets, diet) is False:
@@ -37,12 +52,14 @@ def exclusion_reasons(product: ProductCandidate, profile: Profile) -> list[str]:
     return reasons
 
 
+def unverified_diets(product: ProductCandidate, profile: Profile) -> list[str]:
+    """Dietas declaradas cuya aptitud la fuente no confirma ni descarta (dato desconocido)."""
+    return [diet for diet in profile.diets if getattr(product.diets, diet) is None]
+
+
 def diet_warnings(product: ProductCandidate, profile: Profile) -> list[str]:
     """Advertencias cuando la aptitud para una dieta no pudo verificarse."""
-    warnings: list[str] = []
-    for diet in profile.diets:
-        if getattr(product.diets, diet) is None and not (
-            diet == "gluten_free" and "gluten" in product.allergens
-        ):
-            warnings.append(f"Aptitud {_DIET_LABELS_ES[diet]} no verificada")
-    return warnings
+    return [
+        f"Aptitud {_DIET_LABELS_ES[diet]} no verificada"
+        for diet in unverified_diets(product, profile)
+    ]

@@ -81,6 +81,8 @@ class ProductCandidate(CamelModel):
     nutriments: Nutriments | None = None
     high_in_seals: list[SealCode] = Field(default_factory=list)
     allergens: list[str] = Field(default_factory=list, max_length=30)
+    # "Puede contener trazas de": la fuente las declara aparte de los ingredientes.
+    traces: list[str] = Field(default_factory=list, max_length=30)
     labels: list[str] = Field(default_factory=list, max_length=80)
     diets: DietFlags = Field(default_factory=DietFlags)
     stores: list[str] = Field(default_factory=list, max_length=60)

@@ -79,6 +79,31 @@ class TestRanking:
         )
         assert response.items[0].warnings == ["Aptitud vegana no verificada"]
 
+    def test_traces_exclude_for_allergy_and_gluten_free_diet(self) -> None:
+        traces = candidate(gtin="7802000014130", allergens=[], traces=["gluten", "milk"])
+        clean = candidate(gtin="96385074", allergens=[], traces=[])
+
+        for profile in (Profile(excluded_allergens=["gluten"]), Profile(diets=["gluten_free"])):
+            response = rank(RankRequest(profile=profile, candidates=[traces, clean]))
+            excluded = {item.gtin: item.reasons for item in response.excluded}
+            assert excluded == {"7802000014130": ["Puede contener trazas de gluten"]}
+            assert [item.gtin for item in response.items] == ["96385074"]
+
+        # La versión base no aplica restricciones de nadie: las trazas no la cambian.
+        baseline = rank(RankRequest(strategy="baseline", candidates=[traces, clean]))
+        assert baseline.excluded == []
+
+    def test_verified_diet_ranks_above_unverified_of_same_quality(self) -> None:
+        unknown = candidate(gtin="7802000014130", brand="A", allergens=[], diets={})
+        verified = candidate(gtin="96385074", brand="B", allergens=[], diets={"vegan": True})
+        response = rank(
+            RankRequest(profile=Profile(diets=["vegan"]), candidates=[unknown, verified])
+        )
+
+        assert [item.gtin for item in response.items] == ["96385074", "7802000014130"]
+        assert response.items[1].score == pytest.approx(response.items[0].score * 0.85, abs=0.1)
+        assert response.items[1].warnings == ["Aptitud vegana no verificada"]
+
     def test_weights_change_the_winner(self) -> None:
         healthy = candidate(gtin="7802000014130", brand="A", nutriscore_grade="a", unit_price=5000)
         cheap = candidate(gtin="7804000001431", brand="B", nutriscore_grade="e", unit_price=1000)
