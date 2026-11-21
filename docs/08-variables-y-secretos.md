@@ -65,7 +65,7 @@ Variables fijadas por la topología (no configurables desde `.env`): `DB_HOST=da
 | `DB_APP_PASSWORD` | ambiente `staging` | Staging efímero y Terraform | Aleatorio enmascarado |
 | `JWT_ACCESS_SECRET` | ambiente `staging` | Staging efímero y Terraform | Aleatorio enmascarado |
 | `INTERNAL_API_TOKEN` | ambiente `staging` | Staging efímero y Terraform | Aleatorio enmascarado |
-| `STAGING_SSH_PRIVATE_KEY` | ambiente `staging` | Llave privada (ed25519) del usuario `deploy` del host de staging | El job `deploy-staging` falla con un error explícito |
+| `STAGING_SSH_PRIVATE_KEY` | ambiente `staging` | Llave privada (ed25519) del usuario `deploy` del host de staging, en base64 en una sola línea (`base64 -w0 <llave>`) o en texto | El job `deploy-staging` falla con un error explícito |
 | `GITHUB_TOKEN` | automático | Publicar imágenes en GHCR (`packages: write` solo en ese job, solo en `main`) | — |
 
 Las pruebas de integración usan una base PostgreSQL de servicio del propio job con credenciales **efímeras** generadas en la ejecución (no reutilizables fuera del runner). En el despliegue real (`deploy-staging`) los cinco secretos de la aplicación son **obligatorios**: nunca se usan valores efímeros.

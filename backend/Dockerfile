@@ -33,8 +33,11 @@ ENV NODE_ENV=production \
     NODE_OPTIONS="--enable-source-maps"
 WORKDIR /app
 # Parches de seguridad de Alpine publicados después de la imagen base, y sin npm/yarn en runtime
-# (reduce la superficie de ataque y las vulnerabilidades reportadas).
-RUN apk upgrade --no-cache \
+# (reduce la superficie de ataque y las vulnerabilidades reportadas). SECURITY_PATCH_DATE la pasa
+# el pipeline con la fecha del día para que esta capa no quede congelada en la caché de Docker.
+ARG SECURITY_PATCH_DATE=local
+RUN echo "Parches de seguridad: ${SECURITY_PATCH_DATE}" \
+ && apk upgrade --no-cache \
  && rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx /opt/yarn* /usr/local/bin/yarn*
 COPY --from=prod-deps --chown=root:root /app/node_modules ./node_modules
 COPY --from=build --chown=root:root /app/dist ./dist
