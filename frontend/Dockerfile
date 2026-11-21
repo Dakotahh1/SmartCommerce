@@ -26,10 +26,16 @@ LABEL org.opencontainers.image.title="smartcommerce-frontend" \
 ENV API_UPSTREAM=http://backend:3000 \
     DNS_RESOLVER=127.0.0.11 \
     NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
-# Parches de seguridad de Alpine publicados después de la imagen base (el escaneo del pipeline
-# bloquea vulnerabilidades con parche disponible). apk necesita root; el proceso vuelve al uid 101.
+# Parches de seguridad publicados después de la imagen base (el escaneo del pipeline bloquea
+# vulnerabilidades con parche disponible): los de Alpine y los de Nginx, que viene del repositorio
+# firmado de nginx.org (su llave ya está en la imagen base). SECURITY_PATCH_DATE la pasa el
+# pipeline con la fecha del día para que esta capa no quede congelada en la caché de Docker.
+# apk necesita root; el proceso vuelve al uid 101.
 USER 0
-RUN apk upgrade --no-cache \
+ARG SECURITY_PATCH_DATE=local
+RUN echo "Parches de seguridad: ${SECURITY_PATCH_DATE}" \
+ && apk upgrade --no-cache \
+      -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main" \
  && rm -f /etc/nginx/conf.d/default.conf
 COPY --chown=root:root nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --chown=root:root nginx/security-headers.conf /etc/nginx/snippets/security-headers.conf
