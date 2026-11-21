@@ -29,12 +29,13 @@
 | Regla | Condición de exclusión | Razón mostrada |
 |---|---|---|
 | Alérgenos | `allergens ∩ excludedAllergens ≠ ∅` | "Contiene gluten" |
+| Trazas | `traces ∩ excludedAllergens ≠ ∅` ("puede contener trazas de"): un riesgo real para alérgicos y celíacos | "Puede contener trazas de gluten" |
 | Dieta vegana/vegetariana | dieta verificada explícitamente como **no** apta | "No es apto para dieta vegana" |
-| Sin gluten | contiene alérgeno gluten | "Contiene gluten" |
+| Sin gluten | contiene gluten o declara trazas de gluten | "Contiene gluten" / "Puede contener trazas de gluten" |
 | Sin lactosa | contiene leche y no tiene etiqueta "sin lactosa" | "Contiene lactosa" |
 | Evitar sellos | `avoidHighIn` y `highInSeals ≠ ∅` | "Tiene sellos ALTO EN: azúcares" |
 
-Si la aptitud para una dieta **no se puede verificar** (dato desconocido), el producto **no se excluye**, pero se agrega la advertencia "Aptitud vegana no verificada".
+Si la aptitud para una dieta **no se puede verificar** (dato desconocido), el producto **no se excluye**: se agrega la advertencia "Aptitud vegana no verificada" y su puntaje se multiplica por 0,85 por cada dieta sin verificar (§5.5), para que un producto verificado de calidad parecida quede antes. Ambas reglas salieron de la evaluación con productos reales ([docs/11 §11.4](11-evaluacion-adaptativa.md#114-hallazgos-que-cambiaron-el-motor)).
 
 ## 5.4 Criterios y funciones de valor (0 a 1)
 
@@ -57,7 +58,8 @@ base       = Σ_{c∈A} w_c · v_c  /  Σ_{c∈A} w_c                  (renormal
 cobertura  = Σ_{c∈A} w_c  /  Σ_{c} w_c                          (0..1)
 confianza  = 0,7 + 0,3 · cobertura                              (penaliza datos incompletos)
 afinidad   = 0,6 · afinidad_categoría + 0,4 · afinidad_marca    (−1..1)
-score      = 100 · clamp(base · confianza · (1 + 0,1 · afinidad), 0, 1)
+dieta      = 0,85 ^ (n.º de dietas declaradas sin aptitud verificada)
+score      = 100 · clamp(base · confianza · (1 + 0,1 · afinidad) · dieta, 0, 1)
 ```
 
 - **Desglose**: por criterio se informa `valor`, `peso normalizado` y `contribución = 100 · confianza · w_c · v_c / Σ_{c∈A} w_c`.
@@ -159,9 +161,9 @@ La interfaz muestra "definido por ti" vs. "aprendido" y permite **restablecer** 
 | Nivel | Método | Métrica | Meta |
 |---|---|---|---|
 | Unitario (CI) | Casos de prueba deterministas: filtros, renormalización, desempates, explicación, aprendizaje acotado | 100 % de casos esperados | EP1 |
-| Offline | 3 personas sintéticas (sección 1.5) con conjuntos relevantes etiquetados sobre el catálogo real | Precision@5, nDCG@10 personalizado vs. base | +20 % |
+| Offline (CI) | 3 personas de referencia y un usuario nuevo sobre 197 productos reales, juicios por reglas explícitas ([docs/11](11-evaluacion-adaptativa.md)) | Precision@5, nDCG@10, violaciones@5 y diversidad, personalizado vs. base | +20 % en P@5 · **logrado: +29,0 %** (0,517 → 0,667), nDCG@10 +41,0 %, 0 violaciones |
 | Online (staging) | Registro en `recommendation_logs` y `user_interactions` | Tasa de aceptación, descarte, clic | Aceptación ≥ 30 % |
-| Usuarios | Prueba con 5–8 personas: elegir entre alternativas con y sin SmartMatch | Tiempo, éxito, utilidad y comprensión (1–5) | ≥ 4/5 |
+| Usuarios | Prueba con 5–8 personas: elegir entre alternativas con y sin SmartMatch (protocolo en [docs/11 §11.7](11-evaluacion-adaptativa.md#117-prueba-con-usuarios-protocolo)) | Tiempo, éxito, utilidad y comprensión (1–5) | ≥ 4/5 |
 
 ## 5.9 Riesgos y mitigaciones
 
