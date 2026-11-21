@@ -118,6 +118,17 @@ variable "off_user_agent" {
   type        = string
 }
 
+variable "off_max_retries" {
+  description = "Reintentos ante errores transitorios de Open Food Facts (0 a 5): la fuente responde 503 con frecuencia."
+  type        = number
+  default     = 2
+
+  validation {
+    condition     = var.off_max_retries >= 0 && var.off_max_retries <= 5
+    error_message = "off_max_retries debe estar entre 0 y 5."
+  }
+}
+
 variable "ingestion" {
   description = "Ingesta programada desde Open Food Facts: activación, intervalo, objetivos pais/categoria y páginas por objetivo."
   type = object({

@@ -255,6 +255,7 @@ resource "docker_container" "python_service" {
     "LOG_LEVEL=INFO",
     "INTERNAL_API_TOKEN=${var.internal_api_token}",
     "OFF_USER_AGENT=${var.off_user_agent}",
+    "OFF_MAX_RETRIES=${var.off_max_retries}",
   ]
 
   networks_advanced {
