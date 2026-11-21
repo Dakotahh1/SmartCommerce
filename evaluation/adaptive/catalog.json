@@ -27,8 +27,7 @@
     "stores": 0.22,
     "image": 0.96
    },
-   "rejections": [],
-   "tookMs": 12.49
+   "rejections": []
   },
   "breakfast-cereals": {
    "received": 50,
@@ -60,8 +59,7 @@
      "code": "7804646450624",
      "reason": "Producto sin nombre"
     }
-   ],
-   "tookMs": 10.38
+   ]
   },
   "dairies": {
    "received": 50,
@@ -82,8 +80,7 @@
     "stores": 0.08,
     "image": 0.98
    },
-   "rejections": [],
-   "tookMs": 9.75
+   "rejections": []
   },
   "snacks": {
    "received": 50,
@@ -110,8 +107,7 @@
      "code": "00495749",
      "reason": "GTIN con dígito verificador inválido"
     }
-   ],
-   "tookMs": 7.82
+   ]
   }
  },
  "queries": {

@@ -45,7 +45,9 @@ async def main(categories: list[str]) -> None:
             }
             destino = OUTPUT_DIR / f"off_{COUNTRY}_{category}.json"
             destino.write_text(
-                json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+                json.dumps(payload, ensure_ascii=False, indent=1) + "\n",
+                encoding="utf-8",
+                newline="\n",
             )
             print(f"{category}: {len(result.products)} de {result.count} productos")
     finally:

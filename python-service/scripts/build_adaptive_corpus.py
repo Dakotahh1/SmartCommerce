@@ -57,7 +57,9 @@ def main() -> None:
             }
             for product in result.products
         ]
-        reports[category] = result.report.model_dump(mode="json", by_alias=True)
+        report = result.report.model_dump(mode="json", by_alias=True)
+        report.pop("tookMs", None)  # depende de la máquina: rompería la reproducibilidad
+        reports[category] = report
         sources[category] = f"{data['source']} (recuperado {data['fetchedAt']})"
 
     payload = {
@@ -69,9 +71,11 @@ def main() -> None:
         "queries": queries,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    OUTPUT.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n"
+    )
     total = sum(len(items) for items in queries.values())
-    print(f"{total} candidatos en {len(queries)} categorías → {OUTPUT.relative_to(ROOT.parent)}")
+    print(f"{total} candidatos en {len(queries)} categorías: {OUTPUT.relative_to(ROOT.parent)}")
 
 
 if __name__ == "__main__":

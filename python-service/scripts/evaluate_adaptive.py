@@ -107,7 +107,7 @@ def main() -> None:
         ],
     }
     (EVALUATION_DIR / "results.json").write_text(
-        json.dumps(results, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+        json.dumps(results, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n"
     )
     markdown = report(summary, curve)
     sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
