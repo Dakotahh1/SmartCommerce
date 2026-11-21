@@ -12,7 +12,7 @@ Proyecto de la asignatura **Ingeniería Web Avanzada** — Ingeniería Civil Inf
 | 🎨 Prototipo navegable y design system | [Figma · SmartCommerce](https://www.figma.com/design/vUBipEZdpxUtfokgU17hKu) |
 | ⚙️ Pipeline | [GitHub Actions](https://github.com/Dakotahh1/SmartCommerce/actions/workflows/ci.yml) |
 | 📋 Tablero de gestión | [Trello · Kanban Board](https://trello.com/invite/b/6ab9e79ba3760eb1cc5d619d/ATTI6a53b4a4926cc415196729043f0e1f74E5264F6E/kanban-smartcommerce)|
-| 🌐 Ambiente desplegado | Staging desplegado automáticamente desde `main` por el job `deploy-staging` (URL en *Environments › staging* del repositorio; `/api/health` informa versión y commit) · staging efímero en cada PR ([docs/09](docs/09-staging-terraform.md)) |
+| 🌐 Ambiente desplegado | **https://57-156-69-73.sslip.io** · staging en Azure, desplegado automáticamente desde `main` por el job `deploy-staging`; [`/api/health`](https://57-156-69-73.sslip.io/api/health) informa la versión y el commit desplegados ([docs/09](docs/09-staging-terraform.md)) · staging efímero en cada PR |
 
 ---
 
@@ -321,6 +321,7 @@ Detalle: [docs/09 · Infraestructura y staging](docs/09-staging-terraform.md).
 | [10 · Recuperación y evaluación](docs/10-recuperacion-y-evaluacion.md) | Extracción, limpieza, indexación, buscador y métricas (EP2) |
 | [11 · Evaluación adaptativa](docs/11-evaluacion-adaptativa.md) | Personalizado vs. versión base no adaptativa: diseño, métricas, resultados, limitaciones y prueba con usuarios (EF) |
 | [Registro EP2](docs/EP2-registro-de-trabajo.md) | Verificación de la EP1, lista de comprobación de la EP2, qué se hizo y cómo, pendientes |
+| [Registro EF](docs/EF-registro-de-trabajo.md) | Rúbrica de la entrega final con su evidencia, objetivos, despliegue y rollback probados, limitaciones |
 | [ADR](docs/adr/README.md) | Registro de decisiones de arquitectura |
 | [CONTRIBUTING](CONTRIBUTING.md) | Flujo de ramas, commits y pull requests |
 
