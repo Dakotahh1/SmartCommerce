@@ -27,15 +27,23 @@ ENV API_UPSTREAM=http://backend:3000 \
     DNS_RESOLVER=127.0.0.11 \
     NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
 # Parches de seguridad publicados después de la imagen base (el escaneo del pipeline bloquea
-# vulnerabilidades con parche disponible): los de Alpine y los de Nginx, que viene del repositorio
-# firmado de nginx.org (su llave ya está en la imagen base). SECURITY_PATCH_DATE la pasa el
-# pipeline con la fecha del día para que esta capa no quede congelada en la caché de Docker.
+# vulnerabilidades con parche disponible). SECURITY_PATCH_DATE la pasa el pipeline con la fecha
+# del día para que esta capa no quede congelada en la caché de Docker.
+# - Alpine: `apk upgrade`.
+# - Nginx y sus módulos: la imagen base los instala con la versión fijada (nginx=1.30.6-r1), así
+#   que `apk upgrade` no los toca. Se piden por nombre al repositorio firmado de nginx.org (su
+#   llave ya está en la imagen base), que publica los parches antes que la imagen.
 # apk necesita root; el proceso vuelve al uid 101.
 USER 0
 ARG SECURITY_PATCH_DATE=local
+# Se instala la última versión publicada a propósito, y la lista de paquetes se arma en ejecución.
+# hadolint ignore=DL3018,SC2046
 RUN echo "Parches de seguridad: ${SECURITY_PATCH_DATE}" \
  && apk upgrade --no-cache \
+ && apk add --no-cache --upgrade \
       -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main" \
+      $(apk info | grep '^nginx') \
+ && nginx -v \
  && rm -f /etc/nginx/conf.d/default.conf
 COPY --chown=root:root nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --chown=root:root nginx/security-headers.conf /etc/nginx/snippets/security-headers.conf
