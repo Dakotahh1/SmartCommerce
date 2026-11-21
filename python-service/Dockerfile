@@ -26,7 +26,11 @@ LABEL org.opencontainers.image.title="smartcommerce-python-service" \
       org.opencontainers.image.licenses="MIT"
 # Parches de seguridad publicados después de la imagen base y sin pip en runtime: la app usa el
 # venv copiado desde builder y pip trae dependencias vendorizadas que solo amplían la superficie.
-RUN apt-get update \
+# SECURITY_PATCH_DATE la pasa el pipeline con la fecha del día para que esta capa no quede
+# congelada en la caché de Docker.
+ARG SECURITY_PATCH_DATE=local
+RUN echo "Parches de seguridad: ${SECURITY_PATCH_DATE}" \
+ && apt-get update \
  && apt-get upgrade -y --no-install-recommends \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
