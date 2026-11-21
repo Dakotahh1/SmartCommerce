@@ -6,5 +6,5 @@
 export const environment = {
   production: true,
   apiUrl: 'http://10.0.2.2:8080/api',
-  appVersion: '0.2.0',
+  appVersion: '1.0.0',
 };

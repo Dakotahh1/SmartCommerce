@@ -925,7 +925,7 @@
   "info": {
     "title": "SmartCommerce API",
     "description": "API REST principal. Autenticación con JWT (Bearer) y refresh token rotativo. Todas las respuestas de error siguen el formato {statusCode, code, message, details, path, timestamp, requestId}.",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "contact": {}
   },
   "tags": [],
