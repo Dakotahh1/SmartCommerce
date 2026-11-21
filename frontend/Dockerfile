@@ -35,6 +35,8 @@ ENV API_UPSTREAM=http://backend:3000 \
 #   llave ya está en la imagen base), que publica los parches antes que la imagen.
 # apk necesita root; el proceso vuelve al uid 101.
 USER 0
+# pipefail: si `apk info` falla, el build también falla en vez de seguir con una lista vacía.
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 ARG SECURITY_PATCH_DATE=local
 # Se instala la última versión publicada a propósito, y la lista de paquetes se arma en ejecución.
 # hadolint ignore=DL3018,SC2046
