@@ -276,7 +276,7 @@ Detalle: [docs/09 · Infraestructura y staging](docs/09-staging-terraform.md).
 3. **Angular → NestJS:** iniciar sesión y abrir *Para ti*; en DevTools › Network se ve `GET /api/v1/recommendations` con `X-Request-Id`.
 4. **NestJS → FastAPI:** `http://localhost:8080/api/health` muestra `smartmatch: up`; la ingesta desde *Administración* pasa por Python hasta Open Food Facts.
 5. **NestJS ↔ PostgreSQL:** los productos ingeridos aparecen en *Explorar*; `docker compose exec database psql -U postgres -d smartcommerce -c "select count(*) from products"`.
-6. **Pipeline en GitHub Actions:** mostrar la última ejecución con el resumen del quality gate, reportes de Trivy/Semgrep y el APK como artefacto.
+6. **Pipeline en GitHub Actions:** mostrar la última ejecución con el resumen del quality gate, reportes de Trivy/Semgrep y los APK como artefacto. `smartcommerce-staging.apk` se instala en un celular Android (permitir apps de origen desconocido) y usa el staging por HTTPS.
 7. **Fallo controlado:**
    - `docker compose stop python-service` → *Para ti* muestra el aviso de modo degradado y recomendaciones de respaldo; `docker compose start python-service` lo recupera.
    - Abrir un PR con un secreto ficticio o una prueba rota: el pipeline se detiene y el quality gate impide integrar ([docs/07 §7.5](docs/07-pipeline-devsecops.md#75-evidencia-de-bloqueo)).
