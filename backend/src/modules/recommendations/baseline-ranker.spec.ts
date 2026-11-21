@@ -16,6 +16,7 @@ function candidate(
     nutriments: { energyKcal: 380, sugars: 1, saturatedFat: 1.9, sodiumMg: 4 },
     highInSeals: [],
     allergens: ['gluten'],
+    traces: [],
     labels: [],
     diets: {},
     stores: ['lider', 'jumbo', 'unimarc'],

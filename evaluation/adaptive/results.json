@@ -1,0 +1,626 @@
+{
+ "strategies": {
+  "baseline": {
+   "precisionAt5": 0.5167,
+   "ndcgAt10": 0.6366,
+   "violationsAt5": 12,
+   "distinctBrandsAt5": 4.5833
+  },
+  "declared": {
+   "precisionAt5": 0.6333,
+   "ndcgAt10": 0.8713,
+   "violationsAt5": 0,
+   "distinctBrandsAt5": 4.4167
+  },
+  "adaptive": {
+   "precisionAt5": 0.6667,
+   "ndcgAt10": 0.8974,
+   "violationsAt5": 0,
+   "distinctBrandsAt5": 4.4167
+  }
+ },
+ "liftPercent": {
+  "precisionAt5": 29.0,
+  "ndcgAt10": 41.0
+ },
+ "maxPrecisionAt5": 0.8,
+ "learningCurve": [
+  {
+   "interactions": 0,
+   "precisionAt5": 0.6,
+   "ndcgAt10": 0.751
+  },
+  {
+   "interactions": 2,
+   "precisionAt5": 0.6,
+   "ndcgAt10": 0.8278
+  },
+  {
+   "interactions": 4,
+   "precisionAt5": 0.6,
+   "ndcgAt10": 0.8301
+  },
+  {
+   "interactions": 6,
+   "precisionAt5": 0.6,
+   "ndcgAt10": 0.8377
+  },
+  {
+   "interactions": 8,
+   "precisionAt5": 0.6667,
+   "ndcgAt10": 0.8461
+  }
+ ],
+ "cases": [
+  {
+   "persona": "camila",
+   "query": "breakfast-cereals",
+   "relevant": 10,
+   "precisionAt5": {
+    "baseline": 0.8,
+    "declared": 1.0,
+    "adaptive": 1.0
+   },
+   "ndcgAt10": {
+    "baseline": 0.7975,
+    "declared": 1.0,
+    "adaptive": 1.0
+   },
+   "violationsAt5": {
+    "baseline": 1,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 5,
+    "declared": 5,
+    "adaptive": 5
+   },
+   "top5": {
+    "baseline": [
+     "7803515020005",
+     "7802000017858",
+     "7804676870201",
+     "7800120170170",
+     "7802000014949"
+    ],
+    "declared": [
+     "7803515020005",
+     "7804676870201",
+     "7800120170170",
+     "7802000014949",
+     "7804673913673"
+    ],
+    "adaptive": [
+     "7803515020005",
+     "7804676870201",
+     "7800120170170",
+     "7802000014949",
+     "7804673913673"
+    ]
+   }
+  },
+  {
+   "persona": "camila",
+   "query": "dairies",
+   "relevant": 10,
+   "precisionAt5": {
+    "baseline": 0.8,
+    "declared": 1.0,
+    "adaptive": 1.0
+   },
+   "ndcgAt10": {
+    "baseline": 0.7242,
+    "declared": 0.9306,
+    "adaptive": 0.9337
+   },
+   "violationsAt5": {
+    "baseline": 0,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 5,
+    "declared": 5,
+    "adaptive": 5
+   },
+   "top5": {
+    "baseline": [
+     "7802910000971",
+     "7802955010867",
+     "7802920009636",
+     "8445291225275",
+     "7802930004867"
+    ],
+    "declared": [
+     "7802910000971",
+     "7802920009636",
+     "7802910007277",
+     "7802930004867",
+     "7802900002305"
+    ],
+    "adaptive": [
+     "7802910000971",
+     "7802920009636",
+     "7802910007277",
+     "7802900002305",
+     "7802930004867"
+    ]
+   }
+  },
+  {
+   "persona": "camila",
+   "query": "snacks",
+   "relevant": 3,
+   "precisionAt5": {
+    "baseline": 0.6,
+    "declared": 0.6,
+    "adaptive": 0.6
+   },
+   "ndcgAt10": {
+    "baseline": 0.906,
+    "declared": 1.0,
+    "adaptive": 1.0
+   },
+   "violationsAt5": {
+    "baseline": 1,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 5,
+    "declared": 5,
+    "adaptive": 5
+   },
+   "top5": {
+    "baseline": [
+     "7804660620553",
+     "7803468005326",
+     "7804609254177",
+     "7804673913925",
+     "7807910031444"
+    ],
+    "declared": [
+     "7804660620553",
+     "7804609254177",
+     "7804673913925",
+     "7804630011176",
+     "7807910032274"
+    ],
+    "adaptive": [
+     "7804660620553",
+     "7804609254177",
+     "7804673913925",
+     "7804630011176",
+     "7807910032274"
+    ]
+   }
+  },
+  {
+   "persona": "jorge",
+   "query": "breakfast-cereals",
+   "relevant": 3,
+   "precisionAt5": {
+    "baseline": 0.0,
+    "declared": 0.6,
+    "adaptive": 0.6
+   },
+   "ndcgAt10": {
+    "baseline": 0.0,
+    "declared": 1.0,
+    "adaptive": 1.0
+   },
+   "violationsAt5": {
+    "baseline": 5,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 5,
+    "declared": 3,
+    "adaptive": 3
+   },
+   "top5": {
+    "baseline": [
+     "7803515020005",
+     "7802000017858",
+     "7804676870201",
+     "7800120170170",
+     "7802000014949"
+    ],
+    "declared": [
+     "7613032269586",
+     "7802000011719",
+     "7800120170125"
+    ],
+    "adaptive": [
+     "7613032269586",
+     "7802000011719",
+     "7800120170125"
+    ]
+   }
+  },
+  {
+   "persona": "jorge",
+   "query": "dairies",
+   "relevant": 21,
+   "precisionAt5": {
+    "baseline": 1.0,
+    "declared": 1.0,
+    "adaptive": 1.0
+   },
+   "ndcgAt10": {
+    "baseline": 1.0,
+    "declared": 1.0,
+    "adaptive": 1.0
+   },
+   "violationsAt5": {
+    "baseline": 0,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 4,
+    "declared": 4,
+    "adaptive": 4
+   },
+   "top5": {
+    "baseline": [
+     "7802920000084",
+     "7808709504743",
+     "7802920009636",
+     "8445291225275",
+     "7802930004867"
+    ],
+    "declared": [
+     "7802920000084",
+     "7808709504743",
+     "7802920009636",
+     "8445291225275",
+     "7802930004867"
+    ],
+    "adaptive": [
+     "7802920000084",
+     "7808709504743",
+     "7802920009636",
+     "8445291225275",
+     "7802910007277"
+    ]
+   }
+  },
+  {
+   "persona": "jorge",
+   "query": "snacks",
+   "relevant": 4,
+   "precisionAt5": {
+    "baseline": 0.4,
+    "declared": 0.8,
+    "adaptive": 0.8
+   },
+   "ndcgAt10": {
+    "baseline": 0.4415,
+    "declared": 1.0,
+    "adaptive": 1.0
+   },
+   "violationsAt5": {
+    "baseline": 3,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 5,
+    "declared": 4,
+    "adaptive": 4
+   },
+   "top5": {
+    "baseline": [
+     "7804660620553",
+     "7803468005326",
+     "7804609254177",
+     "7804673913925",
+     "7807910031444"
+    ],
+    "declared": [
+     "7803468005326",
+     "7804609254177",
+     "0766902004286",
+     "12215591"
+    ],
+    "adaptive": [
+     "7803468005326",
+     "7804609254177",
+     "0766902004286",
+     "12215591"
+    ]
+   }
+  },
+  {
+   "persona": "valentina",
+   "query": "beverages",
+   "relevant": 4,
+   "precisionAt5": {
+    "baseline": 0.2,
+    "declared": 0.2,
+    "adaptive": 0.2
+   },
+   "ndcgAt10": {
+    "baseline": 0.3904,
+    "declared": 0.5079,
+    "adaptive": 0.5135
+   },
+   "violationsAt5": {
+    "baseline": 0,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 3,
+    "declared": 4,
+    "adaptive": 4
+   },
+   "top5": {
+    "baseline": [
+     "7802820600100",
+     "7802820441512",
+     "7802820443356",
+     "7801610022740",
+     "7801610000595"
+    ],
+    "declared": [
+     "7802820600100",
+     "7802820441512",
+     "7802820443356",
+     "7801620852962",
+     "7801610022740"
+    ],
+    "adaptive": [
+     "7802820600100",
+     "7802820443356",
+     "7802820441512",
+     "7801620852962",
+     "7801610022740"
+    ]
+   }
+  },
+  {
+   "persona": "valentina",
+   "query": "breakfast-cereals",
+   "relevant": 3,
+   "precisionAt5": {
+    "baseline": 0.4,
+    "declared": 0.4,
+    "adaptive": 0.4
+   },
+   "ndcgAt10": {
+    "baseline": 0.7654,
+    "declared": 0.9325,
+    "adaptive": 0.9325
+   },
+   "violationsAt5": {
+    "baseline": 0,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 5,
+    "declared": 5,
+    "adaptive": 5
+   },
+   "top5": {
+    "baseline": [
+     "7803515020005",
+     "7802000017858",
+     "7804676870201",
+     "7800120170170",
+     "7802000014949"
+    ],
+    "declared": [
+     "7803515020005",
+     "7802000017858",
+     "7804676870201",
+     "7800120170170",
+     "7802000014949"
+    ],
+    "adaptive": [
+     "7803515020005",
+     "7802000017858",
+     "7804676870201",
+     "7800120170170",
+     "7802000014949"
+    ]
+   }
+  },
+  {
+   "persona": "valentina",
+   "query": "snacks",
+   "relevant": 2,
+   "precisionAt5": {
+    "baseline": 0.2,
+    "declared": 0.2,
+    "adaptive": 0.4
+   },
+   "ndcgAt10": {
+    "baseline": 0.2372,
+    "declared": 0.8316,
+    "adaptive": 0.8503
+   },
+   "violationsAt5": {
+    "baseline": 2,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 5,
+    "declared": 5,
+    "adaptive": 5
+   },
+   "top5": {
+    "baseline": [
+     "7804660620553",
+     "7803468005326",
+     "7804609254177",
+     "7804673913925",
+     "7807910031444"
+    ],
+    "declared": [
+     "7807910031444",
+     "7803468005326",
+     "7804630011176",
+     "7807910032274",
+     "7804630010728"
+    ],
+    "adaptive": [
+     "7807910031444",
+     "7804630011176",
+     "7807910032274",
+     "7804630010728",
+     "0799192197239"
+    ]
+   }
+  },
+  {
+   "persona": "explorador",
+   "query": "breakfast-cereals",
+   "relevant": 4,
+   "precisionAt5": {
+    "baseline": 0.4,
+    "declared": 0.4,
+    "adaptive": 0.4
+   },
+   "ndcgAt10": {
+    "baseline": 0.7542,
+    "declared": 0.6367,
+    "adaptive": 0.9059
+   },
+   "violationsAt5": {
+    "baseline": 0,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 5,
+    "declared": 5,
+    "adaptive": 5
+   },
+   "top5": {
+    "baseline": [
+     "7803515020005",
+     "7802000017858",
+     "7800120170170",
+     "7802000014949",
+     "7804673913673"
+    ],
+    "declared": [
+     "7803515020005",
+     "7802000017858",
+     "7800120170170",
+     "7802000014949",
+     "7804673913673"
+    ],
+    "adaptive": [
+     "7803515020005",
+     "7802000017858",
+     "7800120170170",
+     "7802000014949",
+     "7804673913673"
+    ]
+   }
+  },
+  {
+   "persona": "explorador",
+   "query": "dairies",
+   "relevant": 6,
+   "precisionAt5": {
+    "baseline": 0.6,
+    "declared": 0.6,
+    "adaptive": 0.6
+   },
+   "ndcgAt10": {
+    "baseline": 0.6448,
+    "declared": 0.6448,
+    "adaptive": 0.6448
+   },
+   "violationsAt5": {
+    "baseline": 0,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 4,
+    "declared": 4,
+    "adaptive": 4
+   },
+   "top5": {
+    "baseline": [
+     "7802920000084",
+     "7808709504743",
+     "7802920009636",
+     "8445291225275",
+     "7802930004867"
+    ],
+    "declared": [
+     "7802920000084",
+     "7808709504743",
+     "7802920009636",
+     "8445291225275",
+     "7802930004867"
+    ],
+    "adaptive": [
+     "7808709504743",
+     "7802920009636",
+     "7802920000084",
+     "8445291225275",
+     "7802930004867"
+    ]
+   }
+  },
+  {
+   "persona": "explorador",
+   "query": "beverages",
+   "relevant": 6,
+   "precisionAt5": {
+    "baseline": 0.8,
+    "declared": 0.8,
+    "adaptive": 1.0
+   },
+   "ndcgAt10": {
+    "baseline": 0.9784,
+    "declared": 0.9715,
+    "adaptive": 0.9877
+   },
+   "violationsAt5": {
+    "baseline": 0,
+    "declared": 0,
+    "adaptive": 0
+   },
+   "distinctBrandsAt5": {
+    "baseline": 4,
+    "declared": 4,
+    "adaptive": 4
+   },
+   "top5": {
+    "baseline": [
+     "7802820600100",
+     "7802820441512",
+     "7802820443356",
+     "7802950002171",
+     "7801610022740"
+    ],
+    "declared": [
+     "7802820600100",
+     "7802820441512",
+     "7802820443356",
+     "7802950002171",
+     "7801610022740"
+    ],
+    "adaptive": [
+     "7802820600100",
+     "7802820441512",
+     "7802820443356",
+     "7802950002171",
+     "7801220004433"
+    ]
+   }
+  }
+ ]
+}

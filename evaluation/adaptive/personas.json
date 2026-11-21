@@ -1,0 +1,98 @@
+{
+ "description": "Personas de referencia (docs/01 §1.5) para evaluar el motor adaptativo. Cada una tiene el perfil que declararía en la app, un historial simulado de interacciones con productos reales del catálogo y juicios de relevancia escritos como reglas explícitas ANTES de medir, a partir de su necesidad y no del motor. Los productos del historial se sacan de los candidatos al evaluar.",
+ "rules": {
+  "noAllergen": "No contiene el alérgeno NI declara trazas de él (criterio estricto de seguridad)",
+  "nutriscoreIn": "Nutri-Score dentro de las letras indicadas",
+  "maxSeals": "Como máximo esa cantidad de sellos ALTO EN (Ley 20.606)",
+  "dietTrue": "Aptitud para la dieta VERIFICADA en la fuente (desconocido no cuenta como apto)",
+  "dietNotFalse": "No está marcado como NO apto para la dieta",
+  "novaIn": "Grupo NOVA dentro de los indicados (desconocido no cuenta)",
+  "novaNotIn": "Grupo NOVA fuera de los indicados (desconocido cuenta)"
+ },
+ "personas": [
+  {
+   "id": "camila",
+   "name": "Camila, 29 años, celíaca",
+   "need": "Descartar rápido los productos con gluten y preferir Nutri-Score A o B aunque cuesten más.",
+   "profile": {
+    "weights": {"nutrition": 50, "price": 10, "processing": 20, "environment": 10, "availability": 10},
+    "diets": ["gluten_free"],
+    "excludedAllergens": ["gluten"],
+    "avoidHighIn": false
+   },
+   "relevance": {"noAllergen": ["gluten"], "nutriscoreIn": ["a", "b"]},
+   "hardConstraints": {"noAllergen": ["gluten"]},
+   "queries": ["breakfast-cereals", "dairies", "snacks"],
+   "history": [
+    {"type": "favorite", "ageDays": 3, "gtin": "7802900002039", "note": "Yoghurt Protein Vainilla (Nutri-Score A, sin gluten)"},
+    {"type": "dismiss", "ageDays": 4, "gtin": "7802635001116", "note": "Cereal Chocolate Pillows (gluten, Nutri-Score E)"},
+    {"type": "favorite", "ageDays": 6, "gtin": "7802920000084", "note": "Leche Descremada Colun (Nutri-Score B)"},
+    {"type": "recommendation_accept", "ageDays": 10, "gtin": "7808709504743", "note": "Leche Descremada Sin Lactosa Surlat (Nutri-Score B)"}
+   ]
+  },
+  {
+   "id": "jorge",
+   "name": "Jorge, 45 años, presupuesto ajustado",
+   "need": "Prioriza el precio por kilo, pero quiere evitar productos con sellos ALTO EN para sus hijos.",
+   "profile": {
+    "weights": {"nutrition": 30, "price": 40, "processing": 15, "environment": 5, "availability": 10},
+    "diets": [],
+    "excludedAllergens": [],
+    "avoidHighIn": true
+   },
+   "relevance": {"maxSeals": 0},
+   "hardConstraints": {"maxSeals": 0},
+   "queries": ["breakfast-cereals", "dairies", "snacks"],
+   "history": [
+    {"type": "favorite", "ageDays": 2, "gtin": "7802955010867", "note": "Yoghurt Griego Oikos (sin sellos)"},
+    {"type": "dismiss", "ageDays": 3, "gtin": "7622201693091", "note": "Oreo (3 sellos)"},
+    {"type": "recommendation_reject", "ageDays": 5, "gtin": "7501073427532", "note": "Cereal Frutal Trix (2 sellos)"},
+    {"type": "favorite", "ageDays": 7, "gtin": "7802910000971", "note": "Leche Sin Lactosa Loncoleche (sin sellos)"}
+   ]
+  },
+  {
+   "id": "valentina",
+   "name": "Valentina, 34 años, vegana",
+   "need": "Productos aptos para veganos; le importan el impacto ambiental y el nivel de procesamiento.",
+   "profile": {
+    "weights": {"nutrition": 20, "price": 0, "processing": 35, "environment": 35, "availability": 10},
+    "diets": ["vegan"],
+    "excludedAllergens": [],
+    "avoidHighIn": false
+   },
+   "relevance": {"dietTrue": "vegan", "novaNotIn": [4]},
+   "hardConstraints": {"dietNotFalse": "vegan"},
+   "queries": ["beverages", "breakfast-cereals", "snacks"],
+   "history": [
+    {"type": "favorite", "ageDays": 2, "gtin": "7790387110234", "note": "Yerba Mate Taragui (vegana, NOVA 1, Eco-Score A)"},
+    {"type": "dismiss", "ageDays": 3, "gtin": "7801610001295", "note": "Coca-Cola Original (NOVA 4)"},
+    {"type": "favorite", "ageDays": 6, "gtin": "7802950002171", "note": "Café Instantáneo Dolca (vegano, NOVA 1)"},
+    {"type": "recommendation_accept", "ageDays": 9, "gtin": "7801220004433", "note": "Smoothie Pink Punch Minuto Verde (vegano, NOVA 1)"}
+   ]
+  },
+  {
+   "id": "explorador",
+   "name": "Usuario nuevo sin preferencias declaradas",
+   "need": "No configuró nada; en la práctica elige productos poco procesados y descarta los ultraprocesados. Mide la adaptación que viene solo del comportamiento.",
+   "profile": {
+    "weights": {"nutrition": 30, "price": 25, "processing": 20, "environment": 15, "availability": 10},
+    "diets": [],
+    "excludedAllergens": [],
+    "avoidHighIn": false
+   },
+   "relevance": {"novaIn": [1, 2]},
+   "hardConstraints": {},
+   "queries": ["breakfast-cereals", "dairies", "beverages"],
+   "history": [
+    {"type": "dismiss", "ageDays": 1, "gtin": "7804000001448", "note": "Enlinea Cereales Sin Azúcar Añadida (NOVA 4)"},
+    {"type": "favorite", "ageDays": 2, "gtin": "7802955010867", "note": "Yoghurt Griego Oikos (NOVA 1)"},
+    {"type": "dismiss", "ageDays": 3, "gtin": "7802920007182", "note": "Leche Semidescremada Chocolate Colun (NOVA 4)"},
+    {"type": "favorite", "ageDays": 4, "gtin": "7804676870201", "note": "Cacao Granola Protein Under Five (NOVA 1)"},
+    {"type": "dismiss", "ageDays": 5, "gtin": "7801620011079", "note": "Frutos del Bosque Mas (NOVA 4)"},
+    {"type": "favorite", "ageDays": 6, "gtin": "7790387110234", "note": "Yerba Mate Taragui (NOVA 1)"},
+    {"type": "dismiss", "ageDays": 7, "gtin": "7804686560222", "note": "Cereal Muesli Chocolate Granolin (NOVA 4)"},
+    {"type": "favorite", "ageDays": 8, "gtin": "7802910000971", "note": "Leche Sin Lactosa Loncoleche (NOVA 1)"}
+   ]
+  }
+ ]
+}

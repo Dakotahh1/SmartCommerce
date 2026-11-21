@@ -61,7 +61,10 @@ function setup(
   prefs: Partial<UserPreferences> = {},
 ) {
   const items = [
-    product('p1', '7802000014130', { nutriscoreGrade: 'e' }),
+    product('p1', '7802000014130', {
+      nutriscoreGrade: 'e',
+      traces: ['gluten'],
+    }),
     product('p2', '7804000001431'),
   ];
   const saved: unknown[] = [];
@@ -148,6 +151,11 @@ describe('RecommendationsService', () => {
     expect(rank.mock.calls[0][0]).toMatchObject({
       strategy: 'personalized',
       limit: 5,
+    });
+    // Las trazas viajan al motor: con ellas excluye productos para alérgicos y celíacos.
+    expect(rank.mock.calls[0][0].candidates[0]).toMatchObject({
+      gtin: '7802000014130',
+      traces: ['gluten'],
     });
     expect(interactions.historyForEngine).toHaveBeenCalledWith('u1');
     expect(saved[0]).toMatchObject({

@@ -1621,6 +1621,14 @@
             "maxItems": 30,
             "title": "Allergens"
           },
+          "traces": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Traces"
+          },
           "labels": {
             "items": {
               "type": "string"

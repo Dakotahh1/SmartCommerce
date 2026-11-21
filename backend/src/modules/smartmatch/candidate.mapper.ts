@@ -45,6 +45,7 @@ export function toCandidate({
       : null,
     highInSeals: product.highInSeals,
     allergens: product.allergens,
+    traces: product.traces,
     labels: product.labels,
     diets: product.diets ?? {},
     stores: product.stores,

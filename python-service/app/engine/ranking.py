@@ -13,7 +13,7 @@ from app.engine.criteria import (
     evaluate,
 )
 from app.engine.explain import build_reasons, build_warnings
-from app.engine.filters import diet_warnings, exclusion_reasons
+from app.engine.filters import diet_warnings, exclusion_reasons, unverified_diets
 from app.engine.learning import LearnedProfile, brand_key, learn_profile
 from app.schemas.engine import (
     CriterionScore,
@@ -45,6 +45,10 @@ AFFINITY_IMPACT = 0.1
 CATEGORY_AFFINITY_SHARE = 0.6
 # Cada aparición previa de la misma marca multiplica su puntaje por 0,95 SOLO para ordenar.
 DIVERSITY_DECAY = 0.95
+# Si el usuario declaró una dieta y la fuente no confirma ni descarta que el producto sea apto,
+# el puntaje se multiplica por 0,85 por cada dieta sin verificar: sigue visible (con advertencia),
+# pero un producto verificado gana ante uno de calidad parecida cuya aptitud se desconoce.
+UNVERIFIED_DIET_FACTOR = 0.85
 
 
 @dataclass
@@ -115,11 +119,15 @@ def score_product(product: ProductCandidate, ctx: EngineContext) -> ScoredProduc
         else 0.0
     )
     affinity = ctx.affinity_for(product) if ctx.personalized else 0.0
-    raw_score = base * confidence * (1 + AFFINITY_IMPACT * affinity)
+    unverified = len(unverified_diets(product, ctx.profile)) if ctx.personalized else 0
+    raw_score = (
+        base * confidence * (1 + AFFINITY_IMPACT * affinity) * UNVERIFIED_DIET_FACTOR**unverified
+    )
     score = round(100 * min(1.0, max(0.0, raw_score)), 1)
 
-    # `contribution` reparte el puntaje entre los criterios (su suma es el puntaje sin afinidad):
-    # es exactamente lo que la app muestra en el desglose "por qué te lo recomendamos".
+    # `contribution` reparte el puntaje entre los criterios (su suma es el puntaje antes de la
+    # afinidad y del ajuste por dieta sin verificar): es lo que la app muestra en el desglose
+    # "por qué te lo recomendamos".
     contributions: dict[str, float] = {}
     breakdown: list[CriterionScore] = []
     for criterion in CRITERIA:

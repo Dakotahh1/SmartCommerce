@@ -49,10 +49,12 @@ Comparar productos **solo por precio** es insuficiente: para elegir en el superm
 | Administrador (`admin`) | Gestionar roles y supervisar el estado del sistema |
 
 **Capacidad inteligente — motor SmartMatch** ([docs/05](docs/05-motor-smartmatch.md)):
-1. *Filtros duros*: alérgenos excluidos, dietas y sellos ALTO EN.
+1. *Filtros duros*: alérgenos excluidos (también sus trazas), dietas y sellos ALTO EN.
 2. *Puntaje multicriterio* 0–100 (nutrición, precio relativo a la categoría, procesamiento NOVA, Eco-Score, disponibilidad) con renormalización ante datos faltantes y confianza según cobertura.
 3. *Adaptación*: ajustes acotados de pesos y afinidades aprendidos de favoritos, comparaciones y descartes, con decaimiento temporal; el usuario puede **desactivarla o restablecerla**.
 4. *Explicación*: desglose por criterio, razones y advertencias; *estrategia base* no adaptativa para evaluar la mejora.
+
+**Evaluación de la adaptación (EF)** ([docs/11](docs/11-evaluacion-adaptativa.md)): con 197 productos reales y las personas de referencia (celíaca, sin sellos para niños, vegana y un usuario nuevo), la estrategia adaptativa logra **P@5 0,667 frente a 0,517 de la versión base (+29 %)**, nDCG@10 0,897 frente a 0,637 y **0 recomendaciones que violen una restricción** (la base tiene 12). Corre en cada pipeline y lo bloquea si la mejora baja del 20 % (objetivo OE4).
 
 **Información web (EP2)** ([docs/10](docs/10-recuperacion-y-evaluacion.md)): ingesta **automatizada y programada** desde Open Food Facts (Chile) → validación, limpieza, normalización, deduplicación y tokenización en Python → persistencia con **procedencia** (fuente, licencia, URL, hash y fecha) e **índice de búsqueda** en PostgreSQL → buscador con **ranking por relevancia** y panel de **calidad de datos** con alertas. Evaluación reproducible: datos reales 95 % válidos y 0 % duplicados; buscador **P@5 0,70 · MRR 1,00 · nDCG@5 0,93** (orden base de la EP1: 0,62 · 0,93 · 0,84).
 
@@ -317,6 +319,7 @@ Detalle: [docs/09 · Infraestructura y staging](docs/09-staging-terraform.md).
 | [08 · Variables y secretos](docs/08-variables-y-secretos.md) | Configuración por ambiente y mínimo privilegio |
 | [09 · Infraestructura y staging](docs/09-staging-terraform.md) | Terraform, ambiente de staging, despliegue y rollback |
 | [10 · Recuperación y evaluación](docs/10-recuperacion-y-evaluacion.md) | Extracción, limpieza, indexación, buscador y métricas (EP2) |
+| [11 · Evaluación adaptativa](docs/11-evaluacion-adaptativa.md) | Personalizado vs. versión base no adaptativa: diseño, métricas, resultados, limitaciones y prueba con usuarios (EF) |
 | [Registro EP2](docs/EP2-registro-de-trabajo.md) | Verificación de la EP1, lista de comprobación de la EP2, qué se hizo y cómo, pendientes |
 | [ADR](docs/adr/README.md) | Registro de decisiones de arquitectura |
 | [CONTRIBUTING](CONTRIBUTING.md) | Flujo de ramas, commits y pull requests |

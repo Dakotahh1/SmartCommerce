@@ -337,6 +337,14 @@ jobs:
       - name: Contrato OpenAPI versionado al día (docs/api/python-service.openapi.json)
         run: uv run python scripts/export_openapi.py --check
 
+      # La compuerta (adaptativa ≥ 1,2 × base en P@5, cero violaciones) ya corrió en pytest; este
+      # paso deja la tabla en el resumen del job y comprueba que los resultados versionados
+      # correspondan al código evaluado.
+      - name: Evaluación del motor adaptativo vs. base no adaptativa (resumen del job)
+        run: |
+          uv run python scripts/evaluate_adaptive.py --summary "$GITHUB_STEP_SUMMARY" > /dev/null
+          git diff --exit-code -- ../evaluation/adaptive/results.json
+
       - name: Análisis estático de seguridad (Bandit)
         run: uv run bandit -c pyproject.toml -r app --severity-level medium
 
