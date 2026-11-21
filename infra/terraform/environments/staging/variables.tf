@@ -66,6 +66,12 @@ variable "off_user_agent" {
   type        = string
 }
 
+variable "off_max_retries" {
+  description = "Reintentos ante errores transitorios de Open Food Facts (0 a 5)."
+  type        = number
+  default     = 2
+}
+
 variable "ingestion" {
   description = "Ingesta programada desde Open Food Facts (ver módulo smartcommerce-stack)."
   type = object({

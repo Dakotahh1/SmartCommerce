@@ -11,6 +11,8 @@ frontend_port    = 8080
 cors_origins     = ["https://staging.smartcommerce.example", "https://localhost"]
 swagger_enabled  = true
 off_user_agent   = "SmartCommerce-staging/0.2.0 (+https://github.com/Dakotahh1/SmartCommerce)"
+# Open Food Facts responde 503 con frecuencia a la IP de Azure: más reintentos (con espera creciente).
+off_max_retries = 5
 
 # Estrategia de actualización: refresco cada 6 h de las categorías del catálogo (EP2).
 ingestion = {
