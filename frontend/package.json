@@ -13,6 +13,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build:android": "ng build --configuration android && cap sync android",
+    "build:android:staging": "ng build --configuration android-staging && cap sync android",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:ci": "ng test --watch=false --coverage",

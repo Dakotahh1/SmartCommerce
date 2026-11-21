@@ -394,16 +394,25 @@ jobs:
           npm ci --no-audit --no-fund
           npm run build:android
 
-      - name: Compilar APK (Gradle)
+      - name: Compilar APK para el emulador (Gradle)
         working-directory: frontend/android
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon --stacktrace
+          mkdir -p ../apk
+          cp app/build/outputs/apk/debug/*.apk ../apk/smartcommerce-emulador.apk
+
+      # La misma app apuntando al staging por HTTPS: se instala en un celular real para la demo.
+      - name: Compilar APK que usa el staging (HTTPS)
+        run: |
+          npm run build:android:staging
+          (cd android && ./gradlew assembleDebug --no-daemon --stacktrace)
+          cp android/app/build/outputs/apk/debug/*.apk apk/smartcommerce-staging.apk
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: smartcommerce-android-debug-apk
-          path: frontend/android/app/build/outputs/apk/debug/*.apk
+          path: frontend/apk/*.apk
           retention-days: 7
 
   # ════════════════════════════════════════════════════════════════════════════
