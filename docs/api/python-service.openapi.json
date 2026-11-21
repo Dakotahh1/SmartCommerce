@@ -3,7 +3,7 @@
   "info": {
     "title": "SmartCommerce · Servicio SmartMatch",
     "description": "\nServicio especializado de **SmartCommerce**. Solo es invocado por el backend NestJS\n(red interna) usando la cabecera `X-Internal-Token`.\n\n* **Ingesta**: obtiene productos desde Open Food Facts y los normaliza con métricas de calidad.\n* **SmartMatch**: ranking multicriterio explicable, comparación y aprendizaje de preferencias.\n",
-    "version": "0.2.0"
+    "version": "1.0.0"
   },
   "paths": {
     "/health": {

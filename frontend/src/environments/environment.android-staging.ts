@@ -6,5 +6,5 @@
 export const environment = {
   production: true,
   apiUrl: 'https://57-156-69-73.sslip.io/api',
-  appVersion: '0.2.0',
+  appVersion: '1.0.0',
 };

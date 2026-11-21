@@ -19,7 +19,7 @@ set -euo pipefail
 TAG="${1:?Uso: scripts/deploy-staging.sh <image_tag>}"
 : "${STAGING_DOCKER_HOST:?Define STAGING_DOCKER_HOST (ssh://usuario@host)}"
 : "${STAGING_URL:?Define STAGING_URL (https://staging.<dominio>)}"
-APP_VERSION="${APP_VERSION:-0.2.0}"
+APP_VERSION="${APP_VERSION:-1.0.0}"
 REMOTE_STATE="${STAGING_STATE_PATH:-smartcommerce/terraform/staging.tfstate}"
 HEALTH_TIMEOUT="${HEALTH_TIMEOUT:-300}"
 

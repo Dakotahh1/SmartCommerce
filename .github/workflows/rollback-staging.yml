@@ -73,6 +73,6 @@ jobs:
         env:
           STAGING_DOCKER_HOST: ${{ vars.STAGING_DOCKER_HOST }}
           STAGING_URL: ${{ vars.STAGING_URL }}
-          APP_VERSION: ${{ vars.APP_VERSION || '0.2.0' }}
+          APP_VERSION: ${{ vars.APP_VERSION || '1.0.0' }}
           IMAGE_TAG: ${{ inputs.image_tag }}
         run: scripts/deploy-staging.sh "$IMAGE_TAG"
