@@ -182,7 +182,7 @@ Las imágenes de GHCR deben ser **públicas** (*perfil › Packages › paquete 
 | Versión incompatible con la base de datos | Las migraciones son aditivas (expandir → contraer): la versión anterior funciona sobre el esquema nuevo. Un cambio destructivo se reparte en dos versiones |
 | Pérdida del host | Nueva VM + mismo procedimiento; `terraform apply` sobre estado vacío recrea todo; la base se restaura desde un respaldo (`pg_dump` programado, trabajo futuro) |
 
-Para identificar qué está desplegado: `curl https://staging.<dominio>/api/health` → `"version": "0.2.0+sha-<commit>"`, o el resumen del último job `deploy-staging`.
+Para identificar qué está desplegado: `curl https://57-156-69-73.sslip.io/api/health` → `"version": "1.0.0+sha-<commit>"`, o el resumen del último job `deploy-staging`.
 
 ## 9.8 Próximos pasos
 

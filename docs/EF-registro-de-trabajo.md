@@ -57,9 +57,9 @@ El 21-11 se probaron en el staging real el despliegue automático y el rollback;
 | [CI 44932267918](https://github.com/Dakotahh1/SmartCommerce/actions/runs/44932267918) (intento 2) | Primer despliegue automático desde main | 0.2.0+sha-8a899c680452 |
 | [CI 44949711188](https://github.com/Dakotahh1/SmartCommerce/actions/runs/44949711188) | Despliegue automático tras mezclar el PR #116 | 0.2.0+sha-5d4e0d144a06 |
 | [Rollback staging 44950518094](https://github.com/Dakotahh1/SmartCommerce/actions/runs/44950518094) | Rollback manual a la versión anterior, verificado | 0.2.0+sha-8a899c680452 |
-| [CI 44950703418](https://github.com/Dakotahh1/SmartCommerce/actions/runs/44950703418) | Despliegue automático tras mezclar el PR #117 (versión entregada) | 0.2.0+sha-7839a089e2c6 |
+| [CI 44950703418](https://github.com/Dakotahh1/SmartCommerce/actions/runs/44950703418) | Despliegue automático tras mezclar el PR #117 | 0.2.0+sha-7839a089e2c6 |
 
-Los datos sobreviven a cada cambio de versión porque PostgreSQL usa un volumen persistente: tras el rollback el catálogo siguió con sus productos. Los primeros intentos de despliegue ([40248129976](https://github.com/Dakotahh1/SmartCommerce/actions/runs/40248129976) y [40249671670](https://github.com/Dakotahh1/SmartCommerce/actions/runs/40249671670)) se detuvieron antes de aplicar nada porque la llave SSH no era válida: un despliegue que no puede verificarse no toca el staging.
+La versión entregada pasa a llamarse 1.0.0: al mezclarse este registro se despliega del mismo modo y /api/health informa `1.0.0+sha-<commit>`, el commit del tag `v1.0.0`. Los datos sobreviven a cada cambio de versión porque PostgreSQL usa un volumen persistente: tras el rollback el catálogo siguió con sus productos. Los primeros intentos de despliegue ([40248129976](https://github.com/Dakotahh1/SmartCommerce/actions/runs/40248129976) y [40249671670](https://github.com/Dakotahh1/SmartCommerce/actions/runs/40249671670)) se detuvieron antes de aplicar nada porque la llave SSH no era válida: un despliegue que no puede verificarse no toca el staging.
 
 ### 3.6 Ingesta ante una fuente intermitente · PR #117
 

@@ -5,7 +5,7 @@
 > Plataforma **web, PWA y Android** que recomienda y compara productos de supermercado de forma **personalizada y explicable**, combinando calidad nutricional, procesamiento, impacto ambiental, precio, disponibilidad y preferencias con datos abiertos de **Open Food Facts**.
 
 Proyecto de la asignatura **Ingeniería Web Avanzada** — Ingeniería Civil Informática · Área de aplicación: **comercio y servicios**.
-**Entrega actual:** Entrega Parcial 2 — *Información web, procesamiento e integración del servicio Python* (`v0.2.0-ep2`). Entrega anterior: EP1 `v0.1.1-ep1`. Qué se hizo en la EP2 y cómo: [docs/EP2-registro-de-trabajo.md](docs/EP2-registro-de-trabajo.md).
+**Entrega actual:** Entrega Final (`v1.0.0`): rúbrica y evidencia en [docs/EF-registro-de-trabajo.md](docs/EF-registro-de-trabajo.md). Entregas anteriores: EP1 `v0.1.1-ep1` y EP2 ([registro](docs/EP2-registro-de-trabajo.md)).
 
 | Enlace | |
 |---|---|
@@ -290,7 +290,7 @@ Detalle: [docs/09 · Infraestructura y staging](docs/09-staging-terraform.md).
 5. **Consulta y visualización:** *Explorar* → "sin azúcar" o "avena" (orden por relevancia) → detalle con procedencia y licencia.
 6. **Métricas:** *Administración › Calidad de datos* (validez, duplicados, actualidad, errores y alertas) y la tabla P@5/MRR/nDCG en el resumen del job *Backend*.
 7. **Error o indisponibilidad:** `docker compose stop python-service` (modo degradado) o sin Internet al ejecutar un lote → ejecución `failed`/`partial`, alerta en *Calidad de datos* y catálogo disponible.
-8. **Staging:** URL del ambiente `staging` y `…/api/health` (versión `0.2.0+sha-<commit>`).
+8. **Staging:** https://57-156-69-73.sslip.io y su `/api/health` (versión `1.0.0+sha-<commit>`).
 
 ## 13. Limitaciones y trabajo futuro
 
