@@ -1,0 +1,7160 @@
+{
+ "description": "Productos reales de Open Food Facts Chile por categoría, normalizados por el servicio Python. Candidatos de la evaluación del motor adaptativo.",
+ "license": "ODbL-1.0 (Open Food Facts)",
+ "sources": {
+  "beverages": "https://world.openfoodfacts.org/api/v2/search?countries_tags_en=chile&fields=code%2Cproduct_name%2Cproduct_name_es%2Cgeneric_name%2Cgeneric_name_es%2Cbrands%2Ccategories_tags%2Cquantity%2Cproduct_quantity%2Cproduct_quantity_unit%2Cnutriscore_grade%2Cnova_group%2Cecoscore_grade%2Cnutriments%2Callergens_tags%2Ctraces_tags%2Clabels_tags%2Cingredients_analysis_tags%2Cstores_tags%2Ccountries_tags%2Cimage_front_url%2Ccompleteness%2Clast_modified_t&page=1&page_size=50&sort_by=last_modified_t&categories_tags_en=beverages (recuperado 2026-11-21T17:11:41+00:00)",
+  "breakfast-cereals": "https://world.openfoodfacts.org/api/v2/search?countries_tags_en=chile&fields=code%2Cproduct_name%2Cproduct_name_es%2Cgeneric_name%2Cgeneric_name_es%2Cbrands%2Ccategories_tags%2Cquantity%2Cproduct_quantity%2Cproduct_quantity_unit%2Cnutriscore_grade%2Cnova_group%2Cecoscore_grade%2Cnutriments%2Callergens_tags%2Ctraces_tags%2Clabels_tags%2Cingredients_analysis_tags%2Cstores_tags%2Ccountries_tags%2Cimage_front_url%2Ccompleteness%2Clast_modified_t&page=1&page_size=50&sort_by=last_modified_t&categories_tags_en=breakfast-cereals (recuperado 2026-11-21T17:11:12+00:00)",
+  "dairies": "https://world.openfoodfacts.org/api/v2/search?countries_tags_en=chile&fields=code%2Cproduct_name%2Cproduct_name_es%2Cgeneric_name%2Cgeneric_name_es%2Cbrands%2Ccategories_tags%2Cquantity%2Cproduct_quantity%2Cproduct_quantity_unit%2Cnutriscore_grade%2Cnova_group%2Cecoscore_grade%2Cnutriments%2Callergens_tags%2Ctraces_tags%2Clabels_tags%2Cingredients_analysis_tags%2Cstores_tags%2Ccountries_tags%2Cimage_front_url%2Ccompleteness%2Clast_modified_t&page=1&page_size=50&sort_by=last_modified_t&categories_tags_en=dairies (recuperado 2026-11-21T17:11:26+00:00)",
+  "snacks": "https://world.openfoodfacts.org/api/v2/search?countries_tags_en=chile&fields=code%2Cproduct_name%2Cproduct_name_es%2Cgeneric_name%2Cgeneric_name_es%2Cbrands%2Ccategories_tags%2Cquantity%2Cproduct_quantity%2Cproduct_quantity_unit%2Cnutriscore_grade%2Cnova_group%2Cecoscore_grade%2Cnutriments%2Callergens_tags%2Ctraces_tags%2Clabels_tags%2Cingredients_analysis_tags%2Cstores_tags%2Ccountries_tags%2Cimage_front_url%2Ccompleteness%2Clast_modified_t&page=1&page_size=50&sort_by=last_modified_t&categories_tags_en=snacks (recuperado 2026-11-21T17:11:49+00:00)"
+ },
+ "reports": {
+  "beverages": {
+   "received": 50,
+   "valid": 50,
+   "rejected": 0,
+   "duplicates": 0,
+   "warnings": 0,
+   "validRatio": 1.0,
+   "duplicateRatio": 0.0,
+   "fieldCoverage": {
+    "brand": 1.0,
+    "category": 1.0,
+    "quantity": 0.98,
+    "nutriscore": 0.64,
+    "nova": 0.74,
+    "ecoscore": 0.44,
+    "nutriments": 0.56,
+    "stores": 0.22,
+    "image": 0.96
+   },
+   "rejections": [],
+   "tookMs": 12.49
+  },
+  "breakfast-cereals": {
+   "received": 50,
+   "valid": 48,
+   "rejected": 2,
+   "duplicates": 0,
+   "warnings": 2,
+   "validRatio": 0.96,
+   "duplicateRatio": 0.0,
+   "fieldCoverage": {
+    "brand": 0.979,
+    "category": 1.0,
+    "quantity": 0.812,
+    "nutriscore": 0.792,
+    "nova": 0.667,
+    "ecoscore": 0.958,
+    "nutriments": 0.792,
+    "stores": 0.188,
+    "image": 0.979
+   },
+   "rejections": [
+    {
+     "index": 29,
+     "code": "7613036301688",
+     "reason": "Producto sin nombre"
+    },
+    {
+     "index": 42,
+     "code": "7804646450624",
+     "reason": "Producto sin nombre"
+    }
+   ],
+   "tookMs": 10.38
+  },
+  "dairies": {
+   "received": 50,
+   "valid": 50,
+   "rejected": 0,
+   "duplicates": 0,
+   "warnings": 1,
+   "validRatio": 1.0,
+   "duplicateRatio": 0.0,
+   "fieldCoverage": {
+    "brand": 1.0,
+    "category": 1.0,
+    "quantity": 1.0,
+    "nutriscore": 0.92,
+    "nova": 0.88,
+    "ecoscore": 0.94,
+    "nutriments": 0.9,
+    "stores": 0.08,
+    "image": 0.98
+   },
+   "rejections": [],
+   "tookMs": 9.75
+  },
+  "snacks": {
+   "received": 50,
+   "valid": 49,
+   "rejected": 1,
+   "duplicates": 0,
+   "warnings": 0,
+   "validRatio": 0.98,
+   "duplicateRatio": 0.0,
+   "fieldCoverage": {
+    "brand": 0.98,
+    "category": 1.0,
+    "quantity": 0.837,
+    "nutriscore": 0.918,
+    "nova": 0.898,
+    "ecoscore": 0.204,
+    "nutriments": 0.959,
+    "stores": 0.061,
+    "image": 0.837
+   },
+   "rejections": [
+    {
+     "index": 28,
+     "code": "00495749",
+     "reason": "GTIN con dígito verificador inválido"
+    }
+   ],
+   "tookMs": 7.82
+  }
+ },
+ "queries": {
+  "beverages": [
+   {
+    "gtin": "7790290101602",
+    "name": "Licor Fernet 39°",
+    "brand": "Branca",
+    "mainCategory": "liqueurs",
+    "nutriscoreGrade": null,
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "not-advised-for-specific-people",
+     "not-advised-for-children-and-pregnant-women"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "amarket",
+     "fidalga",
+     "la-an-nima",
+     "licor-house",
+     "mega-licor"
+    ],
+    "dataQualityScore": 0.738
+   },
+   {
+    "gtin": "7802920011530",
+    "name": "Leche Chocolate Origen",
+    "brand": "Colun",
+    "mainCategory": "l-cteos",
+    "nutriscoreGrade": "e",
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 69.0,
+     "sugars": 11.8,
+     "saturatedFat": 0.0,
+     "sodiumMg": 49.0,
+     "salt": 0.12446,
+     "proteins": 3.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "fsc",
+     "no-colorings",
+     "fsc-mix"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802820600100",
+    "name": "Vital de Chanquihue Agua Mineral Gasificada",
+    "brand": "Vital",
+    "mainCategory": "bebidas",
+    "nutriscoreGrade": "a",
+    "novaGroup": 1,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 0.0,
+     "sugars": 0.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 2.0,
+     "salt": 0.00508,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.915
+   },
+   {
+    "gtin": "7802820443356",
+    "name": "Benedictino",
+    "brand": "Benedictino",
+    "mainCategory": "bebidas",
+    "nutriscoreGrade": "a",
+    "novaGroup": 1,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 0.0,
+     "sugars": 0.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": 0.0,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.873
+   },
+   {
+    "gtin": "7801620006341",
+    "name": "Néctar de Piña Light 0% Azúcar Añadida Botella",
+    "brand": "Watts",
+    "mainCategory": "jugo-de-pi-a",
+    "nutriscoreGrade": "c",
+    "novaGroup": null,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 14.0,
+     "sugars": 2.8,
+     "saturatedFat": 0.0,
+     "sodiumMg": 16.0,
+     "salt": 0.04,
+     "proteins": 0.1,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.77
+   },
+   {
+    "gtin": "7801610001295",
+    "name": "Bebida Original Botella Retornable",
+    "brand": "Coca-Cola",
+    "mainCategory": "sodas",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 32.0,
+     "sugars": 7.8,
+     "saturatedFat": null,
+     "sodiumMg": 10.0,
+     "salt": 0.025,
+     "proteins": 0.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.773
+   },
+   {
+    "gtin": "7801620011079",
+    "name": "Frutos del Bosque",
+    "brand": "Mas",
+    "mainCategory": "bebidas-carbonatadas",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 3.0,
+     "sugars": 0.2,
+     "saturatedFat": 0.0,
+     "sodiumMg": 15.0,
+     "salt": 0.0381,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.915
+   },
+   {
+    "gtin": "7802950002171",
+    "name": "Café Instantáneo Dolca Tarro",
+    "brand": "Nescafé",
+    "mainCategory": "coffee-and-tea-variety-packs",
+    "nutriscoreGrade": null,
+    "novaGroup": 1,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.672
+   },
+   {
+    "gtin": "7802920010618",
+    "name": "Kefir",
+    "brand": "Colun",
+    "mainCategory": "l-cteos",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 86.0,
+     "sugars": 9.9,
+     "saturatedFat": 1.98,
+     "sodiumMg": 50.0,
+     "salt": 0.125,
+     "proteins": 3.1,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-lactose"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": true
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7790387110234",
+    "name": "Yerba Mate Con Palo",
+    "brand": "Taragui",
+    "mainCategory": "herbs",
+    "nutriscoreGrade": null,
+    "novaGroup": 1,
+    "ecoscoreGrade": "a",
+    "nutriments": {
+     "energyKcal": 20.0,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": 12.0,
+     "salt": 0.03,
+     "proteins": 2.0,
+     "fiber": 1.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "mercadona"
+    ],
+    "dataQualityScore": 0.715
+   },
+   {
+    "gtin": "7801620006631",
+    "name": "Agua con Jugo de Fruta Natural Granada",
+    "brand": "+mas",
+    "mainCategory": "bebestibles",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 5.0,
+     "sugars": 0.9,
+     "saturatedFat": 0.0,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.778
+   },
+   {
+    "gtin": "7804320303178",
+    "name": "Reserva Cabernet Sauvignon",
+    "brand": "Casillero del Diablo",
+    "mainCategory": "vinos-tintos",
+    "nutriscoreGrade": null,
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "sulphites"
+    ],
+    "traces": [],
+    "labels": [
+     "vegetarian",
+     "not-advised-for-specific-people",
+     "vegan",
+     "with-sulfites",
+     "green-dot",
+     "not-advised-for-pregnant-women"
+    ],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "ah"
+    ],
+    "dataQualityScore": 0.738
+   },
+   {
+    "gtin": "7802910000230",
+    "name": "Leche Semidescremada Chocolate",
+    "brand": "Loncoleche",
+    "mainCategory": "chocolate-milks",
+    "nutriscoreGrade": "b",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 43.0,
+     "sugars": 4.6,
+     "saturatedFat": 0.9,
+     "sodiumMg": 69.0,
+     "salt": 0.18288,
+     "proteins": 2.9,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [
+     "soy"
+    ],
+    "labels": [
+     "no-gluten"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": true,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.92
+   },
+   {
+    "gtin": "7802900005108",
+    "name": "Soprole Natural Yoghurt Batido",
+    "brand": "Soprole",
+    "mainCategory": "plain-stirred-yogurts",
+    "nutriscoreGrade": "c",
+    "novaGroup": null,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 73.0,
+     "sugars": 4.8,
+     "saturatedFat": 3.2,
+     "sodiumMg": 32.0,
+     "salt": 0.08,
+     "proteins": 3.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "saturated_fat"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.775
+   },
+   {
+    "gtin": "7801610591888",
+    "name": "Sprite Zero Azúcar Sabor Lima-Limón",
+    "brand": "Sprite",
+    "mainCategory": "refrescos-de-lima-lim-n",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 1.1,
+     "sugars": 0.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 18.0,
+     "salt": 0.045,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "contains-a-source-of-phenylalanine",
+     "with-sweeteners"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802955001087",
+    "name": "Yoghurt Batido Sabor Frutilla Pote Calán",
+    "brand": "Danone",
+    "mainCategory": "sweetened-yogurts",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 59.0909090909091,
+     "sugars": 9.09090909090909,
+     "saturatedFat": 0.454545454545455,
+     "sodiumMg": 18.5,
+     "salt": 0.0463636363636364,
+     "proteins": 2.72727272727273,
+     "fiber": null
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "tree_nuts"
+    ],
+    "traces": [
+     "gluten",
+     "soy",
+     "tree_nuts"
+    ],
+    "labels": [
+     "no-colorings"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.94
+   },
+   {
+    "gtin": "7801620011635",
+    "name": "Néctar Piña Botella",
+    "brand": "Watts",
+    "mainCategory": "jugo-de-pi-a",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 21.0,
+     "sugars": 4.8,
+     "saturatedFat": 0.0,
+     "sodiumMg": 5.2,
+     "salt": 0.013,
+     "proteins": 0.1,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.818
+   },
+   {
+    "gtin": "7802800503735",
+    "name": "Cappuccino",
+    "brand": "Gold",
+    "mainCategory": "caf-s",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 400.0,
+     "sugars": 49.7,
+     "saturatedFat": null,
+     "sodiumMg": 929.0,
+     "salt": 2.36,
+     "proteins": 6.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "sodium"
+    ],
+    "allergens": [],
+    "traces": [
+     "milk"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.677
+   },
+   {
+    "gtin": "7801220004433",
+    "name": "Smoothie Pink Punch",
+    "brand": "Minuto Verde",
+    "mainCategory": "bebidas",
+    "nutriscoreGrade": "c",
+    "novaGroup": 1,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 27.0,
+     "sugars": 8.1,
+     "saturatedFat": 0.1,
+     "sodiumMg": 19.6,
+     "salt": 0.05,
+     "proteins": 0.3,
+     "fiber": 0.3
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7804320301174",
+    "name": "Vino Blanco Sauvignon Blanc Reserva Botella",
+    "brand": "Casillero del Diablo",
+    "mainCategory": "wines-from-chile",
+    "nutriscoreGrade": null,
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "with-sulfites"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "ah"
+    ],
+    "dataQualityScore": 0.69
+   },
+   {
+    "gtin": "5010677801553",
+    "name": "Vodka Black Wild Berry 18° Botella",
+    "brand": "Eristoff",
+    "mainCategory": "vodka",
+    "nutriscoreGrade": null,
+    "novaGroup": 3,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 40.0,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "delhaize",
+     "magasins-u",
+     "venta-peio",
+     "carrefour-fr"
+    ],
+    "dataQualityScore": 0.71
+   },
+   {
+    "gtin": "7804320706009",
+    "name": "Vino Tinto Merlot Botella",
+    "brand": "Frontera",
+    "mainCategory": "wines",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.51
+   },
+   {
+    "gtin": "7804320485515",
+    "name": "Vino Tinto Ensamblaje Reserva 13,5° Botella",
+    "brand": "Palo Alto",
+    "mainCategory": "wines",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 0.0,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.47
+   },
+   {
+    "gtin": "7802175001072",
+    "name": "Pisco Reservado 40° Botella",
+    "brand": "Mistral",
+    "mainCategory": "piscos",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "jumbo"
+    ],
+    "dataQualityScore": 0.54
+   },
+   {
+    "gtin": "7591446002176",
+    "name": "Malta sin Alcohol Lata",
+    "brand": "Maltin",
+    "mainCategory": "non-alcoholic-beverages",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 60.0,
+     "sugars": 10.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 4.8,
+     "salt": 0.012,
+     "proteins": 0.5,
+     "fiber": null
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [
+     "gluten"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7804320985633",
+    "name": "Vino Tinto Merlot Reserva Botella",
+    "brand": "Casillero del Diablo",
+    "mainCategory": "wines",
+    "nutriscoreGrade": null,
+    "novaGroup": 3,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "vegetarian",
+     "vegan",
+     "with-sulfites"
+    ],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "ah"
+    ],
+    "dataQualityScore": 0.67
+   },
+   {
+    "gtin": "7804320087016",
+    "name": "Vino Tinto Carmenere Reserva Botella",
+    "brand": "Casillero del Diablo",
+    "mainCategory": "red-wines",
+    "nutriscoreGrade": null,
+    "novaGroup": 3,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "vegetarian",
+     "not-advised-for-specific-people",
+     "vegan",
+     "with-sulfites",
+     "not-advised-for-pregnant-women"
+    ],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "ah"
+    ],
+    "dataQualityScore": 0.67
+   },
+   {
+    "gtin": "7804330005918",
+    "name": "Vino Tinto Cabernet Sauvignon 12° Botella",
+    "brand": "Gran 120",
+    "mainCategory": "red-wines",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.51
+   },
+   {
+    "gtin": "7804320746104",
+    "name": "Vino Tinto Dark Red Ensamblaje Botella",
+    "brand": "Diablo",
+    "mainCategory": "wines",
+    "nutriscoreGrade": null,
+    "novaGroup": 3,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 85.0,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "sulphites"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.675
+   },
+   {
+    "gtin": "5410228143376",
+    "name": "Cerveza Premium Lager 5.0° Botella",
+    "brand": "Stella Artois",
+    "mainCategory": "beers",
+    "nutriscoreGrade": null,
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 41.0,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "gluten"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.65
+   },
+   {
+    "gtin": "0798190273884",
+    "name": "Bebida Energética Lata radical white",
+    "brand": "Score",
+    "mainCategory": "energy-drinks",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 3.0,
+     "sugars": 0.0,
+     "saturatedFat": null,
+     "sodiumMg": 80.3,
+     "salt": 0.200686,
+     "proteins": 0.0,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.775
+   },
+   {
+    "gtin": "7802820651157",
+    "name": "Bebida Isotónica Frozen Blast Botella",
+    "brand": "Powerade",
+    "mainCategory": "bebidas-deportivas",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 21.0,
+     "sugars": 4.8,
+     "saturatedFat": 0.0,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802820441512",
+    "name": "Agua Mineral Botella Sin Gas",
+    "brand": "Benedictino",
+    "mainCategory": "non-carbonated-natural-mineral-waters",
+    "nutriscoreGrade": "a",
+    "novaGroup": 1,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 0.0,
+     "sugars": 0.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 1.0,
+     "salt": 0.0025,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802820175233",
+    "name": "Néctar Tetra Pack Naranja",
+    "brand": "Del Valle",
+    "mainCategory": "orange-nectars",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 20.0,
+     "sugars": 4.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 20.0,
+     "salt": 0.05,
+     "proteins": 0.0,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-preservatives",
+     "no-added-sugar"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.9
+   },
+   {
+    "gtin": "7801610223284",
+    "name": "Bebida Limón Sin Azúcar Botella Retornable",
+    "brand": "Sprite",
+    "mainCategory": "carbonated-drinks",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.513
+   },
+   {
+    "gtin": "90424496",
+    "name": "Bebida Energética Tropical Lata",
+    "brand": "Red Bull",
+    "mainCategory": "energy-drinks",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 46.0,
+     "sugars": 11.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 57.0,
+     "salt": 0.145,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7801620001896",
+    "name": "Bebida Ginger Ale Original Botella",
+    "brand": "Canada Dry",
+    "mainCategory": "carbonated-fruit-soft-drink",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.5
+   },
+   {
+    "gtin": "7801620006860",
+    "name": "Bebida Zero Botella",
+    "brand": "Pepsi",
+    "mainCategory": "diet-cola-soft-drink",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 0.0,
+     "sugars": 0.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 4.0,
+     "salt": 0.01,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "pepsi-zero-azucar"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "supermercados-y-otros"
+    ],
+    "dataQualityScore": 0.975
+   },
+   {
+    "gtin": "7801610350256",
+    "name": "Bebida Sin Azúcar Botella Retornable",
+    "brand": "Coca-Cola",
+    "mainCategory": "diet-cola-soft-drink",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 0.2,
+     "sugars": 0.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "jumbo"
+    ],
+    "dataQualityScore": 0.953
+   },
+   {
+    "gtin": "7801620852962",
+    "name": "Agua Mineral Sin Gas Botella",
+    "brand": "Cachantun",
+    "mainCategory": "waters",
+    "nutriscoreGrade": "d",
+    "novaGroup": 1,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 0.0,
+     "sugars": 0.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 800.0,
+     "salt": 2.0,
+     "proteins": 0.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "sodium"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.87
+   },
+   {
+    "gtin": "7801620014513",
+    "name": "Bebida Original Botella",
+    "brand": "Pepsi",
+    "mainCategory": "sweetened-beverages",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 28.0,
+     "sugars": 7.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 2.0,
+     "salt": 0.005,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-gluten",
+     "kosher",
+     "no-eggs",
+     "no-soy",
+     "without-sulfites",
+     "libre-de-man",
+     "libre-de-mariscos",
+     "libre-de-peces"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": true,
+     "glutenFree": true,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.912
+   },
+   {
+    "gtin": "7801620001599",
+    "name": "Bebida Naranja Original Botella",
+    "brand": "Crush",
+    "mainCategory": "beverages",
+    "nutriscoreGrade": "c",
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 20.0,
+     "sugars": 4.9,
+     "saturatedFat": 0.0,
+     "sodiumMg": 56.0,
+     "salt": 0.14,
+     "proteins": 0.0,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.773
+   },
+   {
+    "gtin": "0798190253701",
+    "name": "Bebida Energética Lata Guarana Gorilla",
+    "brand": "Score",
+    "mainCategory": "energy-drinks",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 48.0,
+     "sugars": 11.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 76.0,
+     "salt": 0.193,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "high-in-sugars"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.9
+   },
+   {
+    "gtin": "7801610323236",
+    "name": "Bebida Original Botella",
+    "brand": "Coca-Cola",
+    "mainCategory": "sweetened-beverages",
+    "nutriscoreGrade": "d",
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 32.0,
+     "sugars": 7.8,
+     "saturatedFat": 0.0,
+     "sodiumMg": 10.0,
+     "salt": 0.025,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "alto-en-az-cares"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.793
+   },
+   {
+    "gtin": "7801610000595",
+    "name": "Bebida Botella Light",
+    "brand": "Coca-Cola",
+    "mainCategory": "sodas",
+    "nutriscoreGrade": "b",
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 0.4,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": 0.0,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.633
+   },
+   {
+    "gtin": "7801620007607",
+    "name": "Néctar de Maracuyá 0% Azúcar Añadida Botella",
+    "brand": "Watts",
+    "mainCategory": "fruit-nectars",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 10.0,
+     "sugars": 1.4,
+     "saturatedFat": 0.0,
+     "sodiumMg": 11000.0,
+     "salt": 27.5,
+     "proteins": 0.2,
+     "fiber": null
+    },
+    "highInSeals": [
+     "sodium"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-added-sugar"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.938
+   },
+   {
+    "gtin": "7802820700435",
+    "name": "Néctar Manzana Botella",
+    "brand": "Del Valle",
+    "mainCategory": "apple-nectars",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 52.0,
+     "sugars": 12.5,
+     "saturatedFat": 0.0,
+     "sodiumMg": 18.0,
+     "salt": 0.045,
+     "proteins": 0.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.917
+   },
+   {
+    "gtin": "7802820700633",
+    "name": "Néctar De Naranja 0% Azúcar Añadida Botella",
+    "brand": "Andina del Valle",
+    "mainCategory": "orange-juices",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 20.0,
+     "sugars": 4.0,
+     "saturatedFat": null,
+     "sodiumMg": 20.3,
+     "salt": 0.0508,
+     "proteins": 0.0,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "refrigerar"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [
+     "l-der"
+    ],
+    "dataQualityScore": 0.855
+   },
+   {
+    "gtin": "7802820700053",
+    "name": "Néctar Tetra Pack De Naranja Andina",
+    "brand": "Del Valle",
+    "mainCategory": "fruit-juices",
+    "nutriscoreGrade": "b",
+    "novaGroup": null,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 20.0,
+     "sugars": 4.6,
+     "saturatedFat": null,
+     "sodiumMg": 17.0,
+     "salt": 0.0425,
+     "proteins": 0.0,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.633
+   },
+   {
+    "gtin": "7801610022740",
+    "name": "Bebida Light Botella",
+    "brand": "Coca-Cola",
+    "mainCategory": "colas",
+    "nutriscoreGrade": "b",
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 0.0,
+     "sugars": 0.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 18.3,
+     "salt": 0.04572,
+     "proteins": 0.2,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.775
+   }
+  ],
+  "breakfast-cereals": [
+   {
+    "gtin": "7804000001448",
+    "name": "Enlinea Cereales Sin Azúcar Añadida",
+    "brand": "Enlinea",
+    "mainCategory": "cereales-para-desayuno",
+    "nutriscoreGrade": "b",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 318.0,
+     "sugars": 0.6,
+     "saturatedFat": 1.5,
+     "sodiumMg": 5.5,
+     "salt": 0.014,
+     "proteins": 10.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [
+     "low-or-no-sodium",
+     "low-sodium",
+     "no-added-sugar"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802000017858",
+    "name": "Avena Integral Tradicional",
+    "brand": "Quaker",
+    "mainCategory": "avena-laminada",
+    "nutriscoreGrade": "a",
+    "novaGroup": 1,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 403.333333333333,
+     "sugars": 1.2,
+     "saturatedFat": 1.4,
+     "sodiumMg": 3.5,
+     "salt": 0.00875,
+     "proteins": 13.1,
+     "fiber": 9.7
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten"
+    ],
+    "traces": [
+     "gluten",
+     "soy",
+     "tree_nuts"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [
+     "jumbo"
+    ],
+    "dataQualityScore": 0.955
+   },
+   {
+    "gtin": "7800120170170",
+    "name": "Vivo Avena instantánea",
+    "brand": "Carozzi",
+    "mainCategory": "cereales",
+    "nutriscoreGrade": "a",
+    "novaGroup": null,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 366.0,
+     "sugars": 1.1,
+     "saturatedFat": 1.3,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": 13.1,
+     "fiber": 10.7
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "source-of-fibre"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.675
+   },
+   {
+    "gtin": "7804000002124",
+    "name": "Enlinea Muesli Cacao",
+    "brand": "Enlinea",
+    "mainCategory": "cereales",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 340.0,
+     "sugars": 0.7,
+     "saturatedFat": 0.5,
+     "sodiumMg": 5.0,
+     "salt": 0.0127,
+     "proteins": 11.4,
+     "fiber": 9.2
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "soy",
+     "tree_nuts"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": true,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7804686560222",
+    "name": "Cereal Muesli Chocolate",
+    "brand": "Granolin",
+    "mainCategory": "cereales-para-desayuno",
+    "nutriscoreGrade": "b",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 370.0,
+     "sugars": 7.8,
+     "saturatedFat": 0.9,
+     "sodiumMg": 26.6,
+     "salt": 0.067564,
+     "proteins": 11.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7501073427532",
+    "name": "Cereal Frutal",
+    "brand": "Trix",
+    "mainCategory": "cereales-para-desayuno",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 383.0,
+     "sugars": 28.4,
+     "saturatedFat": 0.0,
+     "sodiumMg": 291.0,
+     "salt": 0.74,
+     "proteins": 4.8,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802635001116",
+    "name": "Cereal Chocolate Pillows",
+    "brand": "Cola Cao",
+    "mainCategory": "cereales-para-desayuno",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 405.0,
+     "sugars": 41.0,
+     "saturatedFat": 5.0,
+     "sodiumMg": 272.0,
+     "salt": 0.0,
+     "proteins": 7.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802215168895",
+    "name": "Cereal Mono Balls",
+    "brand": "Costa",
+    "mainCategory": "chocolate-cereals",
+    "nutriscoreGrade": "c",
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 119.0,
+     "sugars": 10.2,
+     "saturatedFat": 1.2,
+     "sodiumMg": 50.0,
+     "salt": 0.125,
+     "proteins": 1.8,
+     "fiber": 0.9
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "sistema-de-etiquetado-frontal-de-alimentos-y-bebidas",
+     "exceso-grasas-saturadas"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.755
+   },
+   {
+    "gtin": "7800120169204",
+    "name": "Cereal Line Integral",
+    "brand": "Vivo",
+    "mainCategory": "cereales-para-desayuno",
+    "nutriscoreGrade": "c",
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 360.0,
+     "sugars": 1.7,
+     "saturatedFat": 1.3,
+     "sodiumMg": 315.0,
+     "salt": 0.7991,
+     "proteins": 5.8,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.755
+   },
+   {
+    "gtin": "7800120169235",
+    "name": "Cereal Line Berries",
+    "brand": "Vivo",
+    "mainCategory": "cereal-flakes-with-fruits",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 362.0,
+     "sugars": 3.0,
+     "saturatedFat": 0.9,
+     "sodiumMg": 275.0,
+     "salt": 0.6875,
+     "proteins": 7.0,
+     "fiber": 4.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten"
+    ],
+    "traces": [
+     "eggs",
+     "gluten",
+     "milk",
+     "sesame",
+     "soy",
+     "sulphites",
+     "tree_nuts"
+    ],
+    "labels": [
+     "pefc"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [
+     "lider"
+    ],
+    "dataQualityScore": 0.978
+   },
+   {
+    "gtin": "7802215121258",
+    "name": "Chocolate Rolls Crocante",
+    "brand": "Costa",
+    "mainCategory": "extruded-cereals",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 498.098859315589,
+     "sugars": 53.2319391634981,
+     "saturatedFat": 15.5893536121673,
+     "sodiumMg": 110.3,
+     "salt": 0.275665399239544,
+     "proteins": 4.56273764258555,
+     "fiber": 0.760456273764259
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "peanuts",
+     "soy",
+     "tree_nuts"
+    ],
+    "traces": [
+     "eggs",
+     "gluten",
+     "milk",
+     "peanuts",
+     "soy",
+     "sulphites",
+     "tree_nuts"
+    ],
+    "labels": [
+     "high-in-calories",
+     "high-in-saturated-fats",
+     "high-in-sugars"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.935
+   },
+   {
+    "gtin": "7613031291441",
+    "name": "Chocapic Sin Azúcar Añadida",
+    "brand": "Nestlé",
+    "mainCategory": "diet-chocolate-breakfast-cereals",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 326.666666666667,
+     "sugars": 2.1,
+     "saturatedFat": null,
+     "sodiumMg": 350.0,
+     "salt": 0.875,
+     "proteins": 8.66666666666667,
+     "fiber": 11.6666666666667
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "soy"
+    ],
+    "traces": [
+     "milk",
+     "tree_nuts"
+    ],
+    "labels": [
+     "no-colorings",
+     "source-of-fibre",
+     "no-added-sugar",
+     "no-flavors",
+     "cpu"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [
+     "fidalga"
+    ],
+    "dataQualityScore": 0.74
+   },
+   {
+    "gtin": "7613033972720",
+    "name": "5 cereales",
+    "brand": "Nestlé",
+    "mainCategory": "instant-cereal-powder-to-be-reconstituted-for-baby-from-6-months",
+    "nutriscoreGrade": null,
+    "novaGroup": 1,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 397.0,
+     "sugars": 21.0,
+     "saturatedFat": 0.8,
+     "sodiumMg": 48.0,
+     "salt": 0.12,
+     "proteins": 10.0,
+     "fiber": 3.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [
+     "gluten"
+    ],
+    "traces": [
+     "milk"
+    ],
+    "labels": [
+     "high-in-iron"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [
+     "farmacorp"
+    ],
+    "dataQualityScore": 0.833
+   },
+   {
+    "gtin": "7804000002117",
+    "name": "Muesli Frutal",
+    "brand": "Linea",
+    "mainCategory": "cereales",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 339.0,
+     "sugars": 2.1,
+     "saturatedFat": null,
+     "sodiumMg": 72.0,
+     "salt": 0.18,
+     "proteins": 9.0,
+     "fiber": 7.4
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "sulphites",
+     "tree_nuts"
+    ],
+    "traces": [],
+    "labels": [
+     "no-added-sugar"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.653
+   },
+   {
+    "gtin": "7613287833495",
+    "name": "Crunchy Cacao Fitness",
+    "brand": "Nestlé",
+    "mainCategory": "breakfast-cereals",
+    "nutriscoreGrade": "a",
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 276.666666666667,
+     "sugars": 5.66666666666667,
+     "saturatedFat": 1.2,
+     "sodiumMg": 396.0,
+     "salt": 0.99,
+     "proteins": 10.0,
+     "fiber": 21.3333333333333
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-colorings"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.657
+   },
+   {
+    "gtin": "7808743605611",
+    "name": "Avena Instantánea Tottus",
+    "brand": "Tottus",
+    "mainCategory": "avenas",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 395.0,
+     "sugars": 1.2,
+     "saturatedFat": null,
+     "sodiumMg": 10700.0,
+     "salt": 26.75,
+     "proteins": 11.0,
+     "fiber": 14.4
+    },
+    "highInSeals": [
+     "calories",
+     "sodium"
+    ],
+    "allergens": [
+     "gluten",
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [
+     "tottus"
+    ],
+    "dataQualityScore": 0.578
+   },
+   {
+    "gtin": "7800120163189",
+    "name": "Granola Miel & Almendras",
+    "brand": "Vivo",
+    "mainCategory": "cereales-para-desayuno",
+    "nutriscoreGrade": "d",
+    "novaGroup": null,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 420.0,
+     "sugars": 25.0,
+     "saturatedFat": 1.5,
+     "sodiumMg": 70.0,
+     "salt": 0.18,
+     "proteins": 8.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.78
+   },
+   {
+    "gtin": "7804000002131",
+    "name": "Muesli Multi Semilla Sin Azúcar Añadida",
+    "brand": "EnLínea",
+    "mainCategory": "cereales-y-sus-derivados",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 358.0,
+     "sugars": 1.6,
+     "saturatedFat": null,
+     "sodiumMg": 74.0,
+     "salt": 0.19,
+     "proteins": 13.0,
+     "fiber": 8.9
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten"
+    ],
+    "traces": [
+     "eggs",
+     "milk",
+     "peanuts",
+     "soy",
+     "sulphites",
+     "tree_nuts"
+    ],
+    "labels": [
+     "no-added-sugar",
+     "with-stevia"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.677
+   },
+   {
+    "gtin": "7702103978134",
+    "name": "ZUCARITAS",
+    "brand": "Kellogg's",
+    "mainCategory": "breakfast-cereals",
+    "nutriscoreGrade": "d",
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 379.0,
+     "sugars": 41.0,
+     "saturatedFat": 0.3,
+     "sodiumMg": 274.3,
+     "salt": 0.6858,
+     "proteins": 4.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.9
+   },
+   {
+    "gtin": "7702103059451",
+    "name": "CORN FLAKES EL ORIGINAL",
+    "brand": "Kellogg's",
+    "mainCategory": "copos-de-ma-z",
+    "nutriscoreGrade": "c",
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 372.0,
+     "sugars": 9.2,
+     "saturatedFat": 0.5,
+     "sodiumMg": 290.6,
+     "salt": 0.72644,
+     "proteins": 6.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7800120163172",
+    "name": "Vivo Granola con trocitos de Berries",
+    "brand": "Vivo",
+    "mainCategory": "cereales-para-desayuno",
+    "nutriscoreGrade": "b",
+    "novaGroup": null,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 408.0,
+     "sugars": 7.2,
+     "saturatedFat": 3.9,
+     "sodiumMg": 30.0,
+     "salt": 0.0762,
+     "proteins": 9.0,
+     "fiber": 8.8
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.775
+   },
+   {
+    "gtin": "7804000001998",
+    "name": "Granola Sin Azúcar Añadida",
+    "brand": "Enlinea",
+    "mainCategory": "cereales",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 421.0,
+     "sugars": 0.0,
+     "saturatedFat": 5.4,
+     "sodiumMg": 138.0,
+     "salt": 0.35,
+     "proteins": 11.0,
+     "fiber": 9.0
+    },
+    "highInSeals": [
+     "calories",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "tree_nuts"
+    ],
+    "traces": [
+     "peanuts",
+     "soy",
+     "sulphites"
+    ],
+    "labels": [
+     "low-or-no-sodium",
+     "low-sodium",
+     "source-of-fibre",
+     "no-added-sugar",
+     "with-stevia"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [
+     "organic-natural-shop"
+    ],
+    "dataQualityScore": 0.978
+   },
+   {
+    "gtin": "7800120167118",
+    "name": "Mono Rolls",
+    "brand": "Costa",
+    "mainCategory": "breakfast-cereals",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 396.0,
+     "sugars": 32.0,
+     "saturatedFat": 3.9,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": 6.4,
+     "fiber": 2.6
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "peanuts",
+     "soy",
+     "sulphites",
+     "tree_nuts"
+    ],
+    "traces": [],
+    "labels": [
+     "pefc"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.78
+   },
+   {
+    "gtin": "7800120162922",
+    "name": "AVENA INSTANTÁNEA",
+    "brand": "Selecta",
+    "mainCategory": "cereales",
+    "nutriscoreGrade": "b",
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 370.0,
+     "sugars": 1.0,
+     "saturatedFat": 1.6,
+     "sodiumMg": 6.0,
+     "salt": 0.01524,
+     "proteins": 11.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-additives"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.775
+   },
+   {
+    "gtin": "7804676870065",
+    "name": "GRANOLA PROTEICA ALMENDRA CRUNCH",
+    "brand": "UNDER FIVE",
+    "mainCategory": "granola-proteica",
+    "nutriscoreGrade": "d",
+    "novaGroup": 1,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 391.0,
+     "sugars": 24.0,
+     "saturatedFat": 1.3,
+     "sodiumMg": 177.8,
+     "salt": 0.4445,
+     "proteins": 20.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [
+     "peanuts",
+     "tree_nuts"
+    ],
+    "traces": [],
+    "labels": [
+     "vegetarian",
+     "vegan",
+     "pefc"
+    ],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.915
+   },
+   {
+    "gtin": "7804646450297",
+    "name": "Granola Mix Semillas",
+    "brand": "Mizos",
+    "mainCategory": "cereales",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 402.0,
+     "sugars": 9.8,
+     "saturatedFat": 2.7,
+     "sodiumMg": 227.0,
+     "salt": 0.57658,
+     "proteins": 11.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "vegetarian",
+     "no-gluten",
+     "vegan"
+    ],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": true,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.915
+   },
+   {
+    "gtin": "7804676870201",
+    "name": "Cacao Granola Protein",
+    "brand": "Under Five",
+    "mainCategory": "cereales",
+    "nutriscoreGrade": "a",
+    "novaGroup": 1,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 379.0,
+     "sugars": 5.6,
+     "saturatedFat": 1.8,
+     "sodiumMg": 218.0,
+     "salt": 0.55452,
+     "proteins": 27.3,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "peanuts"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.915
+   },
+   {
+    "gtin": "7800120163424",
+    "name": "Granola Chocolate",
+    "brand": "Selecta",
+    "mainCategory": "cereales-para-desayuno",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 447.0,
+     "sugars": 25.2,
+     "saturatedFat": 6.1,
+     "sodiumMg": 145.0,
+     "salt": 0.368,
+     "proteins": 8.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7800120170101",
+    "name": "Avena 4 semillas",
+    "brand": "Vivo",
+    "mainCategory": "breakfast-cereals",
+    "nutriscoreGrade": "e",
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 374.0,
+     "sugars": 1.6,
+     "saturatedFat": 2.3,
+     "sodiumMg": 4000.0,
+     "salt": 10.0,
+     "proteins": 11.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sodium"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "source-of-fibre"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.655
+   },
+   {
+    "gtin": "7804000002766",
+    "name": "Muesli de Proteína con cacao",
+    "brand": "Enlinea",
+    "mainCategory": "cereales-y-patatas",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 381.0,
+     "sugars": 0.8,
+     "saturatedFat": 0.0,
+     "sodiumMg": 178.0,
+     "salt": 0.45,
+     "proteins": 29.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802000011719",
+    "name": "Avena Multisemillas",
+    "brand": "Quaker",
+    "mainCategory": "rolled-flakes",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "gluten"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.415
+   },
+   {
+    "gtin": "7613287521507",
+    "name": "Chocapic Sin Azúcar Añadida",
+    "brand": "Nestlé",
+    "mainCategory": "breakfast-cereals-fortified-with-vitamins-and-chemical-elements",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 328.0,
+     "sugars": 1.5,
+     "saturatedFat": 1.1,
+     "sodiumMg": 376.0,
+     "salt": 0.94,
+     "proteins": 9.2,
+     "fiber": 12.3
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "soy"
+    ],
+    "traces": [
+     "milk",
+     "tree_nuts"
+    ],
+    "labels": [
+     "no-added-sugar",
+     "cpu"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [
+     "farmacorp",
+     "hipermaxi"
+    ],
+    "dataQualityScore": 0.98
+   },
+   {
+    "gtin": "7802000011306",
+    "name": "Quadritos",
+    "brand": "Quaker",
+    "mainCategory": "breakfast-cereals",
+    "nutriscoreGrade": "e",
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 361.0,
+     "sugars": 12.0,
+     "saturatedFat": 1.1,
+     "sodiumMg": 1356.0,
+     "salt": 3.39,
+     "proteins": 11.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "sodium"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.655
+   },
+   {
+    "gtin": "7800120170125",
+    "name": "Avena Instantanea",
+    "brand": null,
+    "mainCategory": "breakfast-cereals",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.315
+   },
+   {
+    "gtin": "7613287593467",
+    "name": "cheerios",
+    "brand": "Cheerios",
+    "mainCategory": "extruded-cereals",
+    "nutriscoreGrade": "c",
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 371.0,
+     "sugars": 19.8,
+     "saturatedFat": 1.1,
+     "sodiumMg": 399.0,
+     "salt": 0.9975,
+     "proteins": 7.2,
+     "fiber": 6.5
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-colorings"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.655
+   },
+   {
+    "gtin": "7804000003022",
+    "name": "Cereal relleno sabor chocolate",
+    "brand": "Enlinea",
+    "mainCategory": "breakfast-cereals-filled-with-chocolate",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 363.0,
+     "sugars": 1.4,
+     "saturatedFat": 2.4,
+     "sodiumMg": 18.0,
+     "salt": 60.0,
+     "proteins": 15.0,
+     "fiber": 13.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "peanuts"
+    ],
+    "traces": [],
+    "labels": [
+     "low-or-no-sodium",
+     "source-of-fibre",
+     "low-sodium",
+     "no-added-sugar"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802000013546",
+    "name": "Avena Multisemillas",
+    "brand": "Quaker",
+    "mainCategory": "rolled-oats",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 375.0,
+     "sugars": 1.3,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": 13.0,
+     "fiber": 11.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.375
+   },
+   {
+    "gtin": "7804673913673",
+    "name": "PROTEIN Granola GOLDEN CRUNCHY",
+    "brand": "WILD",
+    "mainCategory": "granola-proteica",
+    "nutriscoreGrade": "a",
+    "novaGroup": null,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 346.0,
+     "sugars": 2.4,
+     "saturatedFat": 1.6,
+     "sodiumMg": 348.6,
+     "salt": 0.8715,
+     "proteins": 29.5,
+     "fiber": 11.9
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.775
+   },
+   {
+    "gtin": "7804000002100",
+    "name": "Enlinea Cereal de Proteína Bolitas Sabor Chocolate",
+    "brand": "Enlinea",
+    "mainCategory": "cereales-para-desayuno",
+    "nutriscoreGrade": "b",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 337.0,
+     "sugars": 2.2,
+     "saturatedFat": 1.2,
+     "sodiumMg": 371.0,
+     "salt": 0.94,
+     "proteins": 34.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [
+     "no-added-sugar",
+     "with-stevia"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [
+     "bonjour-sant"
+    ],
+    "dataQualityScore": 0.958
+   },
+   {
+    "gtin": "7800120162212",
+    "name": "Check 3 Cereales",
+    "brand": "Vivo",
+    "mainCategory": "extruded-cereals",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 340.0,
+     "sugars": 1.0,
+     "saturatedFat": 1.6,
+     "sodiumMg": 310.0,
+     "salt": 0.775,
+     "proteins": 9.0,
+     "fiber": 16.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten"
+    ],
+    "traces": [
+     "eggs",
+     "gluten",
+     "milk",
+     "peanuts",
+     "sesame",
+     "soy",
+     "sulphites",
+     "tree_nuts"
+    ],
+    "labels": [
+     "incorrect-data-on-label",
+     "incorrect-nutrition-facts-on-label",
+     "no-added-sugar",
+     "pefc"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802000017803",
+    "name": "Granola Avena, Almendras y Miel",
+    "brand": "Quaker",
+    "mainCategory": "cereales",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 371.0,
+     "sugars": 6.9,
+     "saturatedFat": 2.3,
+     "sodiumMg": 59.0,
+     "salt": 0.15,
+     "proteins": 10.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "milk",
+     "soy",
+     "tree_nuts"
+    ],
+    "traces": [
+     "gluten",
+     "milk",
+     "soy",
+     "sulphites",
+     "tree_nuts"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.917
+   },
+   {
+    "gtin": "7613032269586",
+    "name": "Cerelac 5 Cereales y leche",
+    "brand": "Cerelac",
+    "mainCategory": "instant-cereal-powder-to-be-reconstituted-for-baby-from-6-months",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "gluten",
+     "milk"
+    ],
+    "traces": [
+     "soy"
+    ],
+    "labels": [
+     "con-probi-tico"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [
+     "amarket",
+     "fsa",
+     "farmacias-ch-vez",
+     "farmacorp"
+    ],
+    "dataQualityScore": 0.76
+   },
+   {
+    "gtin": "7804000002759",
+    "name": "Granola de Proteína Almendras y Coco",
+    "brand": "Enlinea",
+    "mainCategory": "cereales",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 459.0,
+     "sugars": 1.0,
+     "saturatedFat": 1.8,
+     "sodiumMg": 150.0,
+     "salt": 0.38,
+     "proteins": 22.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "milk",
+     "soy",
+     "tree_nuts"
+    ],
+    "traces": [],
+    "labels": [
+     "no-added-sugar"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802215168970",
+    "name": "Mono Rolls",
+    "brand": "Costa",
+    "mainCategory": "breakfast-cereals",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 396.0,
+     "sugars": 34.0,
+     "saturatedFat": 4.3,
+     "sodiumMg": 145.0,
+     "salt": 0.3625,
+     "proteins": 6.0,
+     "fiber": 3.5
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "peanuts",
+     "soy",
+     "tree_nuts"
+    ],
+    "traces": [
+     "milk",
+     "soy",
+     "tree_nuts"
+    ],
+    "labels": [
+     "high-in-calories",
+     "high-in-saturated-fats",
+     "high-in-sugars",
+     "pefc"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.915
+   },
+   {
+    "gtin": "7702103127693",
+    "name": "Zucaritas",
+    "brand": "Kellogs",
+    "mainCategory": "breakfast-cereals",
+    "nutriscoreGrade": "e",
+    "novaGroup": 3,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 375.0,
+     "sugars": 41.0,
+     "saturatedFat": 0.1,
+     "sodiumMg": 361.0,
+     "salt": 0.9,
+     "proteins": 3.9,
+     "fiber": 1.8
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [
+     "gluten",
+     "soy"
+    ],
+    "labels": [
+     "high-in-calories",
+     "high-in-sugars"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.92
+   },
+   {
+    "gtin": "7790045823094",
+    "name": "Fibra Total 4 Fibras",
+    "brand": "Granix",
+    "mainCategory": "oat-brans",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": "a",
+    "nutriments": {
+     "energyKcal": 296.666666666667,
+     "sugars": null,
+     "saturatedFat": 0.3,
+     "sodiumMg": 100.0,
+     "salt": 0.25,
+     "proteins": 14.0,
+     "fiber": 15.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "sulphites"
+    ],
+    "traces": [
+     "milk",
+     "peanuts",
+     "soy",
+     "tree_nuts"
+    ],
+    "labels": [
+     "low-or-no-sodium",
+     "low-sodium"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.7
+   },
+   {
+    "gtin": "7802000014949",
+    "name": "Avena",
+    "brand": "Quajer",
+    "mainCategory": "rolled-oats",
+    "nutriscoreGrade": "a",
+    "novaGroup": null,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 402.0,
+     "sugars": 1.2,
+     "saturatedFat": 1.4,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": 13.1,
+     "fiber": 9.71
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.655
+   },
+   {
+    "gtin": "7803515020005",
+    "name": "Avena Integral",
+    "brand": "La Fuente Natural",
+    "mainCategory": "rolled-oats",
+    "nutriscoreGrade": "a",
+    "novaGroup": 1,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 384.0,
+     "sugars": 1.66666666666667,
+     "saturatedFat": 1.33333333333333,
+     "sodiumMg": 10.7,
+     "salt": 0.0266666666666667,
+     "proteins": 14.3333333333333,
+     "fiber": 9.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-additives"
+    ],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   }
+  ],
+  "dairies": [
+   {
+    "gtin": "18429350",
+    "name": "Yogur Oikos Griego Natural No Endulzado",
+    "brand": "Danone",
+    "mainCategory": "greek-style-yogurts",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 98.0,
+     "sugars": 5.7,
+     "saturatedFat": 4.0,
+     "sodiumMg": null,
+     "salt": 59.0,
+     "proteins": 4.6,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [
+     "jumbo",
+     "lider",
+     "unimarc"
+    ],
+    "dataQualityScore": 0.812
+   },
+   {
+    "gtin": "7802920007182",
+    "name": "Leche Semidescremada Chocolate Original",
+    "brand": "Colun",
+    "mainCategory": "l-cteos",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 75.0,
+     "sugars": 11.6,
+     "saturatedFat": 0.0,
+     "sodiumMg": 61.0,
+     "salt": 0.0,
+     "proteins": 3.1,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-gluten"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": true,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.9
+   },
+   {
+    "gtin": "7802920011530",
+    "name": "Leche Chocolate Origen",
+    "brand": "Colun",
+    "mainCategory": "l-cteos",
+    "nutriscoreGrade": "e",
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 69.0,
+     "sugars": 11.8,
+     "saturatedFat": 0.0,
+     "sodiumMg": 49.0,
+     "salt": 0.12446,
+     "proteins": 3.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "fsc",
+     "no-colorings",
+     "fsc-mix"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802900002039",
+    "name": "Yoghurt Protein Sabor Vainilla Pote",
+    "brand": "Soprole",
+    "mainCategory": "yogures-batidos",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 68.0,
+     "sugars": 6.3,
+     "saturatedFat": 1.2,
+     "sodiumMg": 122.0,
+     "salt": 0.0,
+     "proteins": 6.6,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802920000084",
+    "name": "Leche Descremada Natural Caja",
+    "brand": "Colun",
+    "mainCategory": "l-cteos",
+    "nutriscoreGrade": "b",
+    "novaGroup": 1,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 34.0,
+     "sugars": 4.7,
+     "saturatedFat": 0.1,
+     "sodiumMg": 40.0,
+     "salt": 0.0,
+     "proteins": 3.3,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "contains-milk"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7808709504743",
+    "name": "Leche Descremada Sin Lactosa",
+    "brand": "Surlat",
+    "mainCategory": "l-cteos",
+    "nutriscoreGrade": "b",
+    "novaGroup": 1,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 33.0,
+     "sugars": 4.8,
+     "saturatedFat": 0.1,
+     "sodiumMg": 41.0,
+     "salt": 0.1025,
+     "proteins": 3.3,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "fsc",
+     "fsc-mix",
+     "no-lactose"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": true
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7802910009172",
+    "name": "MANTEQUILLA RECETA ARTESANAL",
+    "brand": "Las Parcelas de Valdivia",
+    "mainCategory": "mantequillas",
+    "nutriscoreGrade": "e",
+    "novaGroup": 2,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 743.0,
+     "sugars": 0.8,
+     "saturatedFat": 52.6,
+     "sodiumMg": 600.0,
+     "salt": 1.524,
+     "proteins": 0.7,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802920010601",
+    "name": "Yoghurt Origen Sabor Vainilla Pote",
+    "brand": "Colun",
+    "mainCategory": "yogures",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 104.0,
+     "sugars": 11.2,
+     "saturatedFat": 3.3,
+     "sodiumMg": 54.0,
+     "salt": 0.0,
+     "proteins": 3.1,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802910000971",
+    "name": "SIN LACTOSA",
+    "brand": "Lonco Leche",
+    "mainCategory": "l-cteos",
+    "nutriscoreGrade": "b",
+    "novaGroup": 1,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 59.0,
+     "sugars": 4.6,
+     "saturatedFat": 2.0,
+     "sodiumMg": 40.0,
+     "salt": 0.1,
+     "proteins": 3.1,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-gluten",
+     "fsc",
+     "fsc-mix",
+     "no-lactose"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": true,
+     "lactoseFree": true
+    },
+    "stores": [],
+    "dataQualityScore": 0.92
+   },
+   {
+    "gtin": "7802920010618",
+    "name": "Kefir",
+    "brand": "Colun",
+    "mainCategory": "l-cteos",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 86.0,
+     "sugars": 9.9,
+     "saturatedFat": 1.98,
+     "sodiumMg": 50.0,
+     "salt": 0.125,
+     "proteins": 3.1,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-lactose"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": true
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802900002022",
+    "name": "Yoghurt Protein Sabor Chirimoya Pote",
+    "brand": "Soprole",
+    "mainCategory": "yogures-saborizados",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 68.0,
+     "sugars": 6.3,
+     "saturatedFat": 1.34,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": 6.6,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "8445291225275",
+    "name": "Postre Goodnes Protein Sabor Caramelo Pote",
+    "brand": "Nestlé",
+    "mainCategory": "postres-l-cteos",
+    "nutriscoreGrade": "b",
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 85.2173913043478,
+     "sugars": 6.08695652173913,
+     "saturatedFat": 1.1304347826087,
+     "sodiumMg": 146.1,
+     "salt": 0.365217391304348,
+     "proteins": 8.69565217391304,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.755
+   },
+   {
+    "gtin": "7802910000230",
+    "name": "Leche Semidescremada Chocolate",
+    "brand": "Loncoleche",
+    "mainCategory": "chocolate-milks",
+    "nutriscoreGrade": "b",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 43.0,
+     "sugars": 4.6,
+     "saturatedFat": 0.9,
+     "sodiumMg": 69.0,
+     "salt": 0.18288,
+     "proteins": 2.9,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [
+     "soy"
+    ],
+    "labels": [
+     "no-gluten"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": true,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.92
+   },
+   {
+    "gtin": "7802930004867",
+    "name": "Yogurt Natural 0%",
+    "brand": "Quillayes",
+    "mainCategory": "plain-yogurts",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 35.0,
+     "sugars": 3.7,
+     "saturatedFat": 0.25,
+     "sodiumMg": 67.3,
+     "salt": 0.16825,
+     "proteins": 3.8,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.9
+   },
+   {
+    "gtin": "7802900005108",
+    "name": "Soprole Natural Yoghurt Batido",
+    "brand": "Soprole",
+    "mainCategory": "plain-stirred-yogurts",
+    "nutriscoreGrade": "c",
+    "novaGroup": null,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 73.0,
+     "sugars": 4.8,
+     "saturatedFat": 3.2,
+     "sodiumMg": 32.0,
+     "salt": 0.08,
+     "proteins": 3.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "saturated_fat"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.775
+   },
+   {
+    "gtin": "7802955001087",
+    "name": "Yoghurt Batido Sabor Frutilla Pote Calán",
+    "brand": "Danone",
+    "mainCategory": "sweetened-yogurts",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 59.0909090909091,
+     "sugars": 9.09090909090909,
+     "saturatedFat": 0.454545454545455,
+     "sodiumMg": 18.5,
+     "salt": 0.0463636363636364,
+     "proteins": 2.72727272727273,
+     "fiber": null
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "tree_nuts"
+    ],
+    "traces": [
+     "gluten",
+     "soy",
+     "tree_nuts"
+    ],
+    "labels": [
+     "no-colorings"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.94
+   },
+   {
+    "gtin": "7802800503735",
+    "name": "Cappuccino",
+    "brand": "Gold",
+    "mainCategory": "caf-s",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 400.0,
+     "sugars": 49.7,
+     "saturatedFat": null,
+     "sodiumMg": 929.0,
+     "salt": 2.36,
+     "proteins": 6.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "sodium"
+    ],
+    "allergens": [],
+    "traces": [
+     "milk"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.677
+   },
+   {
+    "gtin": "7802920106106",
+    "name": "Leche Semidescremada Vainilla Caja",
+    "brand": "Colun",
+    "mainCategory": "milks",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 48.0,
+     "sugars": 5.0,
+     "saturatedFat": 0.96,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": 3.1,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "fsc",
+     "fsc-mix"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.92
+   },
+   {
+    "gtin": "7802920777214",
+    "name": "Leche Larga Vida Chocolate Caja",
+    "brand": "Colun",
+    "mainCategory": "l-cteos",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 47.0,
+     "sugars": 5.6,
+     "saturatedFat": 0.0,
+     "sodiumMg": 89.0,
+     "salt": 0.0,
+     "proteins": 3.2,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-colorings",
+     "no-vegan"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.915
+   },
+   {
+    "gtin": "7802920115658",
+    "name": "Queso Gauda Laminado",
+    "brand": "Colun",
+    "mainCategory": "cheeses",
+    "nutriscoreGrade": "d",
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 346.0,
+     "sugars": 0.0,
+     "saturatedFat": 17.92,
+     "sodiumMg": 496.0,
+     "salt": 1.24,
+     "proteins": 23.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-gluten"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": true,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802900003203",
+    "name": "Queso Camembert Trozo",
+    "brand": "Soprole",
+    "mainCategory": "quesos-sin-lactosa",
+    "nutriscoreGrade": "d",
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 291.0,
+     "sugars": 0.0,
+     "saturatedFat": 15.0,
+     "sodiumMg": 609.6,
+     "salt": 1.524,
+     "proteins": 18.5,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-lactose"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": true
+    },
+    "stores": [],
+    "dataQualityScore": 0.915
+   },
+   {
+    "gtin": "7802900001339",
+    "name": "Queso Mantecoso Quilque Laminado",
+    "brand": "Soprole",
+    "mainCategory": "queso-mantecoso",
+    "nutriscoreGrade": "d",
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 359.036144578313,
+     "sugars": 1.32530120481928,
+     "saturatedFat": 18.6746987951807,
+     "sodiumMg": 753.0,
+     "salt": 1.88253012048193,
+     "proteins": 23.4939759036145,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-gluten",
+     "no-lactose"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": true,
+     "lactoseFree": true
+    },
+    "stores": [],
+    "dataQualityScore": 0.917
+   },
+   {
+    "gtin": "7802955010867",
+    "name": "Yoghurt Griego Sabor Natural endulzado Pote",
+    "brand": "Oikos",
+    "mainCategory": "yogures-griegos",
+    "nutriscoreGrade": "c",
+    "novaGroup": 1,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 95.0,
+     "sugars": 8.9,
+     "saturatedFat": 2.7,
+     "sodiumMg": 50.8,
+     "salt": 0.127,
+     "proteins": 4.8,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.9
+   },
+   {
+    "gtin": "7802900002305",
+    "name": "Yoghurt Protein con Trozos Sabor Mango Maracuyá Pote",
+    "brand": "Soprole",
+    "mainCategory": "yogurts",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 74.8387096774194,
+     "sugars": 6.7,
+     "saturatedFat": 1.07,
+     "sodiumMg": 64.0,
+     "salt": 0.16,
+     "proteins": 6.6,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802955008697",
+    "name": "Yoghurt Griego Colchón de Frutas con Frutos del Bosque Pote",
+    "brand": "Oikos",
+    "mainCategory": "greek-style-yogurts",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 137.0,
+     "sugars": 13.1,
+     "saturatedFat": 3.5,
+     "sodiumMg": 78.2,
+     "salt": 0.19558,
+     "proteins": 6.2,
+     "fiber": null
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [
+     "soy",
+     "tree_nuts"
+    ],
+    "labels": [
+     "no-gluten"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": true,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.917
+   },
+   {
+    "gtin": "7802900392024",
+    "name": "Yoghurt Batido Frutilla Botella",
+    "brand": "Soprole",
+    "mainCategory": "yogures-bebibles",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 84.0,
+     "sugars": 9.3,
+     "saturatedFat": 0.0,
+     "sodiumMg": 40.0,
+     "salt": 0.0,
+     "proteins": 3.1,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [
+     "milk",
+     "tree_nuts"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.938
+   },
+   {
+    "gtin": "7590006200137",
+    "name": "Margarina",
+    "brand": "Mavesa",
+    "mainCategory": "salted-butters",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 80.0,
+     "sugars": 0.0,
+     "saturatedFat": 4.0,
+     "sodiumMg": 150.0,
+     "salt": 0.375,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [
+     "no-trans-fat"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.932
+   },
+   {
+    "gtin": "7802900221010",
+    "name": "Arroz con Leche Postre Tradicional",
+    "brand": "Soprole",
+    "mainCategory": "rice-puddings",
+    "nutriscoreGrade": "b",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 86.1538461538462,
+     "sugars": 6.76923076923077,
+     "saturatedFat": 0.0,
+     "sodiumMg": 49.2,
+     "salt": 0.123076923076923,
+     "proteins": 2.69230769230769,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [
+     "gluten"
+    ],
+    "labels": [
+     "no-added-sugar"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [
+     "jumbo",
+     "l-der",
+     "santa-isabel",
+     "tottus",
+     "unimarc"
+    ],
+    "dataQualityScore": 0.978
+   },
+   {
+    "gtin": "7802930004713",
+    "name": "Queso Chacra Trozo",
+    "brand": "Quillayes",
+    "mainCategory": "cheeses",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 186.666666666667,
+     "sugars": 1.2,
+     "saturatedFat": 9.94,
+     "sodiumMg": 300.0,
+     "salt": 0.75,
+     "proteins": 12.7,
+     "fiber": null
+    },
+    "highInSeals": [
+     "saturated_fat"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-gluten"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": true,
+     "lactoseFree": null
+    },
+    "stores": [
+     "lider"
+    ],
+    "dataQualityScore": 0.958
+   },
+   {
+    "gtin": "7802910007277",
+    "name": "Leche Blanca Descremada",
+    "brand": "Loncoleche",
+    "mainCategory": "skimmed-milks",
+    "nutriscoreGrade": "b",
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 33.0,
+     "sugars": 4.8,
+     "saturatedFat": 0.05,
+     "sodiumMg": 32.0,
+     "salt": 0.08,
+     "proteins": 3.3,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-gluten"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": true,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.755
+   },
+   {
+    "gtin": "7802920006352",
+    "name": "Queso Mantecoso Laminado",
+    "brand": "Colun",
+    "mainCategory": "cheeses",
+    "nutriscoreGrade": "d",
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 343.0,
+     "sugars": 0.0,
+     "saturatedFat": 17.73,
+     "sodiumMg": 498.0,
+     "salt": 1.245,
+     "proteins": 23.3,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-gluten"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": true,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.92
+   },
+   {
+    "gtin": "7802920001326",
+    "name": "Mantequilla Untable Tradicional",
+    "brand": "Colun",
+    "mainCategory": "butters",
+    "nutriscoreGrade": "e",
+    "novaGroup": 2,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 743.0,
+     "sugars": 0.7,
+     "saturatedFat": 52.48,
+     "sodiumMg": 468.0,
+     "salt": 1.17,
+     "proteins": 0.7,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [
+     "milk"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.938
+   },
+   {
+    "gtin": "7802920202105",
+    "name": "Mantequilla Con sal",
+    "brand": "Colun",
+    "mainCategory": "salted-butters",
+    "nutriscoreGrade": "e",
+    "novaGroup": 2,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 757.0,
+     "sugars": 0.7,
+     "saturatedFat": 55.1,
+     "sodiumMg": 398.0,
+     "salt": 0.995,
+     "proteins": 1.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "sistema-de-etiquetado-frontal-de-alimentos-y-bebidas",
+     "exceso-grasas-saturadas",
+     "mantequilla"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [
+     "jumbo"
+    ],
+    "dataQualityScore": 0.978
+   },
+   {
+    "gtin": "7802920009636",
+    "name": "Leche Descremada Sin Lactosa",
+    "brand": "Colun",
+    "mainCategory": "lactose-free-milk",
+    "nutriscoreGrade": "b",
+    "novaGroup": 1,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 32.0,
+     "sugars": 4.4,
+     "saturatedFat": 0.03,
+     "sodiumMg": 40.0,
+     "salt": 0.1,
+     "proteins": 3.3,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-gluten",
+     "no-lactose"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": true,
+     "lactoseFree": true
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802900002220",
+    "name": "Yoghurt Sabor Natural Azucarado 1+1 Pote",
+    "brand": "Soprole",
+    "mainCategory": "yogurts",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "a",
+    "nutriments": {
+     "energyKcal": 95.0,
+     "sugars": 7.1,
+     "saturatedFat": 3.3,
+     "sodiumMg": 45.0,
+     "salt": 0.1125,
+     "proteins": 3.6,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802920465104",
+    "name": "Queso Crema Salame Y Morrón Untable Tradicional",
+    "brand": "Colun",
+    "mainCategory": "cream-cheeses",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 238.0,
+     "sugars": 0.5,
+     "saturatedFat": 11.2,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": 16.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.613
+   },
+   {
+    "gtin": "7802900228170",
+    "name": "Yoghurt con Cereal 1+1 Mini Cookies",
+    "brand": "Soprole",
+    "mainCategory": "yogures-con-galletas",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 138.0,
+     "sugars": 9.0,
+     "saturatedFat": 3.51,
+     "sodiumMg": 89.0,
+     "salt": 0.2225,
+     "proteins": 4.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802900000363",
+    "name": "Yoghurt Gold con Trozos de Almendras y Chocolate Pote",
+    "brand": "Soprole",
+    "mainCategory": "yogurts",
+    "nutriscoreGrade": "c",
+    "novaGroup": null,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 107.878787878788,
+     "sugars": 9.81818181818182,
+     "saturatedFat": 1.75757575757576,
+     "sodiumMg": 19.2,
+     "salt": 0.0478787878787879,
+     "proteins": 3.57575757575758,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.75
+   },
+   {
+    "gtin": "7802900003296",
+    "name": "Yoghurt Protein con Trozos Frutos Secos Pote",
+    "brand": "Soprole",
+    "mainCategory": "yogures",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 94.1935483870968,
+     "sugars": 6.6,
+     "saturatedFat": 1.1,
+     "sodiumMg": 65.0,
+     "salt": 0.0,
+     "proteins": 6.8,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk",
+     "tree_nuts"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802910000254",
+    "name": "Leche Semidescremada Plátano",
+    "brand": "Loncoleche",
+    "mainCategory": "cow-milks",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 44.0,
+     "sugars": 4.8,
+     "saturatedFat": 1.0,
+     "sodiumMg": 21.2,
+     "salt": 0.053,
+     "proteins": 2.9,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-gluten",
+     "libre-pastoreo"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": true,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.92
+   },
+   {
+    "gtin": "7802900001926",
+    "name": "Yoghurt Protein con Trozos Sabor Frutilla Pote",
+    "brand": "Soprole",
+    "mainCategory": "yogures-con-frutas",
+    "nutriscoreGrade": "b",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 75.0,
+     "sugars": 7.0,
+     "saturatedFat": 1.2,
+     "sodiumMg": 76.0,
+     "salt": 0.0,
+     "proteins": 6.6,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-gluten"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": true,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.917
+   },
+   {
+    "gtin": "7802900332419",
+    "name": "Yoghurt con Cereal 1+1 Choco Krispis Chocolate",
+    "brand": "Soprole",
+    "mainCategory": "yogurts",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 121.0,
+     "sugars": 8.8,
+     "saturatedFat": 3.1,
+     "sodiumMg": 86.4,
+     "salt": 0.2159,
+     "proteins": 3.7,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "8445290906281",
+    "name": "Leche en Polvo Entera Buen Día Bolsa",
+    "brand": "Nido",
+    "mainCategory": "milk-powders",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.64
+   },
+   {
+    "gtin": "7802920423814",
+    "name": "Queso Rallado Reggianito",
+    "brand": "Colun",
+    "mainCategory": "grated-cheese",
+    "nutriscoreGrade": "e",
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 466.0,
+     "sugars": 0.0,
+     "saturatedFat": 19.26,
+     "sodiumMg": 1222.0,
+     "salt": 3.055,
+     "proteins": 48.7,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.917
+   },
+   {
+    "gtin": "7802920008370",
+    "name": "Queso Fresco Trozo",
+    "brand": "Colun",
+    "mainCategory": "cheeses",
+    "nutriscoreGrade": "c",
+    "novaGroup": 3,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 175.0,
+     "sugars": 3.4,
+     "saturatedFat": 7.74,
+     "sodiumMg": 325.0,
+     "salt": 0.8125,
+     "proteins": 12.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-colorings"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802910007062",
+    "name": "Yoghurt Protein Sabor natural endulzado Pote",
+    "brand": "Loncoleche",
+    "mainCategory": "l-cteos",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 65.0,
+     "sugars": 5.9,
+     "saturatedFat": 0.4,
+     "sodiumMg": 65.0,
+     "salt": 0.1625,
+     "proteins": 8.8,
+     "fiber": 0.0
+    },
+    "highInSeals": [],
+    "allergens": [
+     "gluten",
+     "milk",
+     "tree_nuts"
+    ],
+    "traces": [
+     "gluten",
+     "soy",
+     "tree_nuts"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7622201797560",
+    "name": "Queso Crema Original",
+    "brand": "Philadelphia",
+    "mainCategory": "queso-crema",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 266.666666666667,
+     "sugars": 3.33333333333333,
+     "saturatedFat": 16.0,
+     "sodiumMg": 393.3,
+     "salt": 0.983333333333333,
+     "proteins": 6.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [
+     "no-gluten"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": true,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.9
+   },
+   {
+    "gtin": "7802920000435",
+    "name": "Crema de Leche Natural Para Batir",
+    "brand": "Colun",
+    "mainCategory": "creams",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 317.0,
+     "sugars": 2.9,
+     "saturatedFat": 21.1,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": 2.0,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "saturated_fat"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.552
+   },
+   {
+    "gtin": "7802920777252",
+    "name": "Queso Ranco Laminado",
+    "brand": "Colun",
+    "mainCategory": "quesos",
+    "nutriscoreGrade": "c",
+    "novaGroup": null,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 330.0,
+     "sugars": 0.0,
+     "saturatedFat": 16.64,
+     "sodiumMg": 496.0,
+     "salt": 0.0,
+     "proteins": 24.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "no-lactose"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": true
+    },
+    "stores": [],
+    "dataQualityScore": 0.778
+   },
+   {
+    "gtin": "7808757000006",
+    "name": "Mantequilla Artesanal Pan Tradicional",
+    "brand": "Kumey",
+    "mainCategory": "mentequilla",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 742.0,
+     "sugars": 0.5,
+     "saturatedFat": 57.3,
+     "sodiumMg": 392.0,
+     "salt": 0.98,
+     "proteins": 0.5,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   }
+  ],
+  "snacks": [
+   {
+    "gtin": "7802225512565",
+    "name": "Bon o Bon",
+    "brand": "Arcor",
+    "mainCategory": "dulces",
+    "nutriscoreGrade": "e",
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 560.0,
+     "sugars": 35.0,
+     "saturatedFat": 21.0,
+     "sodiumMg": 106.0,
+     "salt": 0.27,
+     "proteins": 7.0,
+     "fiber": 1.33333333333333
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.733
+   },
+   {
+    "gtin": "7802225689014",
+    "name": "Cracker Sabor Tradicional",
+    "brand": "Selz",
+    "mainCategory": "galletas-saladas",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 438.0,
+     "sugars": 0.9,
+     "saturatedFat": 5.3,
+     "sodiumMg": 205.0,
+     "salt": 0.52,
+     "proteins": 8.1,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": true,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "12215591",
+    "name": "Super 8 balls",
+    "brand": null,
+    "mainCategory": "confectioneries",
+    "nutriscoreGrade": null,
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.293
+   },
+   {
+    "gtin": "7802215502026",
+    "name": "Soda",
+    "brand": "Costa",
+    "mainCategory": "galletas-saladas",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 418.0,
+     "sugars": 3.9,
+     "saturatedFat": 3.9,
+     "sodiumMg": 390.0,
+     "salt": 0.99,
+     "proteins": 9.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "sesame",
+     "soy",
+     "sulphites"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.795
+   },
+   {
+    "gtin": "7622201693091",
+    "name": "OREO ORIGINAL LA GALLETA FAVORITA DE LA LECHE",
+    "brand": "Oreo",
+    "mainCategory": "galletas-de-chocolate",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 472.222222222222,
+     "sugars": 0.0,
+     "saturatedFat": 8.33333333333333,
+     "sodiumMg": 444.4,
+     "salt": 1.11111111111111,
+     "proteins": 4.16666666666667,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7804673912829",
+    "name": "WILD PROTEIN mini",
+    "brand": "WILD",
+    "mainCategory": "barras-de-prote-nas",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 348.0,
+     "sugars": 6.9,
+     "saturatedFat": 3.9,
+     "sodiumMg": 235.0,
+     "salt": 0.6,
+     "proteins": 33.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "milk",
+     "peanuts"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.8
+   },
+   {
+    "gtin": "7804000002872",
+    "name": "Galletas Sin Azúcar Añadida con Chips de Cacao",
+    "brand": "Livean",
+    "mainCategory": "galletas",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 301.0,
+     "sugars": 0.0,
+     "saturatedFat": 3.6,
+     "sodiumMg": 151.0,
+     "salt": 0.38354,
+     "proteins": 12.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "eggs",
+     "gluten",
+     "milk",
+     "peanuts",
+     "soy",
+     "tree_nuts"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.917
+   },
+   {
+    "gtin": "7802215504655",
+    "name": "Nik",
+    "brand": "carozzi",
+    "mainCategory": "vanilla-stuffed-wafers",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 517.0,
+     "sugars": 34.9,
+     "saturatedFat": 13.8,
+     "sodiumMg": 185.0,
+     "salt": 0.4625,
+     "proteins": 2.9,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802230070227",
+    "name": "Chocolate con Almendras Barra",
+    "brand": "Sahne Nuss",
+    "mainCategory": "chocolates-con-leche",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 558.064516129032,
+     "sugars": 44.0,
+     "saturatedFat": 15.6,
+     "sodiumMg": 84.0,
+     "salt": 0.21,
+     "proteins": 11.3,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk",
+     "soy",
+     "tree_nuts"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802215501821",
+    "name": "Agua Line",
+    "brand": "Costa",
+    "mainCategory": "galletas-de-agua",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "d",
+    "nutriments": {
+     "energyKcal": 410.0,
+     "sugars": 3.5,
+     "saturatedFat": 2.8,
+     "sodiumMg": 402.3,
+     "salt": 1.00584,
+     "proteins": 7.5,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sodium"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7807910044505",
+    "name": "IRON PROTEIN CHOCOLATE COCO",
+    "brand": "Evercrisp",
+    "mainCategory": "barras-de-prote-na",
+    "nutriscoreGrade": "c",
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 356.0,
+     "sugars": 5.7,
+     "saturatedFat": 3.3,
+     "sodiumMg": 400.0,
+     "salt": 1.016,
+     "proteins": 37.5,
+     "fiber": 7.2
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.613
+   },
+   {
+    "gtin": "0799192197239",
+    "name": "Mr Pop Buttery & Salty Sal y Mantequilla",
+    "brand": "Mr Pop",
+    "mainCategory": "palomitas-de-ma-z",
+    "nutriscoreGrade": "d",
+    "novaGroup": 3,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 371.0,
+     "sugars": 0.0,
+     "saturatedFat": 3.6,
+     "sodiumMg": 833.0,
+     "salt": 2.11,
+     "proteins": 7.1,
+     "fiber": 9.5
+    },
+    "highInSeals": [
+     "calories",
+     "sodium"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.873
+   },
+   {
+    "gtin": "7802215104848",
+    "name": "Vizzio",
+    "brand": "Costa",
+    "mainCategory": "flavoured-milk-chocolates",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 551.0,
+     "sugars": 52.0,
+     "saturatedFat": 12.9,
+     "sodiumMg": 85.0,
+     "salt": 0.2125,
+     "proteins": 7.9,
+     "fiber": 2.7
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "peanuts",
+     "soy",
+     "tree_nuts"
+    ],
+    "traces": [
+     "eggs",
+     "gluten",
+     "milk",
+     "peanuts",
+     "soy",
+     "sulphites",
+     "tree_nuts"
+    ],
+    "labels": [
+     "high-in-calories",
+     "high-in-saturated-fats",
+     "high-in-sugars"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [
+     "farmacorp",
+     "fidalga"
+    ],
+    "dataQualityScore": 0.98
+   },
+   {
+    "gtin": "7807910032274",
+    "name": "#Plátano Frito",
+    "brand": "Cuisine & Co",
+    "mainCategory": "hojuelas-de-pl-tano",
+    "nutriscoreGrade": "c",
+    "novaGroup": 3,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 501.0,
+     "sugars": 2.5,
+     "saturatedFat": 2.1,
+     "sodiumMg": 204.0,
+     "salt": 0.51816,
+     "proteins": 2.3,
+     "fiber": 5.1
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7804609254177",
+    "name": "Twenty's Mini Barra De Proteina Chocolate Fudge",
+    "brand": "Your Goal",
+    "mainCategory": "barras-de-prote-na",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 224.0,
+     "sugars": 3.3,
+     "saturatedFat": 3.9,
+     "sodiumMg": 31.0,
+     "salt": 0.08,
+     "proteins": 32.4,
+     "fiber": 24.3
+    },
+    "highInSeals": [],
+    "allergens": [
+     "milk",
+     "soy",
+     "tree_nuts"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7804673910030",
+    "name": "Protein",
+    "brand": "Wild",
+    "mainCategory": "barras-de-prote-na",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 399.0,
+     "sugars": 13.4,
+     "saturatedFat": 8.9,
+     "sodiumMg": 235.0,
+     "salt": 0.601,
+     "proteins": 33.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk",
+     "peanuts",
+     "soy",
+     "sulphites",
+     "tree_nuts"
+    ],
+    "traces": [
+     "milk",
+     "tree_nuts"
+    ],
+    "labels": [
+     "low-or-no-sugar",
+     "source-of-proteins",
+     "high-proteins",
+     "no-added-sugar",
+     "naturalmente-libre-de-sellos"
+    ],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [
+     "coles",
+     "supermercado-jumbo"
+    ],
+    "dataQualityScore": 0.998
+   },
+   {
+    "gtin": "7803468005326",
+    "name": "Linaza Chía Prebiótico",
+    "brand": "Castaño",
+    "mainCategory": "snacks",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 257.0,
+     "sugars": 3.0,
+     "saturatedFat": 0.9,
+     "sodiumMg": 368.0,
+     "salt": 0.934,
+     "proteins": 13.2,
+     "fiber": 10.5
+    },
+    "highInSeals": [],
+    "allergens": [
+     "gluten",
+     "sesame",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [
+     "vegetarian",
+     "european-vegetarian-union",
+     "vegan",
+     "european-vegetarian-union-vegan"
+    ],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802225428064",
+    "name": "Maní Tiffany's Max",
+    "brand": "Arcor",
+    "mainCategory": "man-confitado",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 541.0,
+     "sugars": 47.0,
+     "saturatedFat": 13.0,
+     "sodiumMg": 65.0,
+     "salt": 0.1651,
+     "proteins": 3.9,
+     "fiber": 3.8
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7804660620553",
+    "name": "PURI Crunchys de Garbanzos Sabor Queso",
+    "brand": "PURI",
+    "mainCategory": "crunchys",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": "a",
+    "nutriments": {
+     "energyKcal": 432.0,
+     "sugars": 2.5,
+     "saturatedFat": 1.7,
+     "sodiumMg": 360.0,
+     "salt": 0.914,
+     "proteins": 12.4,
+     "fiber": 9.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "milk"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.753
+   },
+   {
+    "gtin": "7802000005831",
+    "name": "Galletón Tipo Casero Chips Sabor Chocolate",
+    "brand": "Quaker",
+    "mainCategory": "galletas-con-chocolate",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 432.0,
+     "sugars": 22.0,
+     "saturatedFat": 7.7,
+     "sodiumMg": 335.0,
+     "salt": 0.85,
+     "proteins": 7.0,
+     "fiber": 6.8
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [
+     "quaker"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.938
+   },
+   {
+    "gtin": "7804522006044",
+    "name": "Trail Mix",
+    "brand": "Frutisa",
+    "mainCategory": "mezclas-de-frutos-secos",
+    "nutriscoreGrade": "d",
+    "novaGroup": 3,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 546.0,
+     "sugars": 19.2,
+     "saturatedFat": 4.9,
+     "sodiumMg": 4.0,
+     "salt": 0.01016,
+     "proteins": 17.8,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "tree_nuts"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7802225313421",
+    "name": "Mogul Ositos",
+    "brand": "Arcor",
+    "mainCategory": "gomitas",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 321.0,
+     "sugars": 59.0,
+     "saturatedFat": 0.2,
+     "sodiumMg": 34.0,
+     "salt": 0.08636,
+     "proteins": 3.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.8
+   },
+   {
+    "gtin": "7802408015081",
+    "name": "Carioca",
+    "brand": "Marco Polo",
+    "mainCategory": "galletas-de-chocolate",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 480.0,
+     "sugars": 31.7,
+     "saturatedFat": 12.0,
+     "sodiumMg": 62.0,
+     "salt": 0.16,
+     "proteins": 5.1,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "soy"
+    ],
+    "traces": [
+     "eggs",
+     "milk",
+     "peanuts",
+     "sulphites"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.897
+   },
+   {
+    "gtin": "7802225514125",
+    "name": "Mogul Extreme Ácido-Dulce",
+    "brand": "Arcor",
+    "mainCategory": "gomas-de-mascar",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 319.0,
+     "sugars": 62.0,
+     "saturatedFat": 0.0,
+     "sodiumMg": 132.0,
+     "salt": 0.33,
+     "proteins": 0.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7896058259445",
+    "name": "Tortitas",
+    "brand": "Bon o Bon",
+    "mainCategory": "galletas",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 500.0,
+     "sugars": 34.0,
+     "saturatedFat": 9.0,
+     "sodiumMg": 200.0,
+     "salt": 0.51,
+     "proteins": 7.0,
+     "fiber": 2.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7804609254238",
+    "name": "Protein Bite Black & White",
+    "brand": "Your Goal",
+    "mainCategory": "barras-de-prote-na",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 292.0,
+     "sugars": 3.5,
+     "saturatedFat": 6.6,
+     "sodiumMg": 185.0,
+     "salt": 0.47,
+     "proteins": 37.8,
+     "fiber": 5.9
+    },
+    "highInSeals": [
+     "calories",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": false,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7804672827964",
+    "name": "Galletas de Arroz",
+    "brand": "Tottus",
+    "mainCategory": "galletas-de-arroz",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 507.0,
+     "sugars": 28.6,
+     "saturatedFat": 23.5,
+     "sodiumMg": 271.0,
+     "salt": 0.687,
+     "proteins": 5.3,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.853
+   },
+   {
+    "gtin": "0766902004286",
+    "name": "Paleta Escobita Azul",
+    "brand": "Mabú",
+    "mainCategory": "snacks-dulces",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": null,
+     "sugars": null,
+     "saturatedFat": null,
+     "sodiumMg": null,
+     "salt": null,
+     "proteins": null,
+     "fiber": null
+    },
+    "highInSeals": [],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.633
+   },
+   {
+    "gtin": "7802220776474",
+    "name": "Alfajor Premium",
+    "brand": "Calaf",
+    "mainCategory": "alfajores",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 453.0,
+     "sugars": 41.5,
+     "saturatedFat": 12.5,
+     "sodiumMg": 329.0,
+     "salt": 0.83566,
+     "proteins": 4.4,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7802000022142",
+    "name": "Doritos minis SABOR QUESO",
+    "brand": "Doritos",
+    "mainCategory": "botanas-saladas",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 509.0,
+     "sugars": 2.6,
+     "saturatedFat": 2.9,
+     "sodiumMg": 668.0,
+     "salt": 1.7,
+     "proteins": 5.6,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sodium"
+    ],
+    "allergens": [
+     "milk",
+     "peanuts"
+    ],
+    "traces": [
+     "gluten",
+     "soy"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802000017308",
+    "name": "Ramitas Evercrisp",
+    "brand": "Evercrisp",
+    "mainCategory": "snacks",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 519.0,
+     "sugars": 3.86,
+     "saturatedFat": 3.51,
+     "sodiumMg": 506.0,
+     "salt": 1.28,
+     "proteins": 7.51,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sodium"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.912
+   },
+   {
+    "gtin": "7590011251100",
+    "name": "Original",
+    "brand": "Oreo",
+    "mainCategory": "chocolate-sandwich-cookies",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": "e",
+    "nutriments": {
+     "energyKcal": 472.222222222222,
+     "sugars": 38.8888888888889,
+     "saturatedFat": 8.33333333333333,
+     "sodiumMg": 444.4,
+     "salt": 1.11111111111111,
+     "proteins": 4.16666666666667,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "milk"
+    ],
+    "traces": [
+     "milk"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [
+     "farmacorp",
+     "fidalga"
+    ],
+    "dataQualityScore": 1.0
+   },
+   {
+    "gtin": "7802215502033",
+    "name": "Soda Line",
+    "brand": "Costa",
+    "mainCategory": "galletas-de-soda",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 415.0,
+     "sugars": 2.3,
+     "saturatedFat": 3.2,
+     "sodiumMg": 399.0,
+     "salt": 1.01,
+     "proteins": 7.37,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "peanuts",
+     "soy"
+    ],
+    "traces": [
+     "eggs",
+     "milk",
+     "tree_nuts"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7804630010728",
+    "name": "Natitas",
+    "brand": "Tika Artesan Foods",
+    "mainCategory": "chips-de-papa",
+    "nutriscoreGrade": "c",
+    "novaGroup": 3,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 532.0,
+     "sugars": 0.1,
+     "saturatedFat": 3.3,
+     "sodiumMg": 273.0,
+     "salt": 0.693,
+     "proteins": 6.1,
+     "fiber": 5.3
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [
+     "with-sunflower-oil"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.753
+   },
+   {
+    "gtin": "0781159081569",
+    "name": "SUPER CLEVER COOKIES CACAO NARANJA",
+    "brand": "CLEVER",
+    "mainCategory": "galletas",
+    "nutriscoreGrade": "c",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 370.0,
+     "sugars": 10.0,
+     "saturatedFat": 1.0,
+     "sodiumMg": 173.0,
+     "salt": 0.44,
+     "proteins": 3.0,
+     "fiber": 8.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7804630011176",
+    "name": "Mini Rice Pop Galletas Horneadas de Arroz Inflado Sabor Sour Cream Ciboulette",
+    "brand": "Tika Artesano Foods",
+    "mainCategory": "galletas",
+    "nutriscoreGrade": "c",
+    "novaGroup": 3,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 433.0,
+     "sugars": 1.3,
+     "saturatedFat": 1.5,
+     "sodiumMg": 291.0,
+     "salt": 0.73914,
+     "proteins": 7.6,
+     "fiber": 1.7
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7804673913925",
+    "name": "WILD PROTEIN mini",
+    "brand": "WILD",
+    "mainCategory": "barras-de-prote-nas",
+    "nutriscoreGrade": "a",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 348.0,
+     "sugars": 0.9,
+     "saturatedFat": 3.6,
+     "sodiumMg": 235.0,
+     "salt": 0.5969,
+     "proteins": 33.4,
+     "fiber": 9.0
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "peanuts"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.853
+   },
+   {
+    "gtin": "7807910031444",
+    "name": "Manzana Deshidratada",
+    "brand": "BC Co.",
+    "mainCategory": "frutas-deshidratadas",
+    "nutriscoreGrade": "d",
+    "novaGroup": 1,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 285.0,
+     "sugars": 61.5,
+     "saturatedFat": 0.1,
+     "sodiumMg": 3.0,
+     "salt": 0.0075,
+     "proteins": 0.5,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7802420008658",
+    "name": "Corte Americano",
+    "brand": "Marco Polo",
+    "mainCategory": "papas-fritas",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 519.0,
+     "sugars": 1.0,
+     "saturatedFat": 3.6,
+     "sodiumMg": 363.0,
+     "salt": 0.922,
+     "proteins": 6.0,
+     "fiber": 3.3
+    },
+    "highInSeals": [
+     "calories"
+    ],
+    "allergens": [
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.873
+   },
+   {
+    "gtin": "7804000002612",
+    "name": "Almendras cubiertas con cacao",
+    "brand": "Enlinea",
+    "mainCategory": "frutos-secos",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 475.0,
+     "sugars": 0.4,
+     "saturatedFat": 6.1,
+     "sodiumMg": 520.0,
+     "salt": 1.32,
+     "proteins": 14.3,
+     "fiber": 0.1
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.893
+   },
+   {
+    "gtin": "7804609253828",
+    "name": "Twenty's Chocolate Fudge",
+    "brand": "Your Goal",
+    "mainCategory": "barras-de-prote-na",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 216.0,
+     "sugars": 23.0,
+     "saturatedFat": 3.9,
+     "sodiumMg": 132.0,
+     "salt": 0.33,
+     "proteins": 8.8,
+     "fiber": 2.3
+    },
+    "highInSeals": [
+     "sugars"
+    ],
+    "allergens": [
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "2498782059909",
+    "name": "Éclairs de Chocolate",
+    "brand": "JUMBO",
+    "mainCategory": "pasteles",
+    "nutriscoreGrade": "d",
+    "novaGroup": null,
+    "ecoscoreGrade": "c",
+    "nutriments": {
+     "energyKcal": 318.0,
+     "sugars": 18.4,
+     "saturatedFat": 8.4,
+     "sodiumMg": 98.0,
+     "salt": 0.25,
+     "proteins": 3.2,
+     "fiber": null
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.652
+   },
+   {
+    "gtin": "8691707038704",
+    "name": "Winergy",
+    "brand": "Solen",
+    "mainCategory": "barras-de-chocolate",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 484.0,
+     "sugars": 62.0,
+     "saturatedFat": 2.0,
+     "sodiumMg": 134.6,
+     "salt": 0.34,
+     "proteins": 22.0,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars"
+    ],
+    "allergens": [
+     "peanuts",
+     "soy",
+     "tree_nuts"
+    ],
+    "traces": [
+     "eggs",
+     "gluten",
+     "milk",
+     "soy",
+     "tree_nuts"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7804673910207",
+    "name": "WILD PROTEIN CHOCOLATE BITTER",
+    "brand": "WILD FOODS",
+    "mainCategory": "barras-de-prote-nas",
+    "nutriscoreGrade": null,
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 386.0,
+     "sugars": 12.3,
+     "saturatedFat": 4.1,
+     "sodiumMg": 340.0,
+     "salt": 0.8636,
+     "proteins": 31.2,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "peanuts"
+    ],
+    "traces": [],
+    "labels": [
+     "vegetarian",
+     "vegan"
+    ],
+    "diets": {
+     "vegan": true,
+     "vegetarian": true,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.793
+   },
+   {
+    "gtin": "7803908000829",
+    "name": "barra de fruta Frambuesa",
+    "brand": "Guallarauco",
+    "mainCategory": "barras-de-fruta",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 429.0,
+     "sugars": 47.7,
+     "saturatedFat": 12.9,
+     "sodiumMg": 0.0,
+     "salt": 0.0,
+     "proteins": 4.5,
+     "fiber": 3.9
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "soy"
+    ],
+    "traces": [],
+    "labels": [
+     "no-colorings"
+    ],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.795
+   },
+   {
+    "gtin": "7804673912416",
+    "name": "Low Carb",
+    "brand": "Wild Fit",
+    "mainCategory": "barras",
+    "nutriscoreGrade": "e",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 400.0,
+     "sugars": 40.0,
+     "saturatedFat": 6.0,
+     "sodiumMg": 200.0,
+     "salt": 0.51,
+     "proteins": 8.0,
+     "fiber": 4.0
+    },
+    "highInSeals": [
+     "calories",
+     "sugars",
+     "saturated_fat"
+    ],
+    "allergens": [
+     "gluten",
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7802000021190",
+    "name": "Tortilla de Maíz sabor queso",
+    "brand": "Doritos",
+    "mainCategory": "botanas",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": "b",
+    "nutriments": {
+     "energyKcal": 512.0,
+     "sugars": 1.1,
+     "saturatedFat": 2.6,
+     "sodiumMg": 621.0,
+     "salt": 1.58,
+     "proteins": 6.1,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sodium"
+    ],
+    "allergens": [
+     "milk",
+     "soy"
+    ],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.915
+   },
+   {
+    "gtin": "7802000021794",
+    "name": "Papas Fritas sabor orégano",
+    "brand": "Lay's",
+    "mainCategory": "papas-fritas",
+    "nutriscoreGrade": "d",
+    "novaGroup": 4,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 541.0,
+     "sugars": 4.9,
+     "saturatedFat": 3.5,
+     "sodiumMg": 541.0,
+     "salt": 1.37,
+     "proteins": 6.43,
+     "fiber": 0.0
+    },
+    "highInSeals": [
+     "calories",
+     "sodium"
+    ],
+    "allergens": [
+     "gluten",
+     "milk"
+    ],
+    "traces": [
+     "gluten",
+     "milk",
+     "soy"
+    ],
+    "labels": [],
+    "diets": {
+     "vegan": false,
+     "vegetarian": null,
+     "glutenFree": false,
+     "lactoseFree": false
+    },
+    "stores": [],
+    "dataQualityScore": 0.895
+   },
+   {
+    "gtin": "7804619850116",
+    "name": "Maní Japones Ají Limón",
+    "brand": "Kazai",
+    "mainCategory": "man-saborizado",
+    "nutriscoreGrade": "e",
+    "novaGroup": null,
+    "ecoscoreGrade": null,
+    "nutriments": {
+     "energyKcal": 543.333333333333,
+     "sugars": 10.0,
+     "saturatedFat": 6.66666666666667,
+     "sodiumMg": 700.0,
+     "salt": 1.75,
+     "proteins": 13.3333333333333,
+     "fiber": 4.66666666666667
+    },
+    "highInSeals": [
+     "calories",
+     "sodium",
+     "saturated_fat"
+    ],
+    "allergens": [],
+    "traces": [],
+    "labels": [],
+    "diets": {
+     "vegan": null,
+     "vegetarian": null,
+     "glutenFree": null,
+     "lactoseFree": null
+    },
+    "stores": [],
+    "dataQualityScore": 0.775
+   }
+  ]
+ }
+}
